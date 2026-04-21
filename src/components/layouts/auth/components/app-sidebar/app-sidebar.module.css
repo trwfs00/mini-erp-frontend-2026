@@ -1,0 +1,135 @@
+.navbar {
+  height: 100%;
+  width: 100%;
+  padding: var(--mantine-spacing-sm);
+  display: flex;
+  flex-direction: column;
+  background: #fafafa;
+  border-right: 1px solid var(--mantine-color-gray-2);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 8px 12px;
+  border-bottom: 1px solid var(--mantine-color-gray-2);
+  margin-bottom: var(--mantine-spacing-sm);
+  min-height: 56px;
+}
+
+.navbar[data-collapsed] .header {
+  justify-content: center;
+  padding: 4px 0 12px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brandText {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--mantine-color-gray-9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toggleBtn {
+  flex-shrink: 0;
+}
+
+.navbarMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+.footer {
+  padding-top: var(--mantine-spacing-sm);
+  margin-top: var(--mantine-spacing-sm);
+  border-top: 1px solid var(--mantine-color-gray-2);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.link {
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.linkInner {
+  display: flex;
+  align-items: center;
+  font-size: var(--mantine-font-size-sm);
+  color: var(--mantine-color-gray-7);
+  padding: 10px 12px;
+  border-radius: var(--mantine-radius-md);
+  font-weight: 500;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.navbar[data-collapsed] .linkInner {
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.linkInner:hover {
+  background-color: var(--mantine-color-gray-1);
+  color: var(--mantine-color-dark-9);
+}
+
+.linkInner:hover .linkIcon {
+  color: var(--mantine-color-dark-9);
+}
+
+.linkInner[data-active],
+.linkInner[data-active]:hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
+}
+
+.linkInner[data-active] .linkIcon {
+  color: #fff;
+}
+
+.linkIcon {
+  color: var(--mantine-color-gray-6);
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.linkLabel {
+  margin-left: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
