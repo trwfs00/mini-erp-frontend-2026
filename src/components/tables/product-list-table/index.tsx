@@ -5,18 +5,25 @@ import type { ProductList } from "@/types/product/product-list";
 import type { DataTableColumn } from "mantine-datatable";
 import { formatDate } from "@/utils/date-util";
 import { formatCurrency } from "@/utils/currency-util";
+import { ActionIcon, Group } from "@mantine/core";
+import { Edit, Trash2 } from "lucide-react";
+import type { FC } from "react";
 
 type Props = {
   records: ProductList[];
   pagination: UsePaginationStateReturnType;
   sortHandler: UseTableSortReturn;
+  onEdit: (product: ProductList) => void;
+  onDelete: (product: ProductList) => void;
 };
 
-export const ProductListTable = ({
+export const ProductListTable: FC<Props> = ({
   records,
   pagination,
   sortHandler,
-}: Props) => {
+  onEdit,
+  onDelete,
+}) => {
   const columns: DataTableColumn<ProductList>[] = [
     { accessor: "sku", title: "SKU", sortable: true, width: 120 },
     { accessor: "name", title: "Product Name", sortable: true },
@@ -51,6 +58,36 @@ export const ProductListTable = ({
       sortable: true,
       width: 140,
       render: (p) => formatDate(p.updated_at),
+    },
+    {
+      accessor: "actions",
+      title: "Actions",
+      width: 100,
+      textAlign: "center",
+      render: (p) => (
+        <Group gap={8} justify="center">
+          <ActionIcon
+            variant="subtle"
+            color="blue"
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(p);
+            }}
+          >
+            <Edit size={16} />
+          </ActionIcon>
+          <ActionIcon
+            variant="subtle"
+            color="red"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(p);
+            }}
+          >
+            <Trash2 size={16} />
+          </ActionIcon>
+        </Group>
+      ),
     },
   ];
 

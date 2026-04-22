@@ -1,44 +1,83 @@
 import { PageLayout } from "@/components/layouts/page";
 import { ProductListTable } from "@/components/tables/product-list-table";
-import { useClientTableData } from "@/hooks/table/use-client-table-data";
+import { useLoadProductData } from "@/pages/products/hooks/use-load-product-data";
 import { Stack, Text, Title, Group, TextInput } from "@mantine/core";
 import { Search } from "lucide-react";
 import type { ProductList } from "@/types/product/product-list";
-import { useEffect, useState, useCallback } from "react";
+import { useState } from "react";
 import { ProductService } from "@/services/product-service";
 import { RefreshButton } from "@/components/refresh-button";
 import { useDebouncedValue } from "@mantine/hooks";
+import { Button } from "@mantine/core";
+import { Plus } from "lucide-react";
+import { ProductFormDrawer } from "./components/product-form-drawer";
+import { modals } from "@mantine/modals";
+import type { ProductFormValues } from "@/schemas/product-schema";
+import type { SaveProductRequest } from "@/services/product-service/types/product-request";
 
 const ProductsPage = () => {
-  const [products, setProducts] = useState<ProductList[]>([]);
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
+  const [drawerOpened, setDrawerOpened] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<ProductList | null>(
+    null,
+  );
+  const [isSaving, setIsSaving] = useState(false);
 
-  const { records, pagination, sortHandler } =
-    useClientTableData<ProductList>(products);
-
-  const fetchProducts = useCallback(async (searchQuery: string) => {
-    try {
-      const response = await ProductService.getProductList({
-        criteria: { search: searchQuery },
-        sort_bys: [],
-        page: 1,
-        limit: 100, // Fetch standard size for client-table
-      });
-      if (response.ok && response.data) {
-        setProducts(response.data.data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch products:", error);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchProducts(debouncedSearch);
-  }, [fetchProducts, debouncedSearch]);
+  const { products, pagination, sortHandler, reloadProducts } =
+    useLoadProductData(debouncedSearch);
 
   const handleRefresh = async () => {
-    await fetchProducts(debouncedSearch);
+    await reloadProducts();
+  };
+
+  const handleEdit = (product: ProductList) => {
+    setSelectedProduct(product);
+    setDrawerOpened(true);
+  };
+
+  const handleDelete = (product: ProductList) => {
+    modals.openConfirmModal({
+      title: "Delete Product",
+      centered: true,
+      children: (
+        <Text size="sm">
+          Are you sure you want to delete <strong>{product.name}</strong>? This
+          action cannot be undone.
+        </Text>
+      ),
+      labels: { confirm: "Delete", cancel: "Cancel" },
+      confirmProps: { color: "red" },
+      onConfirm: async () => {
+        try {
+          await ProductService.deleteProduct(product.product_id);
+          await reloadProducts();
+        } catch (error) {
+          console.error("Failed to delete product:", error);
+        }
+      },
+    });
+  };
+
+  const handleSave = async (values: ProductFormValues) => {
+    setIsSaving(true);
+    try {
+      await ProductService.saveProduct({
+        ...values,
+        product_id: selectedProduct?.product_id, // include ID if editing
+      } as SaveProductRequest);
+      await reloadProducts();
+      setDrawerOpened(false);
+    } catch (error) {
+      console.error("Failed to save product:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleCreate = () => {
+    setSelectedProduct(null);
+    setDrawerOpened(true);
   };
 
   return (
@@ -63,13 +102,26 @@ const ProductsPage = () => {
               w={{ base: "100%", sm: 250 }}
             />
             <RefreshButton onClick={handleRefresh} />
+            <Button leftSection={<Plus size={16} />} onClick={handleCreate}>
+              Add Product
+            </Button>
           </Group>
         </Group>
 
         <ProductListTable
-          records={records}
+          records={products}
           pagination={pagination}
           sortHandler={sortHandler}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+
+        <ProductFormDrawer
+          opened={drawerOpened}
+          onClose={() => setDrawerOpened(false)}
+          product={selectedProduct}
+          onSave={handleSave}
+          isLoading={isSaving}
         />
       </Stack>
     </PageLayout>
