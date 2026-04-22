@@ -49,7 +49,7 @@ export const InstantTable = <T,>({
   pagination,
   sortHandler,
   entityName,
-  height,
+  height = 526,
   minHeight = 526,
   ...restProps
 }: Props<T>) => {

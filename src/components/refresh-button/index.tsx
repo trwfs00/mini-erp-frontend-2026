@@ -1,7 +1,7 @@
 import { ActionIcon, Box, Group, Text } from "@mantine/core";
 import { RefreshCwIcon } from "lucide-react";
 import { type FC, useState } from "react";
-import { formatDate } from "@/utils/date-util";
+import { formatDateTime } from "@/utils/date-util";
 import classes from "./RefreshButton.module.css";
 
 type Props = {
@@ -22,7 +22,6 @@ export const RefreshButton: FC<Props> = ({ onClick }) => {
         setLastUpdated(new Date());
       }
 
-      // หน่วงเวลาเล็กน้อยเพื่อให้แอนิเมชันตอนโหลดไวๆ ดูมีจังหวะสมูท
       await new Promise((resolve) => setTimeout(resolve, 400));
     } finally {
       setIsRefreshing(false);
@@ -31,12 +30,7 @@ export const RefreshButton: FC<Props> = ({ onClick }) => {
 
   return (
     <Group gap="sm" onClick={handleClick} className={classes.buttonWrapper}>
-      <ActionIcon
-        size="38px"
-        variant="light"
-        color="blue"
-        radius="md"
-      >
+      <ActionIcon size="38px" variant="light" color="blue" radius="md">
         <RefreshCwIcon size={18} className={isRefreshing ? classes.spin : ""} />
       </ActionIcon>
       <Box>
@@ -44,7 +38,7 @@ export const RefreshButton: FC<Props> = ({ onClick }) => {
           Refresh Data
         </Text>
         <Text variant="caption1" c="dimmed">
-          {formatDate(lastUpdated, "DD MMM BBBB HH:mm")} น.
+          {formatDateTime(lastUpdated)}
         </Text>
       </Box>
     </Group>

@@ -15,13 +15,12 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(relativeTime);
 
-// 2. ตั้งค่า Locale เริ่มต้นเป็นภาษาไทย
 dayjs.locale("en");
 
 type DateInput = string | number | Date | dayjs.Dayjs | null | undefined;
 
 /**
- * แปลงวันที่เป็นรูปแบบภาษาไทย (ค่าเริ่มต้น: "22 เม.ย. 2569")
+ * แปลงวันที่เป็นรูปแบบภาษาอังกฤษ (ค่าเริ่มต้น: "22 Apr 2026")
  */
 export const formatDate = (
   date: DateInput,
@@ -32,15 +31,15 @@ export const formatDate = (
 };
 
 /**
- * แปลงวันที่และเวลาเป็นรูปแบบอเมริกาตะวันตกฐานเวลาไทย (เช่น "22 เมษายน 2569 เวลา 14:30 น.")
+ * แปลงวันที่และเวลาเป็นรูปแบบอเมริกาตะวันตก (เช่น "22 April 2026 14:30")
  */
 export const formatDateTime = (date: DateInput): string => {
   if (!date) return "-";
-  return `${dayjs(date).format("DD MMMM BBBB")} เวลา ${dayjs(date).format("HH:mm")} น.`;
+  return `${dayjs(date).format("DD MMMM BBBB")} ${dayjs(date).format("HH:mm")}`;
 };
 
 /**
- * แสดงความแตกต่างของเวลาแบบ Relative (เช่น "2 ชั่วโมงที่แล้ว", "อีก 5 วัน")
+ * แสดงความแตกต่างของเวลาแบบ Relative (เช่น "2 hours ago", "5 days ago")
  */
 export const formatRelativeTime = (date: DateInput): string => {
   if (!date) return "-";
