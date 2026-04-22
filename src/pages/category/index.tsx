@@ -24,7 +24,7 @@ const CategoryPage = () => {
   );
   const [isSaving, setIsSaving] = useState(false);
 
-  const { categories, pagination, sortHandler, reloadCategories } =
+  const { categories, pagination, sortHandler, reloadCategories, isLoading } =
     useLoadCategoryData(debouncedSearch);
 
   const handleRefresh = async () => {
@@ -114,6 +114,7 @@ const CategoryPage = () => {
           sortHandler={sortHandler}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          isLoading={isLoading}
         />
 
         <CategoryFormDrawer

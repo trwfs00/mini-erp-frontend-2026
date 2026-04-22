@@ -15,6 +15,7 @@ type Props = {
   sortHandler: UseTableSortReturn;
   onEdit: (product: ProductList) => void;
   onDelete: (product: ProductList) => void;
+  isLoading?: boolean;
 };
 
 export const ProductListTable: FC<Props> = ({
@@ -23,6 +24,7 @@ export const ProductListTable: FC<Props> = ({
   sortHandler,
   onEdit,
   onDelete,
+  isLoading,
 }) => {
   const columns: DataTableColumn<ProductList>[] = [
     { accessor: "sku", title: "SKU", sortable: true, width: 120 },
@@ -99,6 +101,7 @@ export const ProductListTable: FC<Props> = ({
       pagination={pagination}
       sortHandler={sortHandler}
       entityName="products"
+      fetching={isLoading}
     />
   );
 };

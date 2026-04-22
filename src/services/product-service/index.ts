@@ -180,11 +180,19 @@ export class ProductService {
             );
           }
 
+          const total = filtered.length;
+          const { page, limit } = request;
+          const start = (page - 1) * limit;
+          const paginated = filtered.slice(start, start + limit);
+
           resolve({
             ok: true,
             data: {
-              data: filtered,
-              pagination: { total_page: 1, total_count: filtered.length },
+              data: paginated,
+              pagination: {
+                total_page: Math.ceil(total / limit),
+                total_count: total,
+              },
             },
           });
         }, 500); // Simulate network delay

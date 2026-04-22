@@ -24,7 +24,7 @@ const ProductsPage = () => {
   );
   const [isSaving, setIsSaving] = useState(false);
 
-  const { products, pagination, sortHandler, reloadProducts } =
+  const { products, pagination, sortHandler, reloadProducts, isLoading } =
     useLoadProductData(debouncedSearch);
 
   const handleRefresh = async () => {
@@ -114,6 +114,7 @@ const ProductsPage = () => {
           sortHandler={sortHandler}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          isLoading={isLoading}
         />
 
         <ProductFormDrawer

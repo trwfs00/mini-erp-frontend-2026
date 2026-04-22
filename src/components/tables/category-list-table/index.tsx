@@ -14,6 +14,7 @@ type Props = {
   sortHandler: UseTableSortReturn;
   onEdit: (category: CategoryList) => void;
   onDelete: (category: CategoryList) => void;
+  isLoading?: boolean;
 };
 
 export const CategoryListTable: FC<Props> = ({
@@ -22,6 +23,7 @@ export const CategoryListTable: FC<Props> = ({
   sortHandler,
   onEdit,
   onDelete,
+  isLoading,
 }) => {
   const columns: DataTableColumn<CategoryList>[] = [
     {
@@ -86,6 +88,7 @@ export const CategoryListTable: FC<Props> = ({
       pagination={pagination}
       sortHandler={sortHandler}
       entityName="categories"
+      fetching={isLoading}
     />
   );
 };
