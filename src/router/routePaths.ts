@@ -1,7 +1,7 @@
 export const ROUTE_PATHS = {
   LOGIN: "/",
   DASHBOARD: "/dashboard",
-  PRODUCTS: "/products",
+  PRODUCT: "/product",
   CATEGORY: "/category",
   STOCK: "/stock",
   SUPPLIERS: "/suppliers",

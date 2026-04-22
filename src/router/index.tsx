@@ -27,7 +27,7 @@ export const router = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       { path: ROUTE_PATHS.DASHBOARD, element: <DashboardPage /> },
-      { path: ROUTE_PATHS.PRODUCTS, element: <ProductsPage /> },
+      { path: ROUTE_PATHS.PRODUCT, element: <ProductsPage /> },
       { path: ROUTE_PATHS.CATEGORY, element: <CategoryPage /> },
       { path: ROUTE_PATHS.STOCK, element: <StockPage /> },
       { path: ROUTE_PATHS.SUPPLIERS, element: <SupplierPage /> },
