@@ -168,15 +168,16 @@ export class ProductService {
     if (isDebug) {
       return new Promise((resolve) => {
         setTimeout(() => {
-          console.debug("[Mock] Fetching products with request:", request);
-          
+          console.log("[Mock] Fetching products with request:", request);
+
           let filtered = MOCK_PRODUCTS;
           if (request.criteria?.search) {
-             const lowerCaseSearch = request.criteria.search.toLowerCase();
-             filtered = MOCK_PRODUCTS.filter(p => 
-               p.name.toLowerCase().includes(lowerCaseSearch) || 
-               p.sku.toLowerCase().includes(lowerCaseSearch)
-             );
+            const lowerCaseSearch = request.criteria.search.toLowerCase();
+            filtered = MOCK_PRODUCTS.filter(
+              (p) =>
+                p.name.toLowerCase().includes(lowerCaseSearch) ||
+                p.sku.toLowerCase().includes(lowerCaseSearch),
+            );
           }
 
           resolve({

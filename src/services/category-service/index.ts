@@ -80,7 +80,7 @@ export class CategoryService {
     if (isDebug) {
       return new Promise((resolve) => {
         setTimeout(() => {
-          console.debug("[Mock] Fetching categories with request:", request);
+          console.log("[Mock] Fetching categories with request:", request);
 
           let filtered = MOCK_CATEGORIES;
           if (request.criteria?.search) {
@@ -137,9 +137,7 @@ export class CategoryService {
     });
   }
 
-  static async deleteCategory(
-    categoryId: string,
-  ): Promise<ApiReturn<void>> {
+  static async deleteCategory(categoryId: string): Promise<ApiReturn<void>> {
     return AxiosUtil.createRequest<void>({
       url: `/category/${categoryId}`,
       method: "DELETE",
