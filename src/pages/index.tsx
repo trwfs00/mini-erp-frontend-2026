@@ -22,6 +22,7 @@ import {
 } from "@mantine/core";
 import { EyeIcon, EyeOffIcon, LockIcon, UserIcon } from "lucide-react";
 import type { User } from "@/types/auth/user";
+import type { LoginRequest } from "@/services/auth-service/types/auth-request";
 
 export const LoginPage: FC = () => {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export const LoginPage: FC = () => {
     initialValues: {
       username: "",
       password: "",
-      rememberMe: false,
+      remember_me: false,
     },
   });
 
@@ -50,7 +51,7 @@ export const LoginPage: FC = () => {
     const validateError = form.validate();
     if (validateError.hasErrors) return;
 
-    const res = await AuthService.login(values);
+    const res = await AuthService.login(values as LoginRequest);
     if (!res.ok) {
       form.setErrors({ password: res.message || "Login failed" });
       return;
@@ -103,7 +104,7 @@ export const LoginPage: FC = () => {
             <Checkbox
               label="Remember me"
               size="sm"
-              {...form.getInputProps("rememberMe", { type: "checkbox" })}
+              {...form.getInputProps("remember_me", { type: "checkbox" })}
             />
             {/* <Anchor
               fz="sm"

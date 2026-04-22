@@ -1,9 +1,10 @@
-import { Container, Paper, Stack, Text, Title } from "@mantine/core";
+import { PageLayout } from "@/components/layouts/page";
+import { Paper, Stack, Text, Title } from "@mantine/core";
 import { BarChart3 } from "lucide-react";
 
 const ReportPage = () => {
   return (
-    <Container size="xl" py="md">
+    <PageLayout>
       <Stack gap="lg">
         <Stack gap={4}>
           <Title order={2} fw={700} c="gray.9">
@@ -27,7 +28,7 @@ const ReportPage = () => {
           </Stack>
         </Paper>
       </Stack>
-    </Container>
+    </PageLayout>
   );
 };
 

@@ -5,7 +5,7 @@ import type {
   LoginResponse,
   RefreshTokenResponse,
 } from "./types/auth-response";
-import type { ApiReturn } from "@/types/api-return";
+import type { ApiReturn } from "@/types/api/api-return";
 
 export const AuthService = {
   async login(data: LoginRequest): Promise<ApiReturn<LoginResponse>> {
@@ -16,7 +16,9 @@ export const AuthService = {
     });
   },
 
-  async refresh(data: RefreshTokenRequest): Promise<ApiReturn<RefreshTokenResponse>> {
+  async refresh(
+    data: RefreshTokenRequest,
+  ): Promise<ApiReturn<RefreshTokenResponse>> {
     return AxiosUtil.createRequest<RefreshTokenResponse>({
       method: "POST",
       url: "/auth/refresh-token",

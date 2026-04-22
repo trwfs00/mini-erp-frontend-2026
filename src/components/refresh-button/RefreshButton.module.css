@@ -1,0 +1,25 @@
+.spin {
+  animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.buttonWrapper {
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 6px 16px 6px 8px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.buttonWrapper:hover {
+  background-color: var(--mantine-color-gray-1);
+}
+
+.buttonWrapper:active {
+  transform: scale(0.98);
+}

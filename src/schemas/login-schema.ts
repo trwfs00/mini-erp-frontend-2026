@@ -9,7 +9,7 @@ export const loginSchema = yup.object({
     .string()
     .required("Password is required")
     .min(1, "Please fill in all required fields"),
-  rememberMe: yup.boolean().default(false),
+  remember_me: yup.boolean().default(false),
 });
 
 export type LoginFormData = yup.InferType<typeof loginSchema>;

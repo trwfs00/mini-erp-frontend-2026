@@ -1,0 +1,79 @@
+.wrapper {
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid var(--mantine-color-gray-2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.wrapper:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+.wrapper :global(.mantine-datatable) {
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+/* Header row */
+.wrapper :global(.mantine-datatable-header) {
+  background: #fafafa !important;
+  border-bottom: 1px solid var(--mantine-color-gray-2);
+  /* Fix sticky header jitter during fast scroll on Mac/WebKit */
+  position: sticky !important;
+  top: 0;
+  z-index: 10;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+.wrapper :global(.mantine-datatable-header th) {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--mantine-color-gray-7) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 14px 16px !important;
+  border-bottom: none !important;
+}
+
+/* Body cells */
+.wrapper :global(.mantine-datatable-row td) {
+  font-size: 13px !important;
+  color: var(--mantine-color-gray-8) !important;
+  padding: 14px 16px !important;
+  border-bottom: 1px solid var(--mantine-color-gray-1) !important;
+  line-height: 20px;
+}
+
+.wrapper :global(.mantine-datatable-row:last-of-type td) {
+  border-bottom: none !important;
+}
+
+/* Row hover — subtle indigo tint matching sidebar gradient */
+.wrapper :global(.mantine-datatable-row:hover td) {
+  background: rgba(79, 70, 229, 0.04) !important;
+  cursor: default;
+}
+
+/* Sort icon size + color */
+.wrapper :global(.mantine-datatable-header th svg) {
+  color: var(--mantine-color-gray-5);
+}
+
+.wrapper :global(.mantine-datatable-header th[data-sortable]:hover svg) {
+  color: var(--mantine-color-indigo-6);
+}
+
+/* Pagination footer container */
+.wrapper :global(.mantine-datatable-pagination) {
+  padding: 12px 16px !important;
+  border-top: 1px solid var(--mantine-color-gray-2) !important;
+  background: #fafafa;
+}
+
+/* Empty state tweaks */
+.wrapper :global(.mantine-datatable-empty-state) {
+  background: #fff;
+}

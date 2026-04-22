@@ -13,7 +13,7 @@ import axios, {
 import { AuthUtil } from "./auth-util";
 import { LocalStorageUtil } from "./local-storage-util";
 import { TokenTimerUtil } from "./token-timer-util";
-import type { ApiReturn } from "@/types/api-return";
+import type { ApiReturn } from "@/types/api/api-return";
 
 const baseAxios = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API_URL,
