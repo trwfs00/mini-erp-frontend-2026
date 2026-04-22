@@ -3,9 +3,9 @@ import { createRoot } from "react-dom/client";
 import "@mantine/core/styles.css";
 import "mantine-datatable/styles.css";
 import App from "./App.tsx";
-import { LocalStorageUtil } from "@/utils/local-storage-util";
-import { $authUser } from "@/stores/auth-user-store";
-import { DebugModeUtil } from "@/utils/debug-mode-util";
+import { LocalStorageUtil } from "@/utils/LocalStorageUtil.ts";
+import { $authUser } from "@/stores/authUserStore.ts";
+import { DebugModeUtil } from "@/utils/DebugModeUtil.ts";
 
 interface WindowWithDebug extends Window {
   enableDebug: (enable: boolean) => void;

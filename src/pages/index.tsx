@@ -1,12 +1,13 @@
-import { loginSchema, type LoginFormData } from "@/schemas/login-schema";
+import { loginSchema, type LoginFormData } from "@/schemas/loginSchema";
 import { useEffect, type FC } from "react";
+import { useStore } from "@nanostores/react";
 import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from "mantine-form-yup-resolver";
-import { AuthService } from "@/services/auth-service";
-import { LocalStorageUtil } from "@/utils/local-storage-util";
-import { $authUser } from "@/stores/auth-user-store";
-import { ROUTE_PATHS } from "@/router/route-paths";
+import { AuthService } from "@/services/AuthService";
+import { LocalStorageUtil } from "@/utils/LocalStorageUtil";
+import { $authUser } from "@/stores/authUserStore";
+import { ROUTE_PATHS } from "@/router/routePaths";
 import {
   // Anchor,
   Box,
@@ -21,10 +22,11 @@ import {
   Title,
 } from "@mantine/core";
 import { EyeIcon, EyeOffIcon, LockIcon, UserIcon } from "lucide-react";
-import type { User } from "@/types/auth/user";
-import type { LoginRequest } from "@/services/auth-service/types/auth-request";
+import type { User } from "@/types/auth/User";
+import type { LoginRequest } from "@/services/AuthService/types/AuthRequest";
 
 export const LoginPage: FC = () => {
+  const authUser = useStore($authUser);
   const navigate = useNavigate();
   const form = useForm<LoginFormData>({
     validate: yupResolver(loginSchema),
@@ -36,16 +38,10 @@ export const LoginPage: FC = () => {
   });
 
   useEffect(() => {
-    const user = LocalStorageUtil.loadAuthUser();
-    if (user && user.refresh_token_exp > Date.now() / 1000) {
-      $authUser.set(user);
+    if (authUser && authUser.refresh_token_exp > Date.now() / 1000) {
       navigate(ROUTE_PATHS.DASHBOARD);
-      return;
     }
-
-    $authUser.set(null);
-    LocalStorageUtil.deleteAuthUser();
-  }, [navigate]);
+  }, [authUser, navigate]);
 
   const handleLogin = async (values: LoginFormData): Promise<void> => {
     const validateError = form.validate();

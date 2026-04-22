@@ -1,15 +1,15 @@
 import { LoginPage } from "@/pages";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { PublicLayout } from "@/components/layouts/public";
-import { AuthLayout } from "@/components/layouts/auth";
 import DashboardPage from "@/pages/dashboard";
-import ProductsPage from "@/pages/products";
+import ProductsPage from "@/pages/product";
 import CategoryPage from "@/pages/category";
 import StockPage from "@/pages/stock";
 import SupplierPage from "@/pages/supplier";
 import PurchaseOrderPage from "@/pages/purchase-order";
 import ReportPage from "@/pages/report";
-import { ROUTE_PATHS } from "./route-paths";
+import { PublicLayout } from "@/components/Layouts/Public";
+import { AuthLayout } from "@/components/Layouts/Auth";
+import { ROUTE_PATHS } from "./routePaths";
 
 export const router = createBrowserRouter([
   {

@@ -1,4 +1,4 @@
-import { PageLayout } from "@/components/layouts/page";
+import { PageLayout } from "@/components/Layouts/Page";
 import { Paper, Stack, Text, Title } from "@mantine/core";
 import { LayoutDashboard } from "lucide-react";
 

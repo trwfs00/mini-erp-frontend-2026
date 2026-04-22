@@ -1,18 +1,18 @@
 import { useEffect, type FC } from "react";
-import { $authUser } from "@/stores/auth-user-store";
+import { $authUser } from "@/stores/authUserStore";
 import { useStore } from "@nanostores/react";
 import { useDisclosure } from "@mantine/hooks";
-import { useSidebarToggle } from "./hooks/use-sidebar-toggle";
-import { useWatchLocalStorage } from "@/hooks/local-storage/use-watch-local-storage";
-import { LOCAL_STORAGE_KEYS } from "@/consts/keys/local-storage-keys";
-import { $debugMode } from "@/stores/debug-mode-store";
-import { LocalStorageUtil } from "@/utils/local-storage-util";
-import { TokenTimerUtil } from "@/utils/token-timer-util";
-import { AuthUtil } from "@/utils/auth-util";
+import { useSidebarToggle } from "./hooks/useSidebarToggle";
+import { useWatchLocalStorage } from "@/hooks/localStorage/useWatchLocalStorage";
+import { LOCAL_STORAGE_KEYS } from "@/consts/keys/localStorageKeys";
+import { $debugMode } from "@/stores/debugModeStore";
+import { LocalStorageUtil } from "@/utils/LocalStorageUtil";
+import { TokenTimerUtil } from "@/utils/TokenTimerUtil";
+import { AuthUtil } from "@/utils/AuthUtil";
 import { AppShell } from "@mantine/core";
 import { Outlet } from "react-router-dom";
-import { AppSidebar } from "./components/app-sidebar";
-import { AppHeader } from "./components/app-header";
+import { AppSidebar } from "./components/AppSidebar";
+import { AppHeader } from "./components/AppHeader";
 
 export const AuthLayout: FC = () => {
   const authUser = useStore($authUser);

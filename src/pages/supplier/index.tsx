@@ -1,17 +1,17 @@
-import { PageLayout } from "@/components/layouts/page";
-import { SupplierListTable } from "@/components/tables/supplier-list-table";
-import { useLoadSupplierData } from "@/pages/supplier/hooks/use-load-supplier-data";
+import { PageLayout } from "@/components/Layouts/Page";
+import { SupplierListTable } from "@/components/Tables/SupplierListTable";
+import { useLoadSupplierData } from "@/pages/supplier/hooks/useLoadSupplierData";
 import { Stack, Text, Title, Group, TextInput, Button } from "@mantine/core";
 import { Search, Plus } from "lucide-react";
-import type { SupplierList } from "@/types/supplier/supplier-list";
+import type { SupplierList } from "@/types/supplier/SupplierList";
 import { useState } from "react";
-import { SupplierService } from "@/services/supplier-service";
-import { RefreshButton } from "@/components/refresh-button";
+import { SupplierService } from "@/services/SupplierService";
+import { RefreshButton } from "@/components/RefreshButton";
 import { useDebouncedValue } from "@mantine/hooks";
-import { SupplierFormDrawer } from "./components/supplier-form-drawer";
+import { SupplierFormDrawer } from "./components/SupplierFormDrawer";
 import { modals } from "@mantine/modals";
-import type { SupplierFormValues } from "@/schemas/supplier-schema";
-import type { SaveSupplierRequest } from "@/services/supplier-service/types/supplier-request";
+import type { SupplierFormValues } from "@/schemas/supplierSchema";
+import type { SaveSupplierRequest } from "@/services/SupplierService/types/SupplierRequest";
 
 const SupplierPage = () => {
   const [search, setSearch] = useState("");
