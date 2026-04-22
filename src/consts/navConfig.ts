@@ -18,7 +18,7 @@ export interface NavItem {
 
 export const NAV_ITEMS: readonly NavItem[] = [
   { path: ROUTE_PATHS.DASHBOARD, label: "Dashboard", icon: LayoutDashboard },
-  { path: ROUTE_PATHS.PRODUCTS, label: "Products", icon: Package },
+  { path: ROUTE_PATHS.PRODUCT, label: "Products", icon: Package },
   { path: ROUTE_PATHS.CATEGORY, label: "Category", icon: Tags },
   { path: ROUTE_PATHS.STOCK, label: "Stock", icon: Warehouse },
   { path: ROUTE_PATHS.SUPPLIERS, label: "Suppliers", icon: Truck },
