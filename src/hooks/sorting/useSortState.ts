@@ -1,9 +1,12 @@
 import type { OrderBy } from "@/types/SortOrder";
 import { useState } from "react";
 
-export const useSortState = () => {
-  const [sortBy, setSortBy] = useState<string | null>(null);
-  const [orderBy, setOrderBy] = useState<OrderBy>(null);
+export const useSortState = (
+  initialSortBy: string | null = null,
+  initialOrderBy: OrderBy = null,
+) => {
+  const [sortBy, setSortBy] = useState<string | null>(initialSortBy);
+  const [orderBy, setOrderBy] = useState<OrderBy>(initialOrderBy);
 
   const toggleSort = (field: string): void => {
     if (sortBy === field) {

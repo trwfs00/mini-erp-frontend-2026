@@ -22,6 +22,7 @@ const MOCK_PRODUCTS: ProductList[] = [
     selling_price: 15,
     unit: "can",
     min_stock: 24,
+    current_stock: 45,
     created_at: "2026-01-10T09:00:00Z",
     updated_at: "2026-04-01T10:15:00Z",
   },
@@ -34,6 +35,7 @@ const MOCK_PRODUCTS: ProductList[] = [
     selling_price: 20,
     unit: "pack",
     min_stock: 30,
+    current_stock: 5,
     created_at: "2026-01-12T09:00:00Z",
     updated_at: "2026-04-05T11:00:00Z",
   },
@@ -46,6 +48,7 @@ const MOCK_PRODUCTS: ProductList[] = [
     selling_price: 8,
     unit: "pack",
     min_stock: 50,
+    current_stock: 120,
     created_at: "2026-01-15T09:00:00Z",
     updated_at: "2026-03-20T14:30:00Z",
   },
@@ -58,6 +61,7 @@ const MOCK_PRODUCTS: ProductList[] = [
     selling_price: 6,
     unit: "sachet",
     min_stock: 100,
+    current_stock: 40,
     created_at: "2026-01-18T09:00:00Z",
     updated_at: "2026-04-10T09:45:00Z",
   },
@@ -70,6 +74,7 @@ const MOCK_PRODUCTS: ProductList[] = [
     selling_price: 25,
     unit: "box",
     min_stock: 20,
+    current_stock: 15,
     created_at: "2026-01-20T09:00:00Z",
     updated_at: "2026-04-12T16:00:00Z",
   },
@@ -82,6 +87,7 @@ const MOCK_PRODUCTS: ProductList[] = [
     selling_price: 22,
     unit: "bottle",
     min_stock: 24,
+    current_stock: 60,
     created_at: "2026-02-01T09:00:00Z",
     updated_at: "2026-04-15T08:20:00Z",
   },
@@ -94,6 +100,7 @@ const MOCK_PRODUCTS: ProductList[] = [
     selling_price: 35,
     unit: "bottle",
     min_stock: 15,
+    current_stock: 8,
     created_at: "2026-02-05T09:00:00Z",
     updated_at: "2026-04-18T12:10:00Z",
   },
@@ -106,6 +113,7 @@ const MOCK_PRODUCTS: ProductList[] = [
     selling_price: 10,
     unit: "bottle",
     min_stock: 48,
+    current_stock: 100,
     created_at: "2026-02-08T09:00:00Z",
     updated_at: "2026-04-19T09:30:00Z",
   },
@@ -118,6 +126,7 @@ const MOCK_PRODUCTS: ProductList[] = [
     selling_price: 20,
     unit: "pack",
     min_stock: 25,
+    current_stock: 10,
     created_at: "2026-02-12T09:00:00Z",
     updated_at: "2026-04-20T15:00:00Z",
   },
@@ -130,6 +139,7 @@ const MOCK_PRODUCTS: ProductList[] = [
     selling_price: 30,
     unit: "bar",
     min_stock: 20,
+    current_stock: 35,
     created_at: "2026-02-15T09:00:00Z",
     updated_at: "2026-04-21T10:00:00Z",
   },
@@ -142,6 +152,7 @@ const MOCK_PRODUCTS: ProductList[] = [
     selling_price: 15,
     unit: "cup",
     min_stock: 40,
+    current_stock: 5,
     created_at: "2026-02-20T09:00:00Z",
     updated_at: "2026-04-21T11:20:00Z",
   },
@@ -154,6 +165,7 @@ const MOCK_PRODUCTS: ProductList[] = [
     selling_price: 14,
     unit: "bottle",
     min_stock: 30,
+    current_stock: 42,
     created_at: "2026-03-01T09:00:00Z",
     updated_at: "2026-04-21T13:00:00Z",
   },
@@ -180,6 +192,19 @@ export class ProductService {
             );
           }
 
+          // Sorting logic
+          if (request.sort_bys && request.sort_bys.length > 0) {
+            const { field, direction } = request.sort_bys[0];
+            filtered = [...filtered].sort((a, b) => {
+              const valA = a[field as keyof ProductList];
+              const valB = b[field as keyof ProductList];
+              if (valA === undefined || valB === undefined) return 0;
+              if (valA < valB) return direction === "asc" ? -1 : 1;
+              if (valA > valB) return direction === "asc" ? 1 : -1;
+              return 0;
+            });
+          }
+
           const total = filtered.length;
           const { page, limit } = request;
           const start = (page - 1) * limit;
@@ -200,7 +225,7 @@ export class ProductService {
     }
 
     return AxiosUtil.createRequest<GetProductListResponse>({
-      url: "/product/list",
+      url: "/product",
       method: "GET",
       params: request,
     });

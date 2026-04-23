@@ -7,6 +7,7 @@ export type ProductList = {
   selling_price: number;
   unit: string;
   min_stock: number;
+  current_stock: number;
   created_at: string;
   updated_at: string;
 };

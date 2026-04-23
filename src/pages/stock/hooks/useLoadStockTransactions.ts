@@ -1,65 +1,71 @@
 import { useState, useCallback, useEffect } from "react";
 import { useDidUpdate } from "@mantine/hooks";
-import { CategoryService } from "@/services/CategoryService";
-import type { CategoryList } from "@/types/category/CategoryList";
+import { StockService } from "@/services/StockService";
+import type { StockTransaction, TransactionType } from "@/types/stock/StockTransaction";
 import { usePaginationState } from "@/hooks/pagination/usePaginationState";
 import { useTableSort } from "@/hooks/table/useTableSort";
 
-export const useLoadCategoryData = (search: string) => {
-  const [categories, setCategories] = useState<CategoryList[]>([]);
+interface FilterCriteria {
+  search: string;
+  type: TransactionType | "";
+  product_id: string;
+}
+
+export const useLoadStockTransactions = (filters: FilterCriteria) => {
+  const [transactions, setTransactions] = useState<StockTransaction[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const pagination = usePaginationState(1, 10);
-  const sortHandler = useTableSort("name", "asc");
+  const sortHandler = useTableSort("created_at", "desc");
 
   const { page, limit, setTotalCount, setTotalPage, setPage } = pagination;
   const { sortBy, orderBy } = sortHandler;
 
   const loadData = useCallback(async () => {
     setIsLoading(true);
-    const response = await CategoryService.getCategoryList({
-      criteria: { search },
+    const response = await StockService.getTransactionList({
+      criteria: {
+        search: filters.search,
+        type: filters.type === "" ? undefined : filters.type,
+        product_id: filters.product_id === "" ? undefined : filters.product_id,
+      },
       limit,
       page,
-      sort_bys:
-        sortBy && orderBy ? [{ field: sortBy, direction: orderBy }] : [],
+      sort_bys: sortBy && orderBy ? [{ field: sortBy, direction: orderBy }] : [],
     });
 
     if (response.ok && response.data) {
-      setCategories(response.data.data);
+      setTransactions(response.data.data);
       setTotalPage(response.data.pagination.total_page);
       setTotalCount(response.data.pagination.total_count);
     } else {
-      console.error("Failed to load categories", response.message);
+      console.error("Failed to load transactions", response.message);
     }
     setIsLoading(false);
-  }, [search, limit, page, sortBy, orderBy, setTotalCount, setTotalPage]);
+  }, [filters, limit, page, sortBy, orderBy, setTotalCount, setTotalPage]);
 
-  // Initial load
   useEffect(() => {
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // When pagination or sort changes
   useDidUpdate(() => {
     loadData();
   }, [page, limit, sortBy, orderBy]);
 
-  // When search changes, reset page to 1 or reload if already on page 1
   useDidUpdate(() => {
     if (page > 1) {
       setPage(1);
     } else {
       loadData();
     }
-  }, [search]);
+  }, [filters.search, filters.type, filters.product_id]);
 
   return {
-    categories,
+    transactions,
     isLoading,
     pagination,
     sortHandler,
-    reloadCategories: loadData,
+    reloadTransactions: loadData,
   };
 };

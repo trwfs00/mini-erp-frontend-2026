@@ -29,9 +29,12 @@ export type UseTableSortReturn = {
  *   sortHandler={sortHandler}
  * />
  */
-export const useTableSort = (): UseTableSortReturn => {
+export const useTableSort = (
+  initialSortBy: string | null = null,
+  initialOrderBy: OrderBy = null,
+): UseTableSortReturn => {
   const { sortBy, orderBy, setSortBy, setOrderBy, toggleSort, resetSort } =
-    useSortState();
+    useSortState(initialSortBy, initialOrderBy);
 
   const getSortProps = <T>() => {
     const props: {

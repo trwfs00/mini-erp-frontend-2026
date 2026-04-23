@@ -16,16 +16,13 @@ export const RefreshButton: FC<Props> = ({ onClick }) => {
     if (isRefreshing) return;
 
     setIsRefreshing(true);
-    try {
-      const result = await onClick();
-      if (result !== false) {
-        setLastUpdated(new Date());
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, 400));
-    } finally {
-      setIsRefreshing(false);
+    const result = await onClick();
+    if (result !== false) {
+      setLastUpdated(new Date());
     }
+
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    setIsRefreshing(false);
   };
 
   return (

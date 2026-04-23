@@ -49,11 +49,11 @@ const ProductsPage = () => {
       labels: { confirm: "Delete", cancel: "Cancel" },
       confirmProps: { color: "red" },
       onConfirm: async () => {
-        try {
-          await ProductService.deleteProduct(product.product_id);
+        const response = await ProductService.deleteProduct(product.product_id);
+        if (response.ok) {
           await reloadProducts();
-        } catch (error) {
-          console.error("Failed to delete product:", error);
+        } else {
+          console.error("Failed to delete product:", response.message);
         }
       },
     });
@@ -61,18 +61,18 @@ const ProductsPage = () => {
 
   const handleSave = async (values: ProductFormValues) => {
     setIsSaving(true);
-    try {
-      await ProductService.saveProduct({
-        ...values,
-        product_id: selectedProduct?.product_id, // include ID if editing
-      } as SaveProductRequest);
+    const response = await ProductService.saveProduct({
+      ...values,
+      product_id: selectedProduct?.product_id, // include ID if editing
+    } as SaveProductRequest);
+
+    if (response.ok) {
       await reloadProducts();
       setDrawerOpened(false);
-    } catch (error) {
-      console.error("Failed to save product:", error);
-    } finally {
-      setIsSaving(false);
+    } else {
+      console.error("Failed to save product:", response.message);
     }
+    setIsSaving(false);
   };
 
   const handleCreate = () => {

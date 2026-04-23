@@ -49,11 +49,11 @@ const CategoryPage = () => {
       labels: { confirm: "Delete", cancel: "Cancel" },
       confirmProps: { color: "red" },
       onConfirm: async () => {
-        try {
-          await CategoryService.deleteCategory(category.category_id);
+        const response = await CategoryService.deleteCategory(category.category_id);
+        if (response.ok) {
           await reloadCategories();
-        } catch (error) {
-          console.error("Failed to delete category:", error);
+        } else {
+          console.error("Failed to delete category:", response.message);
         }
       },
     });
@@ -61,18 +61,18 @@ const CategoryPage = () => {
 
   const handleSave = async (values: CategoryFormValues) => {
     setIsSaving(true);
-    try {
-      await CategoryService.saveCategory({
-        ...values,
-        category_id: selectedCategory?.category_id,
-      } as SaveCategoryRequest);
+    const response = await CategoryService.saveCategory({
+      ...values,
+      category_id: selectedCategory?.category_id,
+    } as SaveCategoryRequest);
+
+    if (response.ok) {
       await reloadCategories();
       setDrawerOpened(false);
-    } catch (error) {
-      console.error("Failed to save category:", error);
-    } finally {
-      setIsSaving(false);
+    } else {
+      console.error("Failed to save category:", response.message);
     }
+    setIsSaving(false);
   };
 
   const handleCreate = () => {

@@ -47,11 +47,11 @@ const SupplierPage = () => {
       labels: { confirm: "Delete", cancel: "Cancel" },
       confirmProps: { color: "red" },
       onConfirm: async () => {
-        try {
-          await SupplierService.deleteSupplier(supplier.supplier_id);
+        const response = await SupplierService.deleteSupplier(supplier.supplier_id);
+        if (response.ok) {
           await reloadSuppliers();
-        } catch (error) {
-          console.error("Failed to delete supplier:", error);
+        } else {
+          console.error("Failed to delete supplier:", response.message);
         }
       },
     });
@@ -59,18 +59,18 @@ const SupplierPage = () => {
 
   const handleSave = async (values: SupplierFormValues) => {
     setIsSaving(true);
-    try {
-      await SupplierService.saveSupplier({
-        ...values,
-        supplier_id: selectedSupplier?.supplier_id,
-      } as SaveSupplierRequest);
+    const response = await SupplierService.saveSupplier({
+      ...values,
+      supplier_id: selectedSupplier?.supplier_id,
+    } as SaveSupplierRequest);
+
+    if (response.ok) {
       await reloadSuppliers();
       setDrawerOpened(false);
-    } catch (error) {
-      console.error("Failed to save supplier:", error);
-    } finally {
-      setIsSaving(false);
+    } else {
+      console.error("Failed to save supplier:", response.message);
     }
+    setIsSaving(false);
   };
 
   const handleCreate = () => {

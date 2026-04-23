@@ -13,27 +13,24 @@ export const useCategoryOptions = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       setIsLoading(true);
-      try {
-        const response = await CategoryService.getCategoryList({
-          criteria: {},
-          page: 1,
-          limit: 100,
-          sort_bys: [{ field: "name", direction: "asc" }],
-        });
+      const response = await CategoryService.getCategoryList({
+        criteria: {},
+        page: 1,
+        limit: 100,
+        sort_bys: [{ field: "name", direction: "asc" }],
+      });
 
-        if (response.ok && response.data) {
-          setOptions(
-            response.data.data.map((c) => ({
-              value: c.category_id,
-              label: c.name,
-            })),
-          );
-        }
-      } catch (error) {
-        console.error("Failed to load category options:", error);
-      } finally {
-        setIsLoading(false);
+      if (response.ok && response.data) {
+        setOptions(
+          response.data.data.map((c) => ({
+            value: c.category_id,
+            label: c.name,
+          })),
+        );
+      } else {
+        console.error("Failed to load category options:", response.message);
       }
+      setIsLoading(false);
     };
 
     fetchCategories();

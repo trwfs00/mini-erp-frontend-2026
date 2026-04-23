@@ -5,8 +5,8 @@ import type { ProductList } from "@/types/product/ProductList";
 import type { DataTableColumn } from "mantine-datatable";
 import { formatDate } from "@/utils/DateUtil";
 import { formatCurrency } from "@/utils/CurrencyUtil";
-import { ActionIcon, Group } from "@mantine/core";
-import { Edit, Trash2 } from "lucide-react";
+import { ActionIcon, Group, Text } from "@mantine/core";
+import { Edit, Trash2, AlertTriangle } from "lucide-react";
 import type { FC } from "react";
 
 type Props = {
@@ -46,7 +46,25 @@ export const ProductListTable: FC<Props> = ({
       textAlign: "right",
       render: (p) => formatCurrency(p.selling_price),
     },
-    { accessor: "unit", title: "Unit", width: 100 },
+    { accessor: "unit", title: "Unit", width: 80 },
+    {
+      accessor: "current_stock",
+      title: "Stock",
+      sortable: true,
+      width: 100,
+      textAlign: "right",
+      render: (p) => {
+        const isLowStock = p.current_stock <= p.min_stock;
+        return (
+          <Group gap={4} justify="flex-end">
+            {isLowStock && <AlertTriangle size={14} color="var(--mantine-color-red-6)" />}
+            <Text fw={isLowStock ? 700 : 400} c={isLowStock ? "red.6" : "inherit"}>
+              {p.current_stock}
+            </Text>
+          </Group>
+        );
+      },
+    },
     {
       accessor: "min_stock",
       title: "Min Stock",
