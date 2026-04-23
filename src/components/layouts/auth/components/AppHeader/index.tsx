@@ -8,11 +8,10 @@ import {
   Text,
   UnstyledButton,
 } from "@mantine/core";
-import { useLocation } from "react-router-dom";
+import { useLocation, useMatches } from "react-router-dom";
 import { ChevronDown, LogOut, User as UserIcon } from "lucide-react";
 import { useStore } from "@nanostores/react";
 import { $authUser } from "@/stores/authUserStore";
-import { NAV_ITEMS } from "@/consts/navConfig";
 import { ROUTE_PATHS } from "@/router/routePaths";
 import { AuthUtil } from "@/utils/AuthUtil";
 import { Breadcrumb } from "@/components/Breadcrumb";
@@ -36,13 +35,27 @@ export const AppHeader: FC<AppHeaderProps> = ({
 }) => {
   const authUser = useStore($authUser);
   const { pathname } = useLocation();
+  const matches = useMatches();
 
-  const current = NAV_ITEMS.find((item) => item.path === pathname);
+  const getCrumbs = (): BreadcrumbItem[] => {
+    const baseCrumbs: BreadcrumbItem[] = [{ label: "Home", path: ROUTE_PATHS.DASHBOARD }];
+    
+    const routeCrumbs = matches
+      .filter((match: any) => match.handle && match.handle.crumb)
+      .map((match: any) => ({
+        label: match.handle.crumb,
+        path: match.pathname,
+      }));
 
-  const crumbs: BreadcrumbItem[] = [
-    { label: "Home", path: ROUTE_PATHS.DASHBOARD },
-    ...(current ? [{ label: current.label }] : []),
-  ];
+    // If we are on Dashboard, don't show Home twice if they are the same
+    if (pathname === ROUTE_PATHS.DASHBOARD) {
+      return [{ label: "Home" }];
+    }
+
+    return [...baseCrumbs, ...routeCrumbs];
+  };
+
+  const crumbs = getCrumbs();
 
   return (
     <Group

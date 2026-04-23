@@ -27,15 +27,6 @@ const ProductsPage = () => {
   const { products, pagination, sortHandler, reloadProducts, isLoading } =
     useLoadProductData(debouncedSearch);
 
-  const handleRefresh = async () => {
-    await reloadProducts();
-  };
-
-  const handleEdit = (product: ProductList) => {
-    setSelectedProduct(product);
-    setDrawerOpened(true);
-  };
-
   const handleDelete = (product: ProductList) => {
     modals.openConfirmModal({
       title: "Delete Product",
@@ -75,11 +66,6 @@ const ProductsPage = () => {
     setIsSaving(false);
   };
 
-  const handleCreate = () => {
-    setSelectedProduct(null);
-    setDrawerOpened(true);
-  };
-
   return (
     <PageLayout>
       <Stack gap="lg">
@@ -101,8 +87,14 @@ const ProductsPage = () => {
               onChange={(e) => setSearch(e.currentTarget.value)}
               w={{ base: "100%", sm: 250 }}
             />
-            <RefreshButton onClick={handleRefresh} />
-            <Button leftSection={<Plus size={16} />} onClick={handleCreate}>
+            <RefreshButton onClick={async () => await reloadProducts()} />
+            <Button
+              leftSection={<Plus size={16} />}
+              onClick={() => {
+                setSelectedProduct(null);
+                setDrawerOpened(true);
+              }}
+            >
               Add Product
             </Button>
           </Group>
@@ -112,7 +104,10 @@ const ProductsPage = () => {
           records={products}
           pagination={pagination}
           sortHandler={sortHandler}
-          onEdit={handleEdit}
+          onEdit={(product) => {
+            setSelectedProduct(product);
+            setDrawerOpened(true);
+          }}
           onDelete={handleDelete}
           isLoading={isLoading}
         />

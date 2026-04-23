@@ -6,5 +6,7 @@ export const ROUTE_PATHS = {
   STOCK: "/stock",
   SUPPLIERS: "/suppliers",
   PURCHASE_ORDERS: "/purchase-orders",
+  PO_CREATE: "/purchase-orders/create",
+  PO_DETAIL: "/purchase-orders/:id",
   REPORT: "/report",
 } as const;
