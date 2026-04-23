@@ -1,0 +1,99 @@
+import { Badge, Group, ScrollArea, Skeleton, Stack, Text, Title } from "@mantine/core";
+import { AlertTriangle, PackageCheck } from "lucide-react";
+import type { FC } from "react";
+import { SurfaceCard } from "@/components/SurfaceCard";
+import type { LowStockProduct } from "@/types/dashboard/DashboardStats";
+
+type Props = {
+  products: LowStockProduct[];
+  isLoading?: boolean;
+};
+
+const LIST_HEIGHT = 260;
+
+const LowStockRow: FC<{ product: LowStockProduct }> = ({ product }) => (
+  <Group justify="space-between" wrap="nowrap" gap="sm" py={6}>
+    <Stack gap={2} style={{ minWidth: 0, flex: 1 }}>
+      <Text fz="sm" fw={500} truncate>
+        {product.name}
+      </Text>
+      <Text fz="xs" c="gray.6" truncate>
+        {product.sku}
+      </Text>
+    </Stack>
+    <Stack gap={0} align="flex-end" style={{ flexShrink: 0 }}>
+      <Text fz="sm" fw={700} c="red.7">
+        {product.current_stock} {product.unit}
+      </Text>
+      <Text fz="xs" c="gray.5">
+        min {product.min_stock}
+      </Text>
+    </Stack>
+  </Group>
+);
+
+export const LowStockWarningList: FC<Props> = ({ products, isLoading }) => {
+  const renderBody = () => {
+    if (isLoading) {
+      return (
+        <Stack gap="sm">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} h={42} radius="sm" />
+          ))}
+        </Stack>
+      );
+    }
+
+    if (products.length === 0) {
+      return (
+        <Stack align="center" justify="center" gap={8} h={LIST_HEIGHT}>
+          <PackageCheck size={32} color="var(--mantine-color-green-6)" strokeWidth={1.5} />
+          <Text fz="sm" c="gray.6" ta="center">
+            All products above minimum stock.
+          </Text>
+        </Stack>
+      );
+    }
+
+    return (
+      <ScrollArea h={LIST_HEIGHT} type="hover" scrollbarSize={6}>
+        <Stack gap={0} pr="xs">
+          {products.map((p, i) => (
+            <div key={p.product_id}>
+              {i > 0 && (
+                <div
+                  style={{
+                    borderTop: "1px solid var(--mantine-color-gray-2)",
+                  }}
+                />
+              )}
+              <LowStockRow product={p} />
+            </div>
+          ))}
+        </Stack>
+      </ScrollArea>
+    );
+  };
+
+  return (
+    <SurfaceCard>
+      <Stack gap="sm">
+        <Group gap="xs" justify="space-between">
+          <Group gap="xs">
+            <AlertTriangle size={18} color="var(--mantine-color-red-6)" />
+            <Title order={5} fw={600} c="gray.9">
+              Low Stock Warning
+            </Title>
+          </Group>
+          {products.length > 0 && (
+            <Badge color="red" variant="light" radius="sm">
+              {products.length}
+            </Badge>
+          )}
+        </Group>
+
+        {renderBody()}
+      </Stack>
+    </SurfaceCard>
+  );
+};
