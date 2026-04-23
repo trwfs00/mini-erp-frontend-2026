@@ -1,7 +1,7 @@
 import { useEffect, type FC } from "react";
 import { $authUser } from "@/stores/authUserStore";
 import { useStore } from "@nanostores/react";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { useSidebarToggle } from "./hooks/useSidebarToggle";
 import { useWatchLocalStorage } from "@/hooks/localStorage/useWatchLocalStorage";
 import { LOCAL_STORAGE_KEYS } from "@/consts/keys/localStorageKeys";
@@ -17,8 +17,9 @@ import { AppHeader } from "./components/AppHeader";
 export const AuthLayout: FC = () => {
   const authUser = useStore($authUser);
   const debugMode = useStore($debugMode);
-  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure(false);
+  const [mobileOpened, { toggle: toggleMobile, close: closeMobile }] = useDisclosure(false);
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
+  const isMobile = useMediaQuery("(max-width: 48em)");
 
   const checkedAuth = debugMode || !!authUser;
 
@@ -102,7 +103,11 @@ export const AuthLayout: FC = () => {
       </AppShell.Header>
 
       <AppShell.Navbar>
-        <AppSidebar collapsed={!desktopOpened} onToggle={toggleDesktop} />
+        <AppSidebar
+          collapsed={!isMobile && !desktopOpened}
+          onToggle={isMobile ? closeMobile : toggleDesktop}
+          isMobile={isMobile}
+        />
       </AppShell.Navbar>
 
       <AppShell.Main>

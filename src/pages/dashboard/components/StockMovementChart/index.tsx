@@ -18,7 +18,7 @@ export const StockMovementChart: FC<Props> = ({ data, isLoading }) => {
   }));
 
   return (
-    <SurfaceCard>
+    <SurfaceCard h="100%">
       <Stack gap="sm">
         <Stack gap={2}>
           <Title order={4} fw={600} c="gray.9">

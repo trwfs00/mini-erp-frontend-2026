@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { LogOut, LayoutGrid, ChevronLeft, ChevronRight } from "lucide-react";
+import { LogOut, LayoutGrid, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { ActionIcon, Tooltip } from "@mantine/core";
 import { NAV_ITEMS } from "@/consts/navConfig";
@@ -9,13 +9,29 @@ import classes from "./AppSidebar.module.css";
 type AppSidebarProps = {
   collapsed: boolean;
   onToggle: () => void;
+  isMobile?: boolean;
 };
 
-export const AppSidebar: FC<AppSidebarProps> = ({ collapsed, onToggle }) => {
+export const AppSidebar: FC<AppSidebarProps> = ({
+  collapsed,
+  onToggle,
+  isMobile,
+}) => {
+  const showLabels = !collapsed;
+
+  const renderToggleIcon = () => {
+    if (isMobile) return <X size={18} strokeWidth={2} />;
+    return collapsed ? (
+      <ChevronRight size={18} strokeWidth={2} />
+    ) : (
+      <ChevronLeft size={18} strokeWidth={2} />
+    );
+  };
+
   return (
     <nav className={classes.navbar} data-collapsed={collapsed || undefined}>
       <div className={classes.header}>
-        {!collapsed && (
+        {showLabels && (
           <div className={classes.brand}>
             <div className={classes.logo}>
               <LayoutGrid size={16} strokeWidth={2.25} color="#fff" />
@@ -28,28 +44,29 @@ export const AppSidebar: FC<AppSidebarProps> = ({ collapsed, onToggle }) => {
           color="gray"
           size="lg"
           onClick={onToggle}
-          aria-label="Toggle sidebar"
+          aria-label={isMobile ? "Close sidebar" : "Toggle sidebar"}
           className={classes.toggleBtn}
         >
-          {collapsed ? (
-            <ChevronRight size={18} strokeWidth={2} />
-          ) : (
-            <ChevronLeft size={18} strokeWidth={2} />
-          )}
+          {renderToggleIcon()}
         </ActionIcon>
       </div>
 
       <div className={classes.navbarMain}>
         {NAV_ITEMS.map((item) => {
           const link = (
-            <NavLink key={item.path} to={item.path} className={classes.link}>
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={classes.link}
+              onClick={isMobile ? onToggle : undefined}
+            >
               {({ isActive }) => (
                 <span
                   className={classes.linkInner}
                   data-active={isActive || undefined}
                 >
                   <item.icon className={classes.linkIcon} strokeWidth={1.75} />
-                  {!collapsed && (
+                  {showLabels && (
                     <span className={classes.linkLabel}>{item.label}</span>
                   )}
                 </span>

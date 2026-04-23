@@ -9,7 +9,7 @@ type Props = {
   isLoading?: boolean;
 };
 
-const LIST_HEIGHT = 260;
+const LIST_MAX_HEIGHT = 260;
 
 const LowStockRow: FC<{ product: LowStockProduct }> = ({ product }) => (
   <Group justify="space-between" wrap="nowrap" gap="sm" py={6}>
@@ -36,7 +36,7 @@ export const LowStockWarningList: FC<Props> = ({ products, isLoading }) => {
   const renderBody = () => {
     if (isLoading) {
       return (
-        <Stack gap="sm">
+        <Stack gap="sm" h={LIST_MAX_HEIGHT}>
           {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} h={42} radius="sm" />
           ))}
@@ -46,7 +46,7 @@ export const LowStockWarningList: FC<Props> = ({ products, isLoading }) => {
 
     if (products.length === 0) {
       return (
-        <Stack align="center" justify="center" gap={8} h={LIST_HEIGHT}>
+        <Stack align="center" justify="center" gap={8} h={LIST_MAX_HEIGHT}>
           <PackageCheck size={32} color="var(--mantine-color-green-6)" strokeWidth={1.5} />
           <Text fz="sm" c="gray.6" ta="center">
             All products above minimum stock.
@@ -56,7 +56,7 @@ export const LowStockWarningList: FC<Props> = ({ products, isLoading }) => {
     }
 
     return (
-      <ScrollArea h={LIST_HEIGHT} type="hover" scrollbarSize={6}>
+      <ScrollArea h={LIST_MAX_HEIGHT} type="hover" scrollbarSize={6}>
         <Stack gap={0} pr="xs">
           {products.map((p, i) => (
             <div key={p.product_id}>
@@ -76,7 +76,7 @@ export const LowStockWarningList: FC<Props> = ({ products, isLoading }) => {
   };
 
   return (
-    <SurfaceCard>
+    <SurfaceCard h="100%">
       <Stack gap="sm">
         <Group gap="xs" justify="space-between">
           <Group gap="xs">

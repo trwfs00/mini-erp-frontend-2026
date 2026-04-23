@@ -35,7 +35,7 @@ const DashboardPage = () => {
 
         <SummaryCards summary={summary} />
 
-        <Grid>
+        <Grid align="stretch">
           <Grid.Col span={{ base: 12, lg: 8 }}>
             <StockMovementChart data={stockMovement} isLoading={isLoading} />
           </Grid.Col>
