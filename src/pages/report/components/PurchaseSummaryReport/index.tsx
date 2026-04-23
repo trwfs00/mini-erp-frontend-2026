@@ -61,9 +61,18 @@ const PurchaseSummaryReportPage = () => {
         <StatTile label="Orders" value={totals.total_orders.toLocaleString()} />
         <StatTile label="Amount" value={formatCurrency(totals.total_amount)} />
         <StatTile label="Draft" value={totals.by_status.DRAFT.toString()} />
-        <StatTile label="Confirmed" value="Confirmed" />
-        <StatTile label="Received" value="Received" />
-        <StatTile label="Cancelled" value="Cancelled" />
+        <StatTile
+          label="Confirmed"
+          value={totals.by_status.CONFIRMED.toString()}
+        />
+        <StatTile
+          label="Received"
+          value={totals.by_status.RECEIVED.toString()}
+        />
+        <StatTile
+          label="Cancelled"
+          value={totals.by_status.CANCELLED.toString()}
+        />
       </SimpleGrid>
 
       <PurchaseSummaryReportTable

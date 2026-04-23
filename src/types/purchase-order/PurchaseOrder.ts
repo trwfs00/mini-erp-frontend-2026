@@ -1,8 +1,11 @@
-export type PurchaseOrderStatus =
-  | "DRAFT"
-  | "CONFIRMED"
-  | "RECEIVED"
-  | "CANCELLED";
+export type PurchaseOrderStatus = 'DRAFT' | 'CONFIRMED' | 'RECEIVED' | 'CANCELLED';
+
+export const PO_STATUS_LABELS: Record<PurchaseOrderStatus, string> = {
+  DRAFT: "ร่าง",
+  CONFIRMED: "ยืนยันคำสั่งซื้อ",
+  RECEIVED: "ได้รับของเข้าคลังแล้ว",
+  CANCELLED: "ยกเลิก",
+};
 
 export type PurchaseOrderItem = {
   purchase_order_item_id: string;
