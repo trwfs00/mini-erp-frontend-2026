@@ -63,6 +63,38 @@ export const isValidDate = (date: DateInput): boolean => {
 };
 
 /**
+ * ตัด ISO string (หรือ Date) → "YYYY-MM-DD"
+ */
+export const toIsoDate = (input: DateInput): string => {
+  if (!input) return "";
+  if (typeof input === "string") return input.slice(0, 10);
+  return dayjs(input).format("YYYY-MM-DD");
+};
+
+/**
+ * ตัด ISO string → "YYYY-MM"
+ */
+export const toYearMonth = (input: DateInput): string => {
+  if (!input) return "";
+  if (typeof input === "string") return input.slice(0, 7);
+  return dayjs(input).format("YYYY-MM");
+};
+
+/**
+ * เดือนปัจจุบันในรูปแบบ "YYYY-MM"
+ */
+export const currentYearMonth = (): string => dayjs().format("YYYY-MM");
+
+/**
+ * ช่วงวัน N วันย้อนหลังถึงวันนี้ (รวมวันนี้) → { from: "YYYY-MM-DD", to: "YYYY-MM-DD" }
+ */
+export const getLastNDaysRange = (days: number): { from: string; to: string } => {
+  const to = dayjs();
+  const from = to.subtract(days - 1, "day");
+  return { from: from.format("YYYY-MM-DD"), to: to.format("YYYY-MM-DD") };
+};
+
+/**
  * Export instance ควบคุมกลางกรณีต้องใช้งาน Dayjs โดยตรงในงานที่ซับซ้อน
  */
 export default dayjs;

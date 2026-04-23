@@ -6,10 +6,10 @@ import { NAV_ITEMS } from "@/consts/navConfig";
 import { AuthUtil } from "@/utils/AuthUtil";
 import classes from "./AppSidebar.module.css";
 
-interface AppSidebarProps {
+type AppSidebarProps = {
   collapsed: boolean;
   onToggle: () => void;
-}
+};
 
 export const AppSidebar: FC<AppSidebarProps> = ({ collapsed, onToggle }) => {
   return (

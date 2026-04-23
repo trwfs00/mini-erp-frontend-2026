@@ -1,6 +1,6 @@
 export type TransactionType = "IN" | "OUT" | "ADJUST";
 
-export interface StockTransaction {
+export type StockTransaction = {
   transaction_id: string;
   product_id: string;
   product_name: string;
@@ -11,11 +11,11 @@ export interface StockTransaction {
   reason?: string; // Mandatory for ADJUST
   created_at: string;
   created_by_name: string;
-}
+};
 
-export interface StockSummary {
+export type StockSummary = {
   product_id: string;
   current_stock: number;
   min_stock: number;
   is_low_stock: boolean;
-}
+};

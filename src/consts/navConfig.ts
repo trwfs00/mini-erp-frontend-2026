@@ -10,11 +10,11 @@ import {
 } from "lucide-react";
 import { ROUTE_PATHS } from "@/router/routePaths";
 
-export interface NavItem {
+export type NavItem = {
   path: string;
   label: string;
   icon: LucideIcon;
-}
+};
 
 export const NAV_ITEMS: readonly NavItem[] = [
   { path: ROUTE_PATHS.DASHBOARD, label: "Dashboard", icon: LayoutDashboard },

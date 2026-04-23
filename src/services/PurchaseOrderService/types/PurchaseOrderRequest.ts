@@ -1,6 +1,6 @@
 import type { PurchaseOrderStatus } from "@/types/purchase-order/PurchaseOrder";
 
-export interface GetPurchaseOrderListRequest {
+export type GetPurchaseOrderListRequest = {
   page: number;
   limit: number;
   criteria?: {
@@ -12,19 +12,19 @@ export interface GetPurchaseOrderListRequest {
     field: string;
     direction: "asc" | "desc";
   }[];
-}
+};
 
-export interface CreatePurchaseOrderItemRequest {
+export type CreatePurchaseOrderItemRequest = {
   product_id: string;
   quantity: number;
   unit_price: number;
-}
+};
 
-export interface CreatePurchaseOrderRequest {
+export type CreatePurchaseOrderRequest = {
   supplier_id: string;
   items: CreatePurchaseOrderItemRequest[];
-}
+};
 
-export interface UpdatePurchaseOrderStatusRequest {
+export type UpdatePurchaseOrderStatusRequest = {
   status: PurchaseOrderStatus;
-}
+};

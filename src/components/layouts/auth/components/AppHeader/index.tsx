@@ -17,10 +17,10 @@ import { AuthUtil } from "@/utils/AuthUtil";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import type { BreadcrumbItem } from "@/types/Global";
 
-interface AppHeaderProps {
+type AppHeaderProps = {
   mobileOpened: boolean;
   toggleMobile: () => void;
-}
+};
 
 const getInitials = (name: string): string => {
   const parts = name.trim().split(/\s+/);

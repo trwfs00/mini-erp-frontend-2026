@@ -112,20 +112,7 @@ export const LoginPage: FC = () => {
             </Anchor> */}
           </Group>
 
-          <Button
-            type="submit"
-            size="md"
-            radius="md"
-            fullWidth
-            mt="xs"
-            styles={{
-              root: {
-                background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
-                border: "none",
-                transition: "transform 150ms ease, box-shadow 150ms ease",
-              },
-            }}
-          >
+          <Button type="submit" size="md" radius="md" fullWidth mt="xs">
             Sign in
           </Button>
 

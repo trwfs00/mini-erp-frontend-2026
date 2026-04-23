@@ -26,16 +26,16 @@ import { useForm } from "@mantine/form";
 import { formatCurrency } from "@/utils/CurrencyUtil";
 import { modals } from "@mantine/modals";
 
-interface POItemFormValue {
+type POItemFormValue = {
   product_id: string;
   quantity: number;
   unit_price: number;
-}
+};
 
-interface POFormValues {
+type POFormValues = {
   supplier_id: string;
   items: POItemFormValue[];
-}
+};
 
 const PurchaseOrderCreatePage = () => {
   const navigate = useNavigate();

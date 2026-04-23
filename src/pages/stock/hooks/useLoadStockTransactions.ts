@@ -5,11 +5,11 @@ import type { StockTransaction, TransactionType } from "@/types/stock/StockTrans
 import { usePaginationState } from "@/hooks/pagination/usePaginationState";
 import { useTableSort } from "@/hooks/table/useTableSort";
 
-interface FilterCriteria {
+type FilterCriteria = {
   search: string;
   type: TransactionType | "";
   product_id: string;
-}
+};
 
 export const useLoadStockTransactions = (filters: FilterCriteria) => {
   const [transactions, setTransactions] = useState<StockTransaction[]>([]);

@@ -3,7 +3,8 @@ import { InstantTable } from "@/components/InstantTable";
 import type { UsePaginationStateReturnType } from "@/hooks/pagination/usePaginationState";
 import type { UseTableSortReturn } from "@/hooks/table/useTableSort";
 import type { StockTransaction } from "@/types/stock/StockTransaction";
-import { Badge, Text, Group } from "@mantine/core";
+import { Text, Group } from "@mantine/core";
+import { TransactionTypeBadge } from "@/components/Badges/TransactionTypeBadge";
 import type { DataTableColumn } from "mantine-datatable";
 import dayjs from "dayjs";
 
@@ -50,14 +51,7 @@ export const StockTransactionTable: FC<Props> = ({
       title: "Type",
       sortable: true,
       width: 100,
-      render: ({ type }) => {
-        const color = type === "IN" ? "green" : type === "OUT" ? "red" : "blue";
-        return (
-          <Badge color={color} variant="light">
-            {type}
-          </Badge>
-        );
-      },
+      render: ({ type }) => <TransactionTypeBadge type={type} />,
     },
     {
       accessor: "quantity",

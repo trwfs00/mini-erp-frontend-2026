@@ -2,9 +2,9 @@ import { Badge } from "@mantine/core";
 import type { PurchaseOrderStatus } from "@/types/purchase-order/PurchaseOrder";
 import type { FC } from "react";
 
-interface Props {
+type Props = {
   status: PurchaseOrderStatus;
-}
+};
 
 export const PurchaseOrderStatusBadge: FC<Props> = ({ status }) => {
   const getColor = () => {

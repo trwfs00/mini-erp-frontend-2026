@@ -14,10 +14,10 @@
 }
 
 .control[data-active] {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+  background: var(--mantine-color-blue-6) !important;
   border-color: transparent !important;
   color: #fff !important;
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
+  box-shadow: 0 4px 14px rgba(34, 139, 230, 0.25);
 }
 
 .control[data-disabled="true"] {

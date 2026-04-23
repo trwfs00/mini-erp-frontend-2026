@@ -35,7 +35,7 @@
   width: 30px;
   height: 30px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: var(--mantine-color-blue-6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -111,9 +111,9 @@
 
 .linkInner[data-active],
 .linkInner[data-active]:hover {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: var(--mantine-color-blue-6);
   color: #fff;
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
+  box-shadow: 0 4px 14px rgba(34, 139, 230, 0.25);
 }
 
 .linkInner[data-active] .linkIcon {
