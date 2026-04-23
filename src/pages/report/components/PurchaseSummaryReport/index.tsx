@@ -12,8 +12,14 @@ import { ExportButton } from "../ExportButton";
 
 const PurchaseSummaryReportPage = () => {
   const [month, setMonth] = useState(currentYearMonth);
-  const { totals, rows, isLoading, pagination, sortHandler, reloadPurchaseSummary } =
-    useLoadPurchaseSummaryData(month);
+  const {
+    totals,
+    rows,
+    isLoading,
+    pagination,
+    sortHandler,
+    reloadPurchaseSummary,
+  } = useLoadPurchaseSummaryData(month);
   const [exportError, setExportError] = useState<string | null>(null);
 
   return (
@@ -31,7 +37,9 @@ const PurchaseSummaryReportPage = () => {
           <ExportButton
             label="Export Excel"
             filename={`purchase-summary-${month}.csv`}
-            onExport={() => ReportService.exportPurchaseSummary({ month, format: "xlsx" })}
+            onExport={() =>
+              ReportService.exportPurchaseSummary({ month, format: "xlsx" })
+            }
             onError={setExportError}
           />
         </Group>
@@ -52,10 +60,19 @@ const PurchaseSummaryReportPage = () => {
       <SimpleGrid cols={{ base: 2, sm: 3, md: 6 }} spacing="md">
         <StatTile label="Orders" value={totals.total_orders.toLocaleString()} />
         <StatTile label="Amount" value={formatCurrency(totals.total_amount)} />
-        <StatTile label="ร่าง" value={totals.by_status.DRAFT.toString()} />
-        <StatTile label="ยืนยัน" value={totals.by_status.CONFIRMED.toString()} />
-        <StatTile label="รับของแล้ว" value={totals.by_status.RECEIVED.toString()} />
-        <StatTile label="ยกเลิก" value={totals.by_status.CANCELLED.toString()} />
+        <StatTile label="Draft" value={totals.by_status.DRAFT.toString()} />
+        <StatTile
+          label="Confirmed"
+          value={totals.by_status.CONFIRMED.toString()}
+        />
+        <StatTile
+          label="Received"
+          value={totals.by_status.RECEIVED.toString()}
+        />
+        <StatTile
+          label="Cancelled"
+          value={totals.by_status.CANCELLED.toString()}
+        />
       </SimpleGrid>
 
       <PurchaseSummaryReportTable
