@@ -81,6 +81,14 @@ export const StockTransactionTable: FC<Props> = ({
         </Text>
       ),
     },
+    {
+      accessor: "created_by_name",
+      title: "By",
+      width: 160,
+      render: ({ created_by_name }) => (
+        <Text fz="sm" c="gray.6">{created_by_name}</Text>
+      ),
+    },
   ];
 
   return (

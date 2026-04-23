@@ -178,7 +178,7 @@ const buildStockSummaryCsv = (report: StockSummaryReport): Blob => {
 };
 
 const buildStockMovementCsv = (report: StockMovementReport): Blob => {
-  const headers = ["Transaction ID", "Date", "Product", "Type", "Quantity", "Balance After", "By", "Note"];
+  const headers = ["Transaction ID", "Date", "Product", "Type", "Quantity", "Balance After", "Note", "By"];
   const rows = report.rows.map((r) => [
     r.transaction_id,
     r.created_at,
@@ -186,8 +186,8 @@ const buildStockMovementCsv = (report: StockMovementReport): Blob => {
     r.type,
     r.quantity,
     r.balance_after,
-    r.created_by_name,
     r.note ?? r.reason ?? "",
+    r.created_by_name,
   ]);
   return ExportUtil.buildCsvBlob(headers, rows);
 };

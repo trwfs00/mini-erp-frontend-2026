@@ -52,10 +52,10 @@ const PurchaseSummaryReportPage = () => {
       <SimpleGrid cols={{ base: 2, sm: 3, md: 6 }} spacing="md">
         <StatTile label="Orders" value={totals.total_orders.toLocaleString()} />
         <StatTile label="Amount" value={formatCurrency(totals.total_amount)} />
-        <StatTile label="Draft" value={totals.by_status.DRAFT.toString()} />
-        <StatTile label="Confirmed" value={totals.by_status.CONFIRMED.toString()} />
-        <StatTile label="Received" value={totals.by_status.RECEIVED.toString()} />
-        <StatTile label="Cancelled" value={totals.by_status.CANCELLED.toString()} />
+        <StatTile label="ร่าง" value={totals.by_status.DRAFT.toString()} />
+        <StatTile label="ยืนยัน" value={totals.by_status.CONFIRMED.toString()} />
+        <StatTile label="รับของแล้ว" value={totals.by_status.RECEIVED.toString()} />
+        <StatTile label="ยกเลิก" value={totals.by_status.CANCELLED.toString()} />
       </SimpleGrid>
 
       <PurchaseSummaryReportTable

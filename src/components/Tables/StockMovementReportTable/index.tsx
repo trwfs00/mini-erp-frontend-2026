@@ -39,15 +39,15 @@ const columns: DataTableColumn<StockMovementRow>[] = [
   { accessor: "quantity", title: "Qty", sortable: true, textAlign: "right", width: 90 },
   { accessor: "balance_after", title: "Balance", sortable: true, textAlign: "right", width: 100 },
   {
+    accessor: "note",
+    title: "Note",
+    render: (r) => <Text fz="sm" c="gray.6">{r.note ?? r.reason ?? "-"}</Text>,
+  },
+  {
     accessor: "created_by_name",
     title: "By",
     width: 160,
     render: (r) => <Text fz="sm" c="gray.6">{r.created_by_name}</Text>,
-  },
-  {
-    accessor: "note",
-    title: "Note",
-    render: (r) => <Text fz="sm" c="gray.6">{r.note ?? r.reason ?? "-"}</Text>,
   },
 ];
 

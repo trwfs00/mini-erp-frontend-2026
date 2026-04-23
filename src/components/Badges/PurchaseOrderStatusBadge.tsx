@@ -1,5 +1,8 @@
 import { Badge } from "@mantine/core";
-import type { PurchaseOrderStatus } from "@/types/purchase-order/PurchaseOrder";
+import {
+  PO_STATUS_LABELS,
+  type PurchaseOrderStatus,
+} from "@/types/purchase-order/PurchaseOrder";
 import type { FC } from "react";
 
 type Props = {
@@ -24,7 +27,7 @@ export const PurchaseOrderStatusBadge: FC<Props> = ({ status }) => {
 
   return (
     <Badge color={getColor()} variant="light">
-      {status}
+      {PO_STATUS_LABELS[status]}
     </Badge>
   );
 };
