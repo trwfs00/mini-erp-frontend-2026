@@ -1,7 +1,15 @@
 import { PageLayout } from "@/components/Layouts/Page";
 import { StockTransactionTable } from "@/components/Tables/StockTransactionTable";
 import { useLoadStockTransactions } from "@/pages/stock/hooks/useLoadStockTransactions";
-import { Stack, Text, Title, Group, TextInput, Select, Button } from "@mantine/core";
+import {
+  Stack,
+  Text,
+  Title,
+  Group,
+  TextInput,
+  Select,
+  Button,
+} from "@mantine/core";
 import { Search, Plus } from "lucide-react";
 import { useState } from "react";
 import { StockService } from "@/services/StockService";
@@ -22,19 +30,24 @@ const StockPage = () => {
   const [debouncedSearch] = useDebouncedValue(search, 400);
   const [typeFilter, setTypeFilter] = useState<TransactionType | "">("");
   const [productFilter, setProductFilter] = useState<string | "">("");
-  
+
   const [drawerOpened, setDrawerOpened] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const { options: productOptions } = useProductOptions();
   const { summary, fetchSummary } = useStockSummary();
 
-  const { transactions, pagination, sortHandler, reloadTransactions, isLoading } =
-    useLoadStockTransactions({
-      search: debouncedSearch,
-      type: typeFilter,
-      product_id: productFilter,
-    });
+  const {
+    transactions,
+    pagination,
+    sortHandler,
+    reloadTransactions,
+    isLoading,
+  } = useLoadStockTransactions({
+    search: debouncedSearch,
+    type: typeFilter,
+    product_id: productFilter,
+  });
 
   // Fetch summary when product filter changes
   useEffect(() => {
@@ -43,34 +56,31 @@ const StockPage = () => {
     }
   }, [productFilter, fetchSummary]);
 
-  const handleRefresh = async () => {
-    await reloadTransactions();
-    if (productFilter) fetchSummary(productFilter);
-  };
-
-  const handleCreate = () => {
-    setDrawerOpened(true);
-  };
-
   const handleSave = async (values: StockTransactionFormValues) => {
     setIsSaving(true);
-    
+
     let response;
     if (values.type === "IN") {
-      response = await StockService.stockIn(values as CreateStockTransactionRequest);
+      response = await StockService.stockIn(
+        values as CreateStockTransactionRequest,
+      );
     } else if (values.type === "OUT") {
-      response = await StockService.stockOut(values as CreateStockTransactionRequest);
+      response = await StockService.stockOut(
+        values as CreateStockTransactionRequest,
+      );
     } else {
-      response = await StockService.stockAdjust(values as CreateStockTransactionRequest);
+      response = await StockService.stockAdjust(
+        values as CreateStockTransactionRequest,
+      );
     }
-    
+
     if (response.ok) {
       await reloadTransactions();
       setDrawerOpened(false);
     } else {
       console.error("Failed to save transaction:", response.message);
     }
-    
+
     setIsSaving(false);
   };
 
@@ -88,10 +98,20 @@ const StockPage = () => {
           </Stack>
 
           <Group>
-            <Button leftSection={<Plus size={16} />} onClick={handleCreate}>
+            <Button
+              leftSection={<Plus size={16} />}
+              onClick={() => {
+                setDrawerOpened(true);
+              }}
+            >
               New Transaction
             </Button>
-            <RefreshButton onClick={handleRefresh} />
+            <RefreshButton
+              onClick={async () => {
+                await reloadTransactions();
+                if (productFilter) fetchSummary(productFilter);
+              }}
+            />
           </Group>
         </Group>
 
@@ -141,12 +161,20 @@ const StockPage = () => {
           >
             <Group gap="xl">
               <Stack gap={0}>
-                <Text fz="xs" c="dimmed" fw={500}>CURRENT BALANCE</Text>
-                <Text fz="xl" fw={700}>{summary.current_stock}</Text>
+                <Text fz="xs" c="dimmed" fw={500}>
+                  CURRENT BALANCE
+                </Text>
+                <Text fz="xl" fw={700}>
+                  {summary.current_stock}
+                </Text>
               </Stack>
               <Stack gap={0}>
-                <Text fz="xs" c="dimmed" fw={500}>MINIMUM REQUIRED</Text>
-                <Text fz="xl" fw={700}>{summary.min_stock}</Text>
+                <Text fz="xs" c="dimmed" fw={500}>
+                  MINIMUM REQUIRED
+                </Text>
+                <Text fz="xl" fw={700}>
+                  {summary.min_stock}
+                </Text>
               </Stack>
               {summary.is_low_stock && (
                 <Badge color="red" variant="filled" size="lg" mt="sm">

@@ -25,15 +25,6 @@ const SupplierPage = () => {
   const { suppliers, pagination, sortHandler, reloadSuppliers, isLoading } =
     useLoadSupplierData(debouncedSearch);
 
-  const handleRefresh = async () => {
-    await reloadSuppliers();
-  };
-
-  const handleEdit = (supplier: SupplierList) => {
-    setSelectedSupplier(supplier);
-    setDrawerOpened(true);
-  };
-
   const handleDelete = (supplier: SupplierList) => {
     modals.openConfirmModal({
       title: "Delete Supplier",
@@ -47,7 +38,9 @@ const SupplierPage = () => {
       labels: { confirm: "Delete", cancel: "Cancel" },
       confirmProps: { color: "red" },
       onConfirm: async () => {
-        const response = await SupplierService.deleteSupplier(supplier.supplier_id);
+        const response = await SupplierService.deleteSupplier(
+          supplier.supplier_id,
+        );
         if (response.ok) {
           await reloadSuppliers();
         } else {
@@ -73,11 +66,6 @@ const SupplierPage = () => {
     setIsSaving(false);
   };
 
-  const handleCreate = () => {
-    setSelectedSupplier(null);
-    setDrawerOpened(true);
-  };
-
   return (
     <PageLayout>
       <Stack gap="lg">
@@ -99,8 +87,18 @@ const SupplierPage = () => {
               onChange={(e) => setSearch(e.currentTarget.value)}
               w={{ base: "100%", sm: 300 }}
             />
-            <RefreshButton onClick={handleRefresh} />
-            <Button leftSection={<Plus size={16} />} onClick={handleCreate}>
+            <RefreshButton
+              onClick={async () => {
+                await reloadSuppliers();
+              }}
+            />
+            <Button
+              leftSection={<Plus size={16} />}
+              onClick={() => {
+                setSelectedSupplier(null);
+                setDrawerOpened(true);
+              }}
+            >
               Add Supplier
             </Button>
           </Group>
@@ -110,7 +108,10 @@ const SupplierPage = () => {
           records={suppliers}
           pagination={pagination}
           sortHandler={sortHandler}
-          onEdit={handleEdit}
+          onEdit={(supplier: SupplierList) => {
+            setSelectedSupplier(supplier);
+            setDrawerOpened(true);
+          }}
           onDelete={handleDelete}
           isLoading={isLoading}
         />

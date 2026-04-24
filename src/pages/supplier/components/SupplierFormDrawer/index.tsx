@@ -59,11 +59,6 @@ export const SupplierFormDrawer = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened, supplier]);
 
-  const handleSubmit = async (values: SupplierFormValues) => {
-    await onSave(values);
-    form.reset();
-  };
-
   return (
     <Drawer
       opened={opened}
@@ -78,7 +73,12 @@ export const SupplierFormDrawer = ({
         },
       }}
     >
-      <form onSubmit={form.onSubmit(handleSubmit)}>
+      <form
+        onSubmit={form.onSubmit(async (values: SupplierFormValues) => {
+          await onSave(values);
+          form.reset();
+        })}
+      >
         <Stack gap="md">
           <TextInput
             label="Supplier Name"
