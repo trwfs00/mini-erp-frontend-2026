@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDidUpdate } from "@mantine/hooks";
 import { ProductService } from "@/services/ProductService";
 import type { ProductList } from "@/types/product/ProductList";
@@ -15,7 +15,7 @@ export const useLoadProductData = (search: string) => {
   const { page, limit, setTotalCount, setTotalPage, setPage } = pagination;
   const { sortBy, orderBy } = sortHandler;
 
-  const loadData = useCallback(async () => {
+  const loadData = async () => {
     setIsLoading(true);
     const response = await ProductService.getProductList({
       criteria: { search },
@@ -33,7 +33,7 @@ export const useLoadProductData = (search: string) => {
       console.error("Failed to load products", response.message);
     }
     setIsLoading(false);
-  }, [search, limit, page, sortBy, orderBy, setTotalCount, setTotalPage]);
+  };
 
   // Initial Load
   useEffect(() => {

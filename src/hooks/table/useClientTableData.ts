@@ -1,6 +1,6 @@
 import { usePaginationState } from "@/hooks/pagination/usePaginationState";
 import { useTableSort } from "@/hooks/table/useTableSort";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 
 type Options = {
   initialPage?: number;
@@ -22,7 +22,7 @@ export const useClientTableData = <T>(
     setTotalCount(data.length);
   }, [data.length, setTotalCount]);
 
-  const records = useMemo(() => {
+  const records = () => {
     const sorted = [...data];
 
     if (sortBy) {
@@ -38,7 +38,7 @@ export const useClientTableData = <T>(
 
     const start = (page - 1) * limit;
     return sorted.slice(start, start + limit);
-  }, [data, page, limit, sortBy, orderBy]);
+  };
 
   return { records, pagination, sortHandler };
 };

@@ -1,7 +1,10 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDidUpdate } from "@mantine/hooks";
 import { StockService } from "@/services/StockService";
-import type { StockTransaction, TransactionType } from "@/types/stock/StockTransaction";
+import type {
+  StockTransaction,
+  TransactionType,
+} from "@/types/stock/StockTransaction";
 import { usePaginationState } from "@/hooks/pagination/usePaginationState";
 import { useTableSort } from "@/hooks/table/useTableSort";
 
@@ -21,7 +24,7 @@ export const useLoadStockTransactions = (filters: FilterCriteria) => {
   const { page, limit, setTotalCount, setTotalPage, setPage } = pagination;
   const { sortBy, orderBy } = sortHandler;
 
-  const loadData = useCallback(async () => {
+  const loadData = async () => {
     setIsLoading(true);
     const response = await StockService.getTransactionList({
       criteria: {
@@ -31,7 +34,8 @@ export const useLoadStockTransactions = (filters: FilterCriteria) => {
       },
       limit,
       page,
-      sort_bys: sortBy && orderBy ? [{ field: sortBy, direction: orderBy }] : [],
+      sort_bys:
+        sortBy && orderBy ? [{ field: sortBy, direction: orderBy }] : [],
     });
 
     if (response.ok && response.data) {
@@ -42,7 +46,7 @@ export const useLoadStockTransactions = (filters: FilterCriteria) => {
       console.error("Failed to load transactions", response.message);
     }
     setIsLoading(false);
-  }, [filters, limit, page, sortBy, orderBy, setTotalCount, setTotalPage]);
+  };
 
   useEffect(() => {
     loadData();

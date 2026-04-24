@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDidUpdate } from "@mantine/hooks";
 import { ReportService } from "@/services/ReportService";
 import { usePaginationState } from "@/hooks/pagination/usePaginationState";
@@ -19,7 +19,8 @@ type Range = {
 };
 
 export const useLoadStockMovementData = (range: Range) => {
-  const [stockMovement, setStockMovement] = useState<StockMovementReport | null>(null);
+  const [stockMovement, setStockMovement] =
+    useState<StockMovementReport | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const pagination = usePaginationState(1, 10);
@@ -28,7 +29,7 @@ export const useLoadStockMovementData = (range: Range) => {
   const { limit, page, setTotalCount, setTotalPage, setPage } = pagination;
   const { sortBy, orderBy } = sortHandler;
 
-  const loadData = useCallback(async () => {
+  const loadData = async () => {
     setIsLoading(true);
     const response = await ReportService.getStockMovement(range);
     if (response.ok && response.data) {
@@ -39,7 +40,7 @@ export const useLoadStockMovementData = (range: Range) => {
       console.error("Failed to load stock movement", response.message);
     }
     setIsLoading(false);
-  }, [range, limit, setTotalCount, setTotalPage]);
+  };
 
   useEffect(() => {
     loadData();
@@ -60,7 +61,7 @@ export const useLoadStockMovementData = (range: Range) => {
     }
   }, [limit]);
 
-  const rows: StockMovementRow[] = useMemo(() => {
+  const rows: StockMovementRow[] = (() => {
     if (!stockMovement) return [];
     let sorted = [...stockMovement.rows];
     if (sortBy && orderBy) {
@@ -74,7 +75,7 @@ export const useLoadStockMovementData = (range: Range) => {
     }
     const start = (page - 1) * limit;
     return sorted.slice(start, start + limit);
-  }, [stockMovement, sortBy, orderBy, page, limit]);
+  })();
 
   return {
     stockMovement,

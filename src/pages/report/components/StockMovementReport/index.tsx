@@ -1,7 +1,14 @@
-import { Alert, Group, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import {
+  Alert,
+  Group,
+  SimpleGrid,
+  Stack,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { BarChart } from "@mantine/charts";
 import { AlertCircle } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { RefreshButton } from "@/components/RefreshButton";
 import { StatTile } from "@/components/StatTile";
 import { SurfaceCard } from "@/components/SurfaceCard";
@@ -15,20 +22,23 @@ const defaultRange = () => getLastNDaysRange(14);
 
 const StockMovementReportPage = () => {
   const [range, setRange] = useState(defaultRange);
-  const { totals, daily, rows, isLoading, pagination, sortHandler, reloadStockMovement } =
-    useLoadStockMovementData(range);
+  const {
+    totals,
+    daily,
+    rows,
+    isLoading,
+    pagination,
+    sortHandler,
+    reloadStockMovement,
+  } = useLoadStockMovementData(range);
   const [exportError, setExportError] = useState<string | null>(null);
 
-  const chartData = useMemo(
-    () =>
-      daily.map((d) => ({
-        date: d.date.slice(5),
-        In: d.in,
-        Out: d.out,
-        Adjust: d.adjust,
-      })),
-    [daily],
-  );
+  const chartData = daily.map((d) => ({
+    date: d.date.slice(5),
+    In: d.in,
+    Out: d.out,
+    Adjust: d.adjust,
+  }));
 
   return (
     <Stack gap="md">
@@ -38,14 +48,18 @@ const StockMovementReportPage = () => {
             type="date"
             label="From"
             value={range.from}
-            onChange={(e) => setRange((r) => ({ ...r, from: e.currentTarget.value }))}
+            onChange={(e) =>
+              setRange((r) => ({ ...r, from: e.currentTarget.value }))
+            }
             size="sm"
           />
           <TextInput
             type="date"
             label="To"
             value={range.to}
-            onChange={(e) => setRange((r) => ({ ...r, to: e.currentTarget.value }))}
+            onChange={(e) =>
+              setRange((r) => ({ ...r, to: e.currentTarget.value }))
+            }
             size="sm"
           />
         </Group>
@@ -54,7 +68,9 @@ const StockMovementReportPage = () => {
           <ExportButton
             label="Export Excel"
             filename={`stock-movement-${range.from}-to-${range.to}.csv`}
-            onExport={() => ReportService.exportStockMovement({ ...range, format: "xlsx" })}
+            onExport={() =>
+              ReportService.exportStockMovement({ ...range, format: "xlsx" })
+            }
             onError={setExportError}
           />
         </Group>
@@ -73,16 +89,32 @@ const StockMovementReportPage = () => {
       )}
 
       <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="md">
-        <StatTile label="Total IN" value={totals.total_in.toLocaleString()} color="teal.7" />
-        <StatTile label="Total OUT" value={totals.total_out.toLocaleString()} color="red.7" />
-        <StatTile label="Adjustments" value={totals.total_adjust.toLocaleString()} color="gray.7" />
+        <StatTile
+          label="Total IN"
+          value={totals.total_in.toLocaleString()}
+          color="teal.7"
+        />
+        <StatTile
+          label="Total OUT"
+          value={totals.total_out.toLocaleString()}
+          color="red.7"
+        />
+        <StatTile
+          label="Adjustments"
+          value={totals.total_adjust.toLocaleString()}
+          color="gray.7"
+        />
       </SimpleGrid>
 
       <SurfaceCard>
         <Stack gap="sm">
-          <Text fz="sm" fw={600}>Daily Movement</Text>
+          <Text fz="sm" fw={600}>
+            Daily Movement
+          </Text>
           {chartData.length === 0 ? (
-            <Text c="gray.5" fz="sm" ta="center" py="xl">No transactions in this range.</Text>
+            <Text c="gray.5" fz="sm" ta="center" py="xl">
+              No transactions in this range.
+            </Text>
           ) : (
             <BarChart
               h={260}

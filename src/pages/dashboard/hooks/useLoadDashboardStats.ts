@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { DashboardService } from "@/services/DashboardService";
 import type {
   DashboardStats,
@@ -22,10 +22,12 @@ const EMPTY_TREND: PurchaseTrendPoint[] = [];
 const EMPTY_LOW_STOCK: LowStockProduct[] = [];
 
 export const useLoadDashboardStats = () => {
-  const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
+  const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useState(false);
 
-  const loadData = useCallback(async () => {
+  const loadData = async () => {
     setIsLoading(true);
     const response = await DashboardService.getDashboardStats();
     if (response.ok && response.data) {
@@ -34,7 +36,7 @@ export const useLoadDashboardStats = () => {
       console.error("Failed to load dashboard stats", response.message);
     }
     setIsLoading(false);
-  }, []);
+  };
 
   useEffect(() => {
     loadData();

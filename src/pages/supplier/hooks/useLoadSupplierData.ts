@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDidUpdate } from "@mantine/hooks";
 import { SupplierService } from "@/services/SupplierService";
 import type { SupplierList } from "@/types/supplier/SupplierList";
@@ -15,7 +15,7 @@ export const useLoadSupplierData = (search: string) => {
   const { page, limit, setTotalCount, setTotalPage, setPage } = pagination;
   const { sortBy, orderBy } = sortHandler;
 
-  const loadData = useCallback(async () => {
+  const loadData = async () => {
     setIsLoading(true);
     const response = await SupplierService.getSupplierList({
       criteria: { search },
@@ -33,7 +33,7 @@ export const useLoadSupplierData = (search: string) => {
       console.error("Failed to load suppliers", response.message);
     }
     setIsLoading(false);
-  }, [search, limit, page, sortBy, orderBy, setTotalCount, setTotalPage]);
+  };
 
   // Initial Load
   useEffect(() => {

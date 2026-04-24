@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDidUpdate } from "@mantine/hooks";
 import { CategoryService } from "@/services/CategoryService";
 import type { CategoryList } from "@/types/category/CategoryList";
@@ -15,7 +15,7 @@ export const useLoadCategoryData = (search: string) => {
   const { page, limit, setTotalCount, setTotalPage, setPage } = pagination;
   const { sortBy, orderBy } = sortHandler;
 
-  const loadData = useCallback(async () => {
+  const loadData = async () => {
     setIsLoading(true);
     const response = await CategoryService.getCategoryList({
       criteria: { search },
@@ -33,7 +33,7 @@ export const useLoadCategoryData = (search: string) => {
       console.error("Failed to load categories", response.message);
     }
     setIsLoading(false);
-  }, [search, limit, page, sortBy, orderBy, setTotalCount, setTotalPage]);
+  };
 
   // Initial load
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDidUpdate } from "@mantine/hooks";
 import { ReportService } from "@/services/ReportService";
 import { usePaginationState } from "@/hooks/pagination/usePaginationState";
@@ -22,7 +22,8 @@ const EMPTY_TOTALS = {
 };
 
 export const useLoadPurchaseSummaryData = (month: string) => {
-  const [purchaseSummary, setPurchaseSummary] = useState<PurchaseSummaryReport | null>(null);
+  const [purchaseSummary, setPurchaseSummary] =
+    useState<PurchaseSummaryReport | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const pagination = usePaginationState(1, 10);
@@ -31,7 +32,7 @@ export const useLoadPurchaseSummaryData = (month: string) => {
   const { limit, page, setTotalCount, setTotalPage, setPage } = pagination;
   const { sortBy, orderBy } = sortHandler;
 
-  const loadData = useCallback(async () => {
+  const loadData = async () => {
     setIsLoading(true);
     const response = await ReportService.getPurchaseSummary({ month });
     if (response.ok && response.data) {
@@ -42,7 +43,7 @@ export const useLoadPurchaseSummaryData = (month: string) => {
       console.error("Failed to load purchase summary", response.message);
     }
     setIsLoading(false);
-  }, [month, limit, setTotalCount, setTotalPage]);
+  };
 
   useEffect(() => {
     loadData();
@@ -63,7 +64,7 @@ export const useLoadPurchaseSummaryData = (month: string) => {
     }
   }, [limit]);
 
-  const rows: PurchaseSummaryRow[] = useMemo(() => {
+  const rows: PurchaseSummaryRow[] = (() => {
     if (!purchaseSummary) return [];
     let sorted = [...purchaseSummary.rows];
     if (sortBy && orderBy) {
@@ -77,7 +78,7 @@ export const useLoadPurchaseSummaryData = (month: string) => {
     }
     const start = (page - 1) * limit;
     return sorted.slice(start, start + limit);
-  }, [purchaseSummary, sortBy, orderBy, page, limit]);
+  })();
 
   return {
     purchaseSummary,
