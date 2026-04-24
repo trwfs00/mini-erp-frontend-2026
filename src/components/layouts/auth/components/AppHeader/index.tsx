@@ -1,19 +1,9 @@
 import type { FC } from "react";
-import {
-  Avatar,
-  Box,
-  Burger,
-  Group,
-  Menu,
-  Text,
-  UnstyledButton,
-} from "@mantine/core";
+import { Avatar, Box, Burger, Group, Text } from "@mantine/core";
 import { useLocation, useMatches } from "react-router-dom";
-import { ChevronDown, LogOut, User as UserIcon } from "lucide-react";
 import { useStore } from "@nanostores/react";
 import { $authUser } from "@/stores/authUserStore";
 import { ROUTE_PATHS } from "@/router/routePaths";
-import { AuthUtil } from "@/utils/AuthUtil";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import type { BreadcrumbItem } from "@/types/Global";
 
@@ -22,8 +12,8 @@ type AppHeaderProps = {
   toggleMobile: () => void;
 };
 
-const getInitials = (name: string): string => {
-  const parts = name.trim().split(/\s+/);
+const getInitials = (name?: string | null): string => {
+  const parts = (name ?? "").trim().split(/\s+/).filter(Boolean);
   const first = parts[0]?.[0] ?? "";
   const last = parts.length > 1 ? parts[parts.length - 1][0] : "";
   return (first + last).toUpperCase() || "U";
@@ -38,8 +28,10 @@ export const AppHeader: FC<AppHeaderProps> = ({
   const matches = useMatches();
 
   const getCrumbs = (): BreadcrumbItem[] => {
-    const baseCrumbs: BreadcrumbItem[] = [{ label: "Home", path: ROUTE_PATHS.DASHBOARD }];
-    
+    const baseCrumbs: BreadcrumbItem[] = [
+      { label: "Home", path: ROUTE_PATHS.DASHBOARD },
+    ];
+
     const routeCrumbs = matches
       .filter((match: any) => match.handle && match.handle.crumb)
       .map((match: any) => ({
@@ -80,64 +72,25 @@ export const AppHeader: FC<AppHeaderProps> = ({
       </Group>
 
       {authUser && (
-        <Menu
-          width={220}
-          position="bottom-end"
-          transitionProps={{ transition: "pop-top-right" }}
-          withinPortal
-        >
-          <Menu.Target>
-            <UnstyledButton
-              px="xs"
-              py={6}
-              style={{ borderRadius: 8 }}
-              className="user-menu-trigger"
-            >
-              <Group gap={10} wrap="nowrap">
-                <Avatar
-                  size={34}
-                  radius="xl"
-                  color="indigo"
-                  variant="gradient"
-                  gradient={{ from: "indigo", to: "violet", deg: 135 }}
-                >
-                  {getInitials(authUser.name)}
-                </Avatar>
-                <Box visibleFrom="sm" style={{ minWidth: 0 }}>
-                  <Text fz="sm" fw={600} c="gray.9" lh={1.2} truncate>
-                    {authUser.name}
-                  </Text>
-                  <Text fz="xs" c="gray.6" lh={1.2} truncate>
-                    @{authUser.username}
-                  </Text>
-                </Box>
-                <ChevronDown size={14} strokeWidth={2} color="#6b7280" />
-              </Group>
-            </UnstyledButton>
-          </Menu.Target>
-
-          <Menu.Dropdown>
-            <Menu.Label>Signed in as</Menu.Label>
-            <Menu.Item leftSection={<UserIcon size={16} strokeWidth={1.75} />}>
-              <Text fz="sm" fw={500}>
-                {authUser.name}
-              </Text>
-              <Text fz="xs" c="gray.6">
-                @{authUser.username}
-              </Text>
-            </Menu.Item>
-
-            <Menu.Divider />
-
-            <Menu.Item
-              color="red"
-              leftSection={<LogOut size={16} strokeWidth={1.75} />}
-              onClick={() => AuthUtil.logout()}
-            >
-              Logout
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+        <Group gap={10} wrap="nowrap" px="xs" py={6}>
+          <Box visibleFrom="sm" style={{ minWidth: 0, textAlign: "right" }}>
+            <Text fz="sm" fw={600} c="gray.9" lh={1.2} truncate>
+              {authUser.username}
+            </Text>
+            <Text fz="xs" c="gray.6" lh={1.2} truncate>
+              @{authUser.username}
+            </Text>
+          </Box>
+          <Avatar
+            size={34}
+            radius="xl"
+            color="indigo"
+            variant="gradient"
+            gradient={{ from: "indigo", to: "violet", deg: 135 }}
+          >
+            {getInitials(authUser.username)}
+          </Avatar>
+        </Group>
       )}
     </Group>
   );

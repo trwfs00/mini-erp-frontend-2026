@@ -5,7 +5,6 @@ export type UserRole = {
 
 export type User = {
   user_id: string;
-  name: string;
   username: string;
   role: UserRole;
   access_token: string;
