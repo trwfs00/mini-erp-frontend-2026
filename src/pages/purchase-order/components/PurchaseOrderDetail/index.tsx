@@ -26,6 +26,8 @@ import { formatCurrency } from "@/utils/CurrencyUtil";
 import { formatDate } from "@/utils/DateUtil";
 import { PurchaseOrderStatusBadge } from "@/components/Badges/PurchaseOrderStatusBadge";
 import { modals } from "@mantine/modals";
+import { $authUser } from "@/stores/authUserStore";
+import { useStore } from "@nanostores/react";
 
 const PurchaseOrderDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -33,6 +35,7 @@ const PurchaseOrderDetailPage = () => {
   const [order, setOrder] = useState<PurchaseOrder | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
+  const authUser = useStore($authUser);
 
   const fetchOrderDetail = async () => {
     if (!id) return;
@@ -75,7 +78,7 @@ const PurchaseOrderDetailPage = () => {
           setIsUpdating(true);
           const response = await PurchaseOrderService.updateStatus(
             order.purchase_order_id,
-            newStatus,
+            { status: newStatus, updated_by: authUser?.user_id || "" },
           );
           if (response.ok) {
             await fetchOrderDetail();

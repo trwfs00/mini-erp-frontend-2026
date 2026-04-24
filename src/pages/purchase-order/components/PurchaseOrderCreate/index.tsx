@@ -23,22 +23,17 @@ import { PurchaseOrderService } from "@/services/PurchaseOrderService";
 import type { SupplierList } from "@/types/supplier/SupplierList";
 import type { ProductList } from "@/types/product/ProductList";
 import { useForm } from "@mantine/form";
+import { yupResolver } from "mantine-form-yup-resolver";
+import {
+  purchaseOrderSchema,
+  type POFormValues,
+} from "@/schemas/purchaseOrderSchema";
 import { formatCurrency } from "@/utils/CurrencyUtil";
 import { modals } from "@mantine/modals";
 import { $authUser } from "@/stores/authUserStore";
 import { useStore } from "@nanostores/react";
 
-type POItemFormValue = {
-  product_id: string;
-  quantity: number;
-  unit_price: number;
-};
 
-type POFormValues = {
-  order_number: string;
-  supplier_id: string;
-  items: POItemFormValue[];
-};
 
 const PurchaseOrderCreatePage = () => {
   const navigate = useNavigate();
@@ -53,15 +48,7 @@ const PurchaseOrderCreatePage = () => {
       supplier_id: "",
       items: [{ product_id: "", quantity: 1, unit_price: 0 }],
     },
-    validate: {
-      order_number: (value) =>
-        !value.trim() ? "Please enter order number" : null,
-      supplier_id: (value) => (!value ? "Please select a supplier" : null),
-      items: {
-        product_id: (value) => (!value ? "Select product" : null),
-        quantity: (value) => (value <= 0 ? "Qty > 0" : null),
-      },
-    },
+    validate: yupResolver(purchaseOrderSchema),
   });
 
   useEffect(() => {
