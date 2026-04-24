@@ -12,7 +12,6 @@ import { Button } from "@mantine/core";
 import { Plus } from "lucide-react";
 import { CategoryFormDrawer } from "./components/CategoryFormDrawer";
 import { modals } from "@mantine/modals";
-import type { CategoryFormValues } from "@/schemas/categorySchema";
 import type { SaveCategoryRequest } from "@/services/CategoryService/types/CategoryRequest";
 
 const CategoryPage = () => {
@@ -52,12 +51,12 @@ const CategoryPage = () => {
     });
   };
 
-  const handleSave = async (values: CategoryFormValues) => {
+  const handleSave = async (values: SaveCategoryRequest) => {
     setIsSaving(true);
     const response = await CategoryService.saveCategory({
       ...values,
       category_id: selectedCategory?.category_id,
-    } as SaveCategoryRequest);
+    });
 
     if (response.ok) {
       await reloadCategories();

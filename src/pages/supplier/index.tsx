@@ -10,8 +10,8 @@ import { RefreshButton } from "@/components/RefreshButton";
 import { useDebouncedValue } from "@mantine/hooks";
 import { SupplierFormDrawer } from "./components/SupplierFormDrawer";
 import { modals } from "@mantine/modals";
-import type { SupplierFormValues } from "@/schemas/supplierSchema";
 import type { SaveSupplierRequest } from "@/services/SupplierService/types/SupplierRequest";
+import { NotificationUtil } from "@/utils/NotificationUtil";
 
 const SupplierPage = () => {
   const [search, setSearch] = useState("");
@@ -41,28 +41,32 @@ const SupplierPage = () => {
         const response = await SupplierService.deleteSupplier(
           supplier.supplier_id,
         );
-        if (response.ok) {
-          await reloadSuppliers();
-        } else {
-          console.error("Failed to delete supplier:", response.message);
+        if (!response.ok) {
+          NotificationUtil.notifyError({
+            title: "Failed to delete supplier",
+          });
+          return;
         }
+        await reloadSuppliers();
       },
     });
   };
 
-  const handleSave = async (values: SupplierFormValues) => {
+  const handleSave = async (values: SaveSupplierRequest) => {
     setIsSaving(true);
     const response = await SupplierService.saveSupplier({
       ...values,
       supplier_id: selectedSupplier?.supplier_id,
-    } as SaveSupplierRequest);
+    });
 
-    if (response.ok) {
-      await reloadSuppliers();
-      setDrawerOpened(false);
-    } else {
-      console.error("Failed to save supplier:", response.message);
+    if (!response.ok) {
+      NotificationUtil.notifyError({
+        title: "Failed to save supplier",
+      });
+      return;
     }
+    await reloadSuppliers();
+    setDrawerOpened(false);
     setIsSaving(false);
   };
 

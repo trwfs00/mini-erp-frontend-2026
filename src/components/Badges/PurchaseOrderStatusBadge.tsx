@@ -1,9 +1,7 @@
 import { Badge } from "@mantine/core";
-import {
-  PO_STATUS_LABELS,
-  type PurchaseOrderStatus,
-} from "@/types/purchase-order/PurchaseOrder";
+import type { PurchaseOrderStatus } from "@/types/purchase-order/PurchaseOrder";
 import type { FC } from "react";
+import { PO_STATUS_LABELS } from "@/consts/poStatusLabels";
 
 type Props = {
   status: PurchaseOrderStatus;

@@ -4,13 +4,6 @@ export type PurchaseOrderStatus =
   | "RECEIVED"
   | "CANCELLED";
 
-export const PO_STATUS_LABELS: Record<PurchaseOrderStatus, string> = {
-  DRAFT: "Draft",
-  CONFIRMED: "Confirmed",
-  RECEIVED: "Received",
-  CANCELLED: "Cancelled",
-};
-
 export type PurchaseOrderItem = {
   purchase_order_item_id: string;
   purchase_order_id: string;

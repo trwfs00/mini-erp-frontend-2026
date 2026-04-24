@@ -101,14 +101,6 @@ export const LoginPage: FC = () => {
               size="sm"
               {...form.getInputProps("remember_me", { type: "checkbox" })}
             />
-            {/* <Anchor
-              fz="sm"
-              fw={500}
-              c="indigo.6"
-              onClick={() => navigate("/auth/forget-password")}
-            >
-              Forgot password?
-            </Anchor> */}
           </Group>
 
           <Button type="submit" size="md" radius="md" fullWidth mt="xs">
