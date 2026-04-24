@@ -51,7 +51,6 @@ export const CategoryFormDrawer = ({
         form.reset();
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened, category]);
 
   return (

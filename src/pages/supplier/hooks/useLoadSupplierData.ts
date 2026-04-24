@@ -38,7 +38,6 @@ export const useLoadSupplierData = (search: string) => {
   // Initial Load
   useEffect(() => {
     loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // When pagination or sort changes

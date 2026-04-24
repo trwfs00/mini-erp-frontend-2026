@@ -44,7 +44,6 @@ export const useLoadStockMovementData = (range: Range) => {
 
   useEffect(() => {
     loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useDidUpdate(() => {

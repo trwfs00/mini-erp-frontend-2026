@@ -62,7 +62,6 @@ export const ProductFormDrawer = ({
         form.reset();
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened, product]);
 
   const handleSubmit = async (values: ProductFormValues) => {

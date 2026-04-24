@@ -38,7 +38,6 @@ export const useLoadCategoryData = (search: string) => {
   // Initial load
   useEffect(() => {
     loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // When pagination or sort changes
