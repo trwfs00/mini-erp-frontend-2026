@@ -1,4 +1,4 @@
-import { PageLayout } from "@/components/Layoutsaaaaa/Pageaaaaaaa";
+import { PageLayout } from "@/components/Layouts/Page";
 import { Stack, Tabs, Text, Title } from "@mantine/core";
 import { BarChart3, Repeat, Truck } from "lucide-react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";

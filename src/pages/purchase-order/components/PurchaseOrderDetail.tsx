@@ -1,4 +1,4 @@
-import { PageLayout } from "@/components/Layoutsaaaaa/Pageaaaaaaa";
+import { PageLayout } from "@/components/Layouts/Page";
 import {
   Stack,
   Text,

@@ -1,4 +1,4 @@
-import { PageLayout } from "@/components/Layoutsaaaaa/Pageaaaaaaa";
+import { PageLayout } from "@/components/Layouts/Page";
 import { RefreshButton } from "@/components/RefreshButton";
 import { Grid, Group, Stack, Text, Title } from "@mantine/core";
 import { useLoadDashboardStats } from "./hooks/useLoadDashboardStats";

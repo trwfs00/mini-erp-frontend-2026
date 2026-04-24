@@ -12,8 +12,8 @@ import ReportPage from "@/pages/report";
 import StockSummaryReportPage from "@/pages/report/components/StockSummaryReport";
 import StockMovementReportPage from "@/pages/report/components/StockMovementReport";
 import PurchaseSummaryReportPage from "@/pages/report/components/PurchaseSummaryReport";
-import { PublicLayout } from "@/components/Layoutsaaaaa/Publicaaaaaaa";
-import { AuthLayout } from "@/components/Layoutsaaaaa/Authaaaaaaa";
+import { PublicLayout } from "@/components/Layouts/Public";
+import { AuthLayout } from "@/components/Layouts/Auth";
 import { ROUTE_PATHS } from "./routePaths";
 
 export const router = createBrowserRouter([
