@@ -24,13 +24,21 @@ export const SessionStorageUtil = {
       this.saveBreadcrumbJourney(journey);
     }
   },
-  saveDebugMode(enabled: boolean) {
-    sessionStorage.setItem(SESSION_STORAGE_KEYS.DEBUG_MODE, enabled.toString());
+  saveAuthBypass(enabled: boolean) {
+    sessionStorage.setItem(
+      SESSION_STORAGE_KEYS.AUTH_BYPASS,
+      enabled.toString(),
+    );
   },
-  loadDebugMode(): boolean {
-    return sessionStorage.getItem(SESSION_STORAGE_KEYS.DEBUG_MODE) === "true";
+  loadAuthBypass(): boolean {
+    return (
+      sessionStorage.getItem(SESSION_STORAGE_KEYS.AUTH_BYPASS) === "true"
+    );
   },
-  deleteDebugMode() {
-    sessionStorage.removeItem(SESSION_STORAGE_KEYS.DEBUG_MODE);
+  saveMockMode(enabled: boolean) {
+    sessionStorage.setItem(SESSION_STORAGE_KEYS.MOCK_MODE, enabled.toString());
+  },
+  loadMockMode(): boolean {
+    return sessionStorage.getItem(SESSION_STORAGE_KEYS.MOCK_MODE) === "true";
   },
 };

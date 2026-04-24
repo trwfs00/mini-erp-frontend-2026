@@ -1,6 +1,6 @@
 import type { ApiReturn } from "@/types/api/ApiReturn";
 import { AxiosUtil } from "@/utils/AxiosUtil";
-import { $debugMode } from "@/stores/debugModeStore";
+import { $mockMode } from "@/stores/debugModeStore";
 import { ProductService } from "../ProductService";
 import { StockService } from "../StockService";
 import { PurchaseOrderService } from "../PurchaseOrderService";
@@ -208,7 +208,7 @@ const buildPurchaseSummaryCsv = (report: PurchaseSummaryReport): Blob => {
 
 export class ReportService {
   static async getStockSummary(): Promise<ApiReturn<GetStockSummaryResponse>> {
-    const isDebug = $debugMode.get();
+    const isDebug = $mockMode.get();
 
     if (isDebug) {
       return new Promise((resolve) => {
@@ -229,7 +229,7 @@ export class ReportService {
   static async getStockMovement(
     request: StockMovementRangeRequest,
   ): Promise<ApiReturn<GetStockMovementResponse>> {
-    const isDebug = $debugMode.get();
+    const isDebug = $mockMode.get();
 
     if (isDebug) {
       return new Promise((resolve) => {
@@ -251,7 +251,7 @@ export class ReportService {
   static async getPurchaseSummary(
     request: PurchaseSummaryMonthRequest,
   ): Promise<ApiReturn<GetPurchaseSummaryResponse>> {
-    const isDebug = $debugMode.get();
+    const isDebug = $mockMode.get();
 
     if (isDebug) {
       return new Promise((resolve) => {
@@ -271,7 +271,7 @@ export class ReportService {
   }
 
   static async exportStockSummary(): Promise<ApiReturn<Blob>> {
-    const isDebug = $debugMode.get();
+    const isDebug = $mockMode.get();
 
     if (isDebug) {
       return new Promise((resolve) => {
@@ -294,7 +294,7 @@ export class ReportService {
   static async exportStockMovement(
     request: StockMovementExportRequest,
   ): Promise<ApiReturn<Blob>> {
-    const isDebug = $debugMode.get();
+    const isDebug = $mockMode.get();
 
     if (isDebug) {
       return new Promise((resolve) => {
@@ -317,7 +317,7 @@ export class ReportService {
   static async exportPurchaseSummary(
     request: PurchaseSummaryExportRequest,
   ): Promise<ApiReturn<Blob>> {
-    const isDebug = $debugMode.get();
+    const isDebug = $mockMode.get();
 
     if (isDebug) {
       return new Promise((resolve) => {

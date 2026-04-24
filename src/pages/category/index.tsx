@@ -27,15 +27,6 @@ const CategoryPage = () => {
   const { categories, pagination, sortHandler, reloadCategories, isLoading } =
     useLoadCategoryData(debouncedSearch);
 
-  const handleRefresh = async () => {
-    await reloadCategories();
-  };
-
-  const handleEdit = (category: CategoryList) => {
-    setSelectedCategory(category);
-    setDrawerOpened(true);
-  };
-
   const handleDelete = (category: CategoryList) => {
     modals.openConfirmModal({
       title: "Delete Category",
@@ -49,7 +40,9 @@ const CategoryPage = () => {
       labels: { confirm: "Delete", cancel: "Cancel" },
       confirmProps: { color: "red" },
       onConfirm: async () => {
-        const response = await CategoryService.deleteCategory(category.category_id);
+        const response = await CategoryService.deleteCategory(
+          category.category_id,
+        );
         if (response.ok) {
           await reloadCategories();
         } else {
@@ -75,11 +68,6 @@ const CategoryPage = () => {
     setIsSaving(false);
   };
 
-  const handleCreate = () => {
-    setSelectedCategory(null);
-    setDrawerOpened(true);
-  };
-
   return (
     <PageLayout>
       <Stack gap="lg">
@@ -101,8 +89,18 @@ const CategoryPage = () => {
               onChange={(e) => setSearch(e.currentTarget.value)}
               w={{ base: "100%", sm: 280 }}
             />
-            <RefreshButton onClick={handleRefresh} />
-            <Button leftSection={<Plus size={16} />} onClick={handleCreate}>
+            <RefreshButton
+              onClick={async () => {
+                await reloadCategories();
+              }}
+            />
+            <Button
+              leftSection={<Plus size={16} />}
+              onClick={() => {
+                setSelectedCategory(null);
+                setDrawerOpened(true);
+              }}
+            >
               Add Category
             </Button>
           </Group>
@@ -112,7 +110,10 @@ const CategoryPage = () => {
           records={categories}
           pagination={pagination}
           sortHandler={sortHandler}
-          onEdit={handleEdit}
+          onEdit={(category: CategoryList) => {
+            setSelectedCategory(category);
+            setDrawerOpened(true);
+          }}
           onDelete={handleDelete}
           isLoading={isLoading}
         />

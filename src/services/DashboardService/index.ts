@@ -1,6 +1,6 @@
 import type { ApiReturn } from "@/types/api/ApiReturn";
 import { AxiosUtil } from "@/utils/AxiosUtil";
-import { $debugMode } from "@/stores/debugModeStore";
+import { $mockMode } from "@/stores/debugModeStore";
 import { ProductService } from "../ProductService";
 import { StockService } from "../StockService";
 import { PurchaseOrderService } from "../PurchaseOrderService";
@@ -119,7 +119,7 @@ const computeDashboardStats = async (): Promise<DashboardStats> => {
 
 export class DashboardService {
   static async getDashboardStats(): Promise<ApiReturn<GetDashboardStatsResponse>> {
-    const isDebug = $debugMode.get();
+    const isDebug = $mockMode.get();
 
     if (isDebug) {
       return new Promise((resolve) => {

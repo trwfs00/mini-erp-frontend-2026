@@ -1,5 +1,13 @@
 import { PageLayout } from "@/components/Layouts/Page";
-import { Stack, Text, Title, Group, TextInput, Button, Select } from "@mantine/core";
+import {
+  Stack,
+  Text,
+  Title,
+  Group,
+  TextInput,
+  Button,
+  Select,
+} from "@mantine/core";
 import { Search, Plus } from "lucide-react";
 import { useState } from "react";
 import { RefreshButton } from "@/components/RefreshButton";
@@ -12,27 +20,17 @@ import type { PurchaseOrderStatus } from "@/types/purchase-order/PurchaseOrder";
 
 const PurchaseOrderPage = () => {
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<PurchaseOrderStatus | "ALL">("ALL");
+  const [statusFilter, setStatusFilter] = useState<PurchaseOrderStatus | "ALL">(
+    "ALL",
+  );
   const [debouncedSearch] = useDebouncedValue(search, 400);
   const navigate = useNavigate();
 
   const { orders, pagination, sortHandler, reloadOrders, isLoading } =
     useLoadPurchaseOrderData(
-      debouncedSearch, 
-      statusFilter === "ALL" ? undefined : statusFilter
+      debouncedSearch,
+      statusFilter === "ALL" ? undefined : statusFilter,
     );
-
-  const handleRefresh = async () => {
-    await reloadOrders();
-  };
-
-  const handleCreate = () => {
-    navigate(ROUTE_PATHS.PO_CREATE);
-  };
-
-  const handleView = (id: string) => {
-    navigate(ROUTE_PATHS.PO_DETAIL.replace(":id", id));
-  };
 
   return (
     <PageLayout>
@@ -68,8 +66,17 @@ const PurchaseOrderPage = () => {
               onChange={(val) => setStatusFilter(val as any)}
               w={150}
             />
-            <RefreshButton onClick={handleRefresh} />
-            <Button leftSection={<Plus size={16} />} onClick={handleCreate}>
+            <RefreshButton
+              onClick={async () => {
+                await reloadOrders();
+              }}
+            />
+            <Button
+              leftSection={<Plus size={16} />}
+              onClick={() => {
+                navigate(ROUTE_PATHS.PO_CREATE);
+              }}
+            >
               Create PO
             </Button>
           </Group>
@@ -79,7 +86,9 @@ const PurchaseOrderPage = () => {
           records={orders}
           pagination={pagination}
           sortHandler={sortHandler}
-          onView={handleView}
+          onView={(id: string) => {
+            navigate(ROUTE_PATHS.PO_DETAIL.replace(":id", id));
+          }}
           isLoading={isLoading}
         />
       </Stack>

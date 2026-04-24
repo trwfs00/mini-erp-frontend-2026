@@ -1,43 +1,48 @@
-import { $debugMode } from "@/stores/debugModeStore";
+import { $authBypass, $mockMode } from "@/stores/debugModeStore";
 import { SessionStorageUtil } from "./SessionStorageUtil";
 
 export const DebugModeUtil = {
   initialize() {
-    if (SessionStorageUtil.loadDebugMode()) {
-      $debugMode.set(true);
-      console.log("[DEBUG MODE] Restored from session - ENABLED");
+    if (SessionStorageUtil.loadAuthBypass()) {
+      $authBypass.set(true);
+      console.log("[AUTH BYPASS] Restored from session - ENABLED");
+    }
+    if (SessionStorageUtil.loadMockMode()) {
+      $mockMode.set(true);
+      console.log("[MOCK MODE] Restored from session - ENABLED");
     }
   },
 
-  enable(enable: boolean) {
-    $debugMode.set(enable);
-    SessionStorageUtil.saveDebugMode(enable);
+  enableAuthBypass(enable: boolean) {
+    $authBypass.set(enable);
+    SessionStorageUtil.saveAuthBypass(enable);
     console.log(
-      `[DEBUG MODE] ${enable ? "ENABLED" : "DISABLED"} - Auth checks ${enable ? "bypassed" : "active"}`,
+      `[AUTH BYPASS] ${enable ? "ENABLED" : "DISABLED"} - Auth checks ${enable ? "bypassed" : "active"}`,
     );
-    if (enable) {
-      console.log(
-        "[DEBUG MODE] Persisted to session - will survive page reloads",
-      );
-    }
+  },
+
+  enableMock(enable: boolean) {
+    $mockMode.set(enable);
+    SessionStorageUtil.saveMockMode(enable);
+    console.log(
+      `[MOCK MODE] ${enable ? "ENABLED" : "DISABLED"} - Services return ${enable ? "mock data" : "real API responses"}`,
+    );
   },
 
   logInstructions() {
     console.log(
-      "%c🔧 Debug Mode Available",
+      "%c🔧 Debug Toggles Available",
       "color: #00D9FF; font-size: 14px; font-weight: bold;",
     );
     console.log(
-      "%cType %cwindow.enableDebug(true)%c to bypass auth checks",
+      "%cAuth bypass: %cwindow.enableAuthBypass(true|false)",
       "color: #888;",
       "color: #FFD700; font-weight: bold;",
-      "color: #888;",
     );
     console.log(
-      "%cType %cwindow.enableDebug(false)%c to re-enable auth checks",
+      "%cMock data:   %cwindow.enableMock(true|false)",
       "color: #888;",
       "color: #FFD700; font-weight: bold;",
-      "color: #888;",
     );
   },
 };

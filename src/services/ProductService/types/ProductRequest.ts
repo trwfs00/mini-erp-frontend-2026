@@ -2,7 +2,6 @@ import type { RequestTable } from "@/types/api/RequestTable";
 
 export type GetProductListRequest = RequestTable<{
   search?: string;
-  category_id?: string;
 }>;
 
 export type SaveProductRequest = {

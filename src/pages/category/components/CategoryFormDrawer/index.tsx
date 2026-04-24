@@ -54,11 +54,6 @@ export const CategoryFormDrawer = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened, category]);
 
-  const handleSubmit = async (values: CategoryFormValues) => {
-    await onSave(values);
-    form.reset();
-  };
-
   return (
     <Drawer
       opened={opened}
@@ -73,7 +68,12 @@ export const CategoryFormDrawer = ({
         },
       }}
     >
-      <form onSubmit={form.onSubmit(handleSubmit)}>
+      <form
+        onSubmit={form.onSubmit(async (values: CategoryFormValues) => {
+          await onSave(values);
+          form.reset();
+        })}
+      >
         <Stack gap="md">
           <TextInput
             label="Category Name"

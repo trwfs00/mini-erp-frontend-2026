@@ -1,6 +1,6 @@
 import type { ApiReturn } from "@/types/api/ApiReturn";
 import { AxiosUtil } from "@/utils/AxiosUtil";
-import { $debugMode } from "@/stores/debugModeStore";
+import { $mockMode } from "@/stores/debugModeStore";
 import type {
   GetStockListResponse,
   StockSummaryResponse,
@@ -177,7 +177,7 @@ export class StockService {
   static async getTransactionList(
     request: GetStockListRequest,
   ): Promise<ApiReturn<GetStockListResponse>> {
-    const isDebug = $debugMode.get();
+    const isDebug = $mockMode.get();
 
     if (isDebug) {
       return new Promise((resolve) => {
@@ -271,7 +271,7 @@ export class StockService {
   static async getStockSummary(
     productId: string,
   ): Promise<ApiReturn<StockSummaryResponse>> {
-    const isDebug = $debugMode.get();
+    const isDebug = $mockMode.get();
 
     if (isDebug) {
       return new Promise((resolve) => {

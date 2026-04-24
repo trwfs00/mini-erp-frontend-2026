@@ -5,7 +5,7 @@ import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { useSidebarToggle } from "./hooks/useSidebarToggle";
 import { useWatchLocalStorage } from "@/hooks/localStorage/useWatchLocalStorage";
 import { LOCAL_STORAGE_KEYS } from "@/consts/keys/localStorageKeys";
-import { $debugMode } from "@/stores/debugModeStore";
+import { $authBypass } from "@/stores/debugModeStore";
 import { LocalStorageUtil } from "@/utils/LocalStorageUtil";
 import { TokenTimerUtil } from "@/utils/TokenTimerUtil";
 import { AuthUtil } from "@/utils/AuthUtil";
@@ -16,7 +16,7 @@ import { AppHeader } from "./components/AppHeader";
 
 export const AuthLayout: FC = () => {
   const authUser = useStore($authUser);
-  const debugMode = useStore($debugMode);
+  const debugMode = useStore($authBypass);
   const [mobileOpened, { toggle: toggleMobile, close: closeMobile }] = useDisclosure(false);
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
   const isMobile = useMediaQuery("(max-width: 48em)");
@@ -45,7 +45,7 @@ export const AuthLayout: FC = () => {
 
   useEffect(() => {
     if (debugMode) {
-      console.log("[DEBUG MODE] Auth check bypassed");
+      console.log("[AUTH BYPASS] Auth check bypassed");
       return;
     }
 

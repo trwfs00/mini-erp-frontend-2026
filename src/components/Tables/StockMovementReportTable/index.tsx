@@ -21,13 +21,21 @@ const columns: DataTableColumn<StockMovementRow>[] = [
     title: "Date",
     sortable: true,
     width: 130,
-    render: (r) => <Text fz="sm" c="gray.6">{formatDate(r.created_at)}</Text>,
+    render: (r) => (
+      <Text fz="sm" c="gray.6">
+        {formatDate(r.created_at)}
+      </Text>
+    ),
   },
   {
     accessor: "product_name",
     title: "Product",
     sortable: true,
-    render: (r) => <Text fz="sm" fw={500}>{r.product_name}</Text>,
+    render: (r) => (
+      <Text fz="sm" fw={500}>
+        {r.product_name}
+      </Text>
+    ),
   },
   {
     accessor: "type",
@@ -36,18 +44,38 @@ const columns: DataTableColumn<StockMovementRow>[] = [
     width: 110,
     render: (r) => <TransactionTypeBadge type={r.type} />,
   },
-  { accessor: "quantity", title: "Qty", sortable: true, textAlign: "right", width: 90 },
-  { accessor: "balance_after", title: "Balance", sortable: true, textAlign: "right", width: 100 },
   {
-    accessor: "note",
-    title: "Note",
-    render: (r) => <Text fz="sm" c="gray.6">{r.note ?? r.reason ?? "-"}</Text>,
+    accessor: "quantity",
+    title: "Qty",
+    sortable: true,
+    textAlign: "right",
+    width: 90,
+  },
+  {
+    accessor: "balance_after",
+    title: "Balance",
+    sortable: true,
+    textAlign: "right",
+    width: 100,
   },
   {
     accessor: "created_by_name",
     title: "By",
     width: 160,
-    render: (r) => <Text fz="sm" c="gray.6">{r.created_by_name}</Text>,
+    render: (r) => (
+      <Text fz="sm" c="gray.6">
+        {r.created_by_name}
+      </Text>
+    ),
+  },
+  {
+    accessor: "note",
+    title: "Note",
+    render: (r) => (
+      <Text fz="sm" c="gray.6">
+        {r.note ?? r.reason ?? "-"}
+      </Text>
+    ),
   },
 ];
 

@@ -73,20 +73,22 @@ export const StockTransactionTable: FC<Props> = ({
       render: ({ balance_after }) => <Text fw={700}>{balance_after}</Text>,
     },
     {
+      accessor: "created_by_name",
+      title: "By",
+      width: 160,
+      render: ({ created_by_name }) => (
+        <Text fz="sm" c="gray.6">
+          {created_by_name}
+        </Text>
+      ),
+    },
+    {
       accessor: "note",
       title: "Note/Reason",
       render: ({ note, reason }) => (
         <Text fz="xs" c="dimmed" lineClamp={1}>
           {reason ? `[Adjust] ${reason}` : note}
         </Text>
-      ),
-    },
-    {
-      accessor: "created_by_name",
-      title: "By",
-      width: 160,
-      render: ({ created_by_name }) => (
-        <Text fz="sm" c="gray.6">{created_by_name}</Text>
       ),
     },
   ];

@@ -6,7 +6,6 @@ export type GetPurchaseOrderListRequest = {
   criteria?: {
     search?: string;
     status?: PurchaseOrderStatus;
-    supplier_id?: string;
   };
   sort_bys?: {
     field: string;
@@ -21,10 +20,14 @@ export type CreatePurchaseOrderItemRequest = {
 };
 
 export type CreatePurchaseOrderRequest = {
+  order_number: string;
   supplier_id: string;
+  total_amount: number;
   items: CreatePurchaseOrderItemRequest[];
+  created_by: string;
 };
 
 export type UpdatePurchaseOrderStatusRequest = {
   status: PurchaseOrderStatus;
+  updated_by: string;
 };

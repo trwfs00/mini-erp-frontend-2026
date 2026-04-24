@@ -9,7 +9,8 @@ import { $authUser } from "@/stores/authUserStore.ts";
 import { DebugModeUtil } from "@/utils/DebugModeUtil.ts";
 
 type WindowWithDebug = Window & {
-  enableDebug: (enable: boolean) => void;
+  enableAuthBypass: (enable: boolean) => void;
+  enableMock: (enable: boolean) => void;
 };
 
 // Initialize from localStorage on app load
@@ -24,8 +25,12 @@ if (authUser && authUser.refresh_token_exp >= Date.now() / 1000) {
 DebugModeUtil.initialize();
 
 // Register backdoor debugging
-(window as unknown as WindowWithDebug).enableDebug = (enable: boolean) => {
-  DebugModeUtil.enable(enable);
+const debugWindow = window as unknown as WindowWithDebug;
+debugWindow.enableAuthBypass = (enable: boolean) => {
+  DebugModeUtil.enableAuthBypass(enable);
+};
+debugWindow.enableMock = (enable: boolean) => {
+  DebugModeUtil.enableMock(enable);
 };
 
 // Log debug mode instructions in development

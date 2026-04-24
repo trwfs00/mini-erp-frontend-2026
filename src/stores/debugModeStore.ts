@@ -1,3 +1,4 @@
 import { atom } from "nanostores";
 
-export const $debugMode = atom<boolean>(false);
+export const $authBypass = atom<boolean>(false);
+export const $mockMode = atom<boolean>(false);

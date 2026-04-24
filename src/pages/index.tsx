@@ -22,7 +22,6 @@ import {
   Title,
 } from "@mantine/core";
 import { EyeIcon, EyeOffIcon, LockIcon, UserIcon } from "lucide-react";
-import type { User } from "@/types/auth/User";
 import type { LoginRequest } from "@/services/AuthService/types/AuthRequest";
 
 export const LoginPage: FC = () => {
@@ -48,13 +47,13 @@ export const LoginPage: FC = () => {
     if (validateError.hasErrors) return;
 
     const res = await AuthService.login(values as LoginRequest);
-    if (!res.ok) {
+    if (!res.ok || !res.data) {
       form.setErrors({ password: res.message || "Login failed" });
       return;
     }
 
-    LocalStorageUtil.saveAuthUser(res.data as User);
-    $authUser.set(res.data as User);
+    LocalStorageUtil.saveAuthUser(res.data);
+    $authUser.set(res.data);
     navigate(ROUTE_PATHS.DASHBOARD);
   };
 

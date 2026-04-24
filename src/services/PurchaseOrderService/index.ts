@@ -1,6 +1,6 @@
 import type { ApiReturn } from "@/types/api/ApiReturn";
 import { AxiosUtil } from "@/utils/AxiosUtil";
-import { $debugMode } from "@/stores/debugModeStore";
+import { $mockMode } from "@/stores/debugModeStore";
 import type {
   GetPurchaseOrderListResponse,
   GetPurchaseOrderResponse,
@@ -11,7 +11,10 @@ import type {
   CreatePurchaseOrderRequest,
   UpdatePurchaseOrderStatusRequest,
 } from "./types/PurchaseOrderRequest";
-import type { PurchaseOrder, PurchaseOrderSummary } from "@/types/purchase-order/PurchaseOrder";
+import type {
+  PurchaseOrder,
+  PurchaseOrderSummary,
+} from "@/types/purchase-order/PurchaseOrder";
 import { StockService } from "../StockService";
 
 const MOCK_POS: PurchaseOrder[] = [
@@ -93,7 +96,7 @@ export class PurchaseOrderService {
   static async getPurchaseOrderList(
     request: GetPurchaseOrderListRequest,
   ): Promise<ApiReturn<GetPurchaseOrderListResponse>> {
-    const isDebug = $debugMode.get();
+    const isDebug = $mockMode.get();
 
     if (isDebug) {
       return new Promise((resolve) => {
@@ -102,7 +105,9 @@ export class PurchaseOrderService {
 
           let filtered = [...MOCK_POS];
           if (request.criteria?.status) {
-            filtered = filtered.filter((po) => po.status === request.criteria?.status);
+            filtered = filtered.filter(
+              (po) => po.status === request.criteria?.status,
+            );
           }
           if (request.criteria?.search) {
             const search = request.criteria.search.toLowerCase();
@@ -152,7 +157,7 @@ export class PurchaseOrderService {
   static async getPurchaseOrder(
     id: string,
   ): Promise<ApiReturn<GetPurchaseOrderResponse>> {
-    const isDebug = $debugMode.get();
+    const isDebug = $mockMode.get();
 
     if (isDebug) {
       return new Promise((resolve) => {
@@ -176,14 +181,16 @@ export class PurchaseOrderService {
   static async createPurchaseOrder(
     request: CreatePurchaseOrderRequest,
   ): Promise<ApiReturn<SavePurchaseOrderResponse>> {
-    const isDebug = $debugMode.get();
+    const isDebug = $mockMode.get();
 
     if (isDebug) {
       return new Promise((resolve) => {
         setTimeout(() => {
-          const newId = `PO-2026-${Math.floor(Math.random() * 1000).toString().padStart(3, "0")}`;
+          const newId = `PO-2026-${Math.floor(Math.random() * 1000)
+            .toString()
+            .padStart(3, "0")}`;
           console.log("[Mock] Creating PO:", request);
-          
+
           // In a real mock we would push to MOCK_POS, but since it's a static const, we'll just return success
           resolve({
             ok: true,
@@ -202,20 +209,22 @@ export class PurchaseOrderService {
 
   static async updateStatus(
     id: string,
-    status: UpdatePurchaseOrderStatusRequest["status"],
+    request: UpdatePurchaseOrderStatusRequest,
   ): Promise<ApiReturn<void>> {
-    const isDebug = $debugMode.get();
+    const isDebug = $mockMode.get();
 
     if (isDebug) {
       return new Promise(async (resolve) => {
         setTimeout(async () => {
           const po = MOCK_POS.find((p) => p.purchase_order_id === id);
           if (po) {
-            po.status = status;
-            
+            po.status = request.status;
+
             // Trigger Stock IN logic
-            if (status === "RECEIVED") {
-              console.log(`[Logic] PO ${id} RECEIVED. Triggering Stock IN for ${po.items.length} items.`);
+            if (request.status === "RECEIVED") {
+              console.log(
+                `[Logic] PO ${id} RECEIVED. Triggering Stock IN for ${po.items.length} items.`,
+              );
               for (const item of po.items) {
                 await StockService.stockIn({
                   product_id: item.product_id,
@@ -225,7 +234,7 @@ export class PurchaseOrderService {
                 });
               }
             }
-            
+
             resolve({ ok: true, data: undefined });
           } else {
             resolve({ ok: false, message: "Purchase Order not found" });
@@ -237,7 +246,7 @@ export class PurchaseOrderService {
     return AxiosUtil.createRequest<void>({
       url: `/purchase-orders/${id}/status`,
       method: "PATCH",
-      data: { status },
+      data: request,
     });
   }
 }

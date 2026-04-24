@@ -1,8 +1,13 @@
+export type UserRole = {
+  role_id: string;
+  name: string;
+};
+
 export type User = {
-  user_id: number;
+  user_id: string;
   name: string;
   username: string;
-  role_id: number;
+  role: UserRole;
   access_token: string;
   access_token_exp: number;
   refresh_token: string;

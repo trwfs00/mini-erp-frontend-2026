@@ -1,6 +1,6 @@
 import type { ApiReturn } from "@/types/api/ApiReturn";
 import { AxiosUtil } from "@/utils/AxiosUtil";
-import { $debugMode } from "@/stores/debugModeStore";
+import { $mockMode } from "@/stores/debugModeStore";
 import type {
   GetCategoryListResponse,
   GetCategoryResponse,
@@ -75,7 +75,7 @@ export class CategoryService {
   static async getCategoryList(
     request: GetCategoryListRequest,
   ): Promise<ApiReturn<GetCategoryListResponse>> {
-    const isDebug = $debugMode.get();
+    const isDebug = $mockMode.get();
 
     if (isDebug) {
       return new Promise((resolve) => {
