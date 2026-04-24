@@ -11,6 +11,11 @@ export const DebugModeUtil = {
       $mockMode.set(true);
       console.log("[MOCK MODE] Restored from session - ENABLED");
     }
+    if (SessionStorageUtil.loadBypassAll()) {
+      $mockMode.set(true);
+      $authBypass.set(true);
+      console.log("[BYPASS ALL] Restored from session - ENABLED");
+    }
   },
 
   enableAuthBypass(enable: boolean) {
@@ -29,6 +34,15 @@ export const DebugModeUtil = {
     );
   },
 
+  enableBypassAll(enable: boolean) {
+    $mockMode.set(enable);
+    $authBypass.set(enable);
+    SessionStorageUtil.saveBypassAll(enable);
+    console.log(
+      `[BYPASS ALL] ${enable ? "ENABLED" : "DISABLED"} - ${enable ? "all" : "normal"} mode`,
+    );
+  },
+
   logInstructions() {
     console.log(
       "%c🔧 Debug Toggles Available",
@@ -41,6 +55,11 @@ export const DebugModeUtil = {
     );
     console.log(
       "%cMock data:   %cwindow.enableMock(true|false)",
+      "color: #888;",
+      "color: #FFD700; font-weight: bold;",
+    );
+    console.log(
+      "%cBypass all:   %cwindow.enableBypassAll(true|false)",
       "color: #888;",
       "color: #FFD700; font-weight: bold;",
     );

@@ -31,14 +31,18 @@ export const SessionStorageUtil = {
     );
   },
   loadAuthBypass(): boolean {
-    return (
-      sessionStorage.getItem(SESSION_STORAGE_KEYS.AUTH_BYPASS) === "true"
-    );
+    return sessionStorage.getItem(SESSION_STORAGE_KEYS.AUTH_BYPASS) === "true";
   },
   saveMockMode(enabled: boolean) {
     sessionStorage.setItem(SESSION_STORAGE_KEYS.MOCK_MODE, enabled.toString());
   },
   loadMockMode(): boolean {
     return sessionStorage.getItem(SESSION_STORAGE_KEYS.MOCK_MODE) === "true";
+  },
+  saveBypassAll(enabled: boolean) {
+    sessionStorage.setItem(SESSION_STORAGE_KEYS.BYPASS_ALL, enabled.toString());
+  },
+  loadBypassAll(): boolean {
+    return sessionStorage.getItem(SESSION_STORAGE_KEYS.BYPASS_ALL) === "true";
   },
 };

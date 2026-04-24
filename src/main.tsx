@@ -11,6 +11,7 @@ import { DebugModeUtil } from "@/utils/DebugModeUtil.ts";
 type WindowWithDebug = Window & {
   enableAuthBypass: (enable: boolean) => void;
   enableMock: (enable: boolean) => void;
+  enableBypassAll: (enable: boolean) => void;
 };
 
 // Initialize from localStorage on app load
@@ -31,6 +32,9 @@ debugWindow.enableAuthBypass = (enable: boolean) => {
 };
 debugWindow.enableMock = (enable: boolean) => {
   DebugModeUtil.enableMock(enable);
+};
+debugWindow.enableBypassAll = (enable: boolean) => {
+  DebugModeUtil.enableBypassAll(enable);
 };
 
 // Log debug mode instructions in development
