@@ -1,4 +1,4 @@
-import { PageLayout } from "@/components/Layouts/Page";
+import { PageLayout } from "@/components/Layoutsaaaaa/Pageaaaaaaa";
 import { RefreshButton } from "@/components/RefreshButton";
 import { Grid, Group, Stack, Text, Title } from "@mantine/core";
 import { useLoadDashboardStats } from "./hooks/useLoadDashboardStats";
@@ -40,7 +40,10 @@ const DashboardPage = () => {
             <StockMovementChart data={stockMovement} isLoading={isLoading} />
           </Grid.Col>
           <Grid.Col span={{ base: 12, lg: 4 }}>
-            <LowStockWarningList products={lowStockProducts} isLoading={isLoading} />
+            <LowStockWarningList
+              products={lowStockProducts}
+              isLoading={isLoading}
+            />
           </Grid.Col>
           <Grid.Col span={12}>
             <PurchaseTrendChart data={purchaseTrend} isLoading={isLoading} />

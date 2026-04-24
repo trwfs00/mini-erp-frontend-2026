@@ -1,4 +1,4 @@
-import { PageLayout } from "@/components/Layouts/Page";
+import { PageLayout } from "@/components/Layoutsaaaaa/Pageaaaaaaa";
 import { ProductListTable } from "@/components/Tables/ProductListTable";
 import { useLoadProductData } from "@/pages/product/hooks/useLoadProductData";
 import { Stack, Text, Title, Group, TextInput } from "@mantine/core";

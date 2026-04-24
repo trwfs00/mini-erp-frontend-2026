@@ -1,4 +1,4 @@
-import { PageLayout } from "@/components/Layouts/Page";
+import { PageLayout } from "@/components/Layoutsaaaaa/Pageaaaaaaa";
 import { CategoryListTable } from "@/components/Tables/CategoryListTable";
 import { useLoadCategoryData } from "@/pages/category/hooks/useLoadCategoryData";
 import { Stack, Text, Title, Group, TextInput } from "@mantine/core";

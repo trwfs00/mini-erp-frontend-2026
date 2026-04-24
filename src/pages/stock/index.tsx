@@ -1,4 +1,4 @@
-import { PageLayout } from "@/components/Layouts/Page";
+import { PageLayout } from "@/components/Layoutsaaaaa/Pageaaaaaaa";
 import { StockTransactionTable } from "@/components/Tables/StockTransactionTable";
 import { useLoadStockTransactions } from "@/pages/stock/hooks/useLoadStockTransactions";
 import {

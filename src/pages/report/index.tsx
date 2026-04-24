@@ -1,20 +1,33 @@
-import { PageLayout } from "@/components/Layouts/Page";
+import { PageLayout } from "@/components/Layoutsaaaaa/Pageaaaaaaa";
 import { Stack, Tabs, Text, Title } from "@mantine/core";
 import { BarChart3, Repeat, Truck } from "lucide-react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ROUTE_PATHS } from "@/router/routePaths";
 
 const TABS = [
-  { value: ROUTE_PATHS.REPORT_STOCK_SUMMARY, label: "Stock Summary", icon: BarChart3 },
-  { value: ROUTE_PATHS.REPORT_STOCK_MOVEMENT, label: "Stock Movement", icon: Repeat },
-  { value: ROUTE_PATHS.REPORT_PURCHASE_SUMMARY, label: "Purchase Summary", icon: Truck },
+  {
+    value: ROUTE_PATHS.REPORT_STOCK_SUMMARY,
+    label: "Stock Summary",
+    icon: BarChart3,
+  },
+  {
+    value: ROUTE_PATHS.REPORT_STOCK_MOVEMENT,
+    label: "Stock Movement",
+    icon: Repeat,
+  },
+  {
+    value: ROUTE_PATHS.REPORT_PURCHASE_SUMMARY,
+    label: "Purchase Summary",
+    icon: Truck,
+  },
 ];
 
 const ReportPage = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const active = TABS.find((t) => pathname.startsWith(t.value))?.value ?? TABS[0].value;
+  const active =
+    TABS.find((t) => pathname.startsWith(t.value))?.value ?? TABS[0].value;
 
   return (
     <PageLayout>
@@ -28,10 +41,18 @@ const ReportPage = () => {
           </Text>
         </Stack>
 
-        <Tabs value={active} onChange={(v) => v && navigate(v)} variant="outline">
+        <Tabs
+          value={active}
+          onChange={(v) => v && navigate(v)}
+          variant="outline"
+        >
           <Tabs.List>
             {TABS.map((t) => (
-              <Tabs.Tab key={t.value} value={t.value} leftSection={<t.icon size={14} />}>
+              <Tabs.Tab
+                key={t.value}
+                value={t.value}
+                leftSection={<t.icon size={14} />}
+              >
                 {t.label}
               </Tabs.Tab>
             ))}

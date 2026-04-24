@@ -12,8 +12,8 @@ import ReportPage from "@/pages/report";
 import StockSummaryReportPage from "@/pages/report/components/StockSummaryReport";
 import StockMovementReportPage from "@/pages/report/components/StockMovementReport";
 import PurchaseSummaryReportPage from "@/pages/report/components/PurchaseSummaryReport";
-import { PublicLayout } from "@/components/Layouts/Public";
-import { AuthLayout } from "@/components/Layouts/Auth";
+import { PublicLayout } from "@/components/Layoutsaaaaa/Publicaaaaaaa";
+import { AuthLayout } from "@/components/Layoutsaaaaa/Authaaaaaaa";
 import { ROUTE_PATHS } from "./routePaths";
 
 export const router = createBrowserRouter([
@@ -31,54 +31,57 @@ export const router = createBrowserRouter([
     path: "/",
     element: <AuthLayout />,
     children: [
-      { 
-        path: ROUTE_PATHS.DASHBOARD, 
+      {
+        path: ROUTE_PATHS.DASHBOARD,
         element: <DashboardPage />,
-        handle: { crumb: "Dashboard" }
+        handle: { crumb: "Dashboard" },
       },
-      { 
-        path: ROUTE_PATHS.PRODUCT, 
+      {
+        path: ROUTE_PATHS.PRODUCT,
         element: <ProductsPage />,
-        handle: { crumb: "Products" }
+        handle: { crumb: "Products" },
       },
-      { 
-        path: ROUTE_PATHS.CATEGORY, 
+      {
+        path: ROUTE_PATHS.CATEGORY,
         element: <CategoryPage />,
-        handle: { crumb: "Category" }
+        handle: { crumb: "Category" },
       },
-      { 
-        path: ROUTE_PATHS.STOCK, 
+      {
+        path: ROUTE_PATHS.STOCK,
         element: <StockPage />,
-        handle: { crumb: "Stock" }
+        handle: { crumb: "Stock" },
       },
-      { 
-        path: ROUTE_PATHS.SUPPLIERS, 
+      {
+        path: ROUTE_PATHS.SUPPLIERS,
         element: <SupplierPage />,
-        handle: { crumb: "Suppliers" }
+        handle: { crumb: "Suppliers" },
       },
-      { 
-        path: ROUTE_PATHS.PURCHASE_ORDERS, 
+      {
+        path: ROUTE_PATHS.PURCHASE_ORDERS,
         handle: { crumb: "Purchase Orders" },
         children: [
           { index: true, element: <PurchaseOrderPage /> },
-          { 
-            path: "create", 
+          {
+            path: "create",
             element: <PurchaseOrderCreatePage />,
-            handle: { crumb: "Create" }
+            handle: { crumb: "Create" },
           },
-          { 
-            path: ":id", 
+          {
+            path: ":id",
             element: <PurchaseOrderDetailPage />,
-            handle: { crumb: "Detail" }
+            handle: { crumb: "Detail" },
           },
-        ]
+        ],
       },
       {
         path: ROUTE_PATHS.REPORT,
         element: <ReportPage />,
         handle: { crumb: "Report" },
         children: [
-          { index: true, element: <Navigate to={ROUTE_PATHS.REPORT_STOCK_SUMMARY} replace /> },
+          {
+            index: true,
+            element: <Navigate to={ROUTE_PATHS.REPORT_STOCK_SUMMARY} replace />,
+          },
           {
             path: "stock-summary",
             element: <StockSummaryReportPage />,
