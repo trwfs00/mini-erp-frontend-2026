@@ -92,8 +92,8 @@ const MOCK_POS: PurchaseOrder[] = [
   },
 ];
 
-export class PurchaseOrderService {
-  static async getPurchaseOrderList(
+export const PurchaseOrderService = {
+  async getPurchaseOrderList(
     request: GetPurchaseOrderListRequest,
   ): Promise<ApiReturn<GetPurchaseOrderListResponse>> {
     const isDebug = $mockMode.get();
@@ -152,9 +152,9 @@ export class PurchaseOrderService {
       method: "GET",
       params: request,
     });
-  }
+  },
 
-  static async getPurchaseOrder(
+  async getPurchaseOrder(
     id: string,
   ): Promise<ApiReturn<GetPurchaseOrderResponse>> {
     const isDebug = $mockMode.get();
@@ -176,9 +176,9 @@ export class PurchaseOrderService {
       url: `/purchase-orders/${id}`,
       method: "GET",
     });
-  }
+  },
 
-  static async createPurchaseOrder(
+  async createPurchaseOrder(
     request: CreatePurchaseOrderRequest,
   ): Promise<ApiReturn<SavePurchaseOrderResponse>> {
     const isDebug = $mockMode.get();
@@ -205,9 +205,9 @@ export class PurchaseOrderService {
       method: "POST",
       data: request,
     });
-  }
+  },
 
-  static async updateStatus(
+  async updateStatus(
     id: string,
     request: UpdatePurchaseOrderStatusRequest,
   ): Promise<ApiReturn<void>> {
@@ -248,5 +248,5 @@ export class PurchaseOrderService {
       method: "PATCH",
       data: request,
     });
-  }
-}
+  },
+};

@@ -35,10 +35,16 @@ const computeStockMovementDaily = async (
     else point.adjust += t.quantity;
     dailyMap.set(date, point);
   }
-  return { daily: Array.from(dailyMap.values()).sort((a, b) => a.date.localeCompare(b.date)) };
+  return {
+    daily: Array.from(dailyMap.values()).sort((a, b) =>
+      a.date.localeCompare(b.date),
+    ),
+  };
 };
 
-const computePurchaseTrend = async (months: number): Promise<PurchaseTrendPoint[]> => {
+const computePurchaseTrend = async (
+  months: number,
+): Promise<PurchaseTrendPoint[]> => {
   const res = await PurchaseOrderService.getPurchaseOrderList(FETCH_ALL_ARGS);
   const pos = res.ok && res.data ? res.data.data : [];
 
@@ -63,12 +69,19 @@ const computePurchaseTrend = async (months: number): Promise<PurchaseTrendPoint[
 
 const computeDashboardStats = async (): Promise<DashboardStats> => {
   const now = new Date();
-  const fourteenDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 13);
+  const fourteenDaysAgo = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() - 13,
+  );
 
   const [productRes, poRes, movement, purchase_trend] = await Promise.all([
     ProductService.getProductList(FETCH_ALL_ARGS),
     PurchaseOrderService.getPurchaseOrderList(FETCH_ALL_ARGS),
-    computeStockMovementDaily(toIsoDate(fourteenDaysAgo.toISOString()), toIsoDate(now.toISOString())),
+    computeStockMovementDaily(
+      toIsoDate(fourteenDaysAgo.toISOString()),
+      toIsoDate(now.toISOString()),
+    ),
     computePurchaseTrend(6),
   ]);
 
@@ -79,14 +92,23 @@ const computeDashboardStats = async (): Promise<DashboardStats> => {
     (acc, p) => ({
       total_products: acc.total_products + 1,
       total_stock_value: acc.total_stock_value + p.cost_price * p.current_stock,
-      total_selling_value: acc.total_selling_value + p.selling_price * p.current_stock,
-      low_stock_count: acc.low_stock_count + (p.current_stock <= p.min_stock ? 1 : 0),
+      total_selling_value:
+        acc.total_selling_value + p.selling_price * p.current_stock,
+      low_stock_count:
+        acc.low_stock_count + (p.current_stock <= p.min_stock ? 1 : 0),
     }),
-    { total_products: 0, total_stock_value: 0, total_selling_value: 0, low_stock_count: 0 },
+    {
+      total_products: 0,
+      total_stock_value: 0,
+      total_selling_value: 0,
+      low_stock_count: 0,
+    },
   );
 
   const thisMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-  const pending_po_count = pos.filter((p) => p.status === "DRAFT" || p.status === "CONFIRMED").length;
+  const pending_po_count = pos.filter(
+    (p) => p.status === "DRAFT" || p.status === "CONFIRMED",
+  ).length;
   const received_po_this_month = pos.filter(
     (p) => p.status === "RECEIVED" && toYearMonth(p.created_at) === thisMonth,
   ).length;
@@ -117,8 +139,8 @@ const computeDashboardStats = async (): Promise<DashboardStats> => {
   };
 };
 
-export class DashboardService {
-  static async getDashboardStats(): Promise<ApiReturn<GetDashboardStatsResponse>> {
+export const DashboardService = {
+  async getDashboardStats(): Promise<ApiReturn<GetDashboardStatsResponse>> {
     const isDebug = $mockMode.get();
 
     if (isDebug) {
@@ -135,5 +157,5 @@ export class DashboardService {
       url: "/dashboard/stats",
       method: "GET",
     });
-  }
-}
+  },
+};

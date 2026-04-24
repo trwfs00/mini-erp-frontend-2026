@@ -173,8 +173,8 @@ const MOCK_TRANSACTIONS: StockTransaction[] = [
   },
 ];
 
-export class StockService {
-  static async getTransactionList(
+export const StockService = {
+  async getTransactionList(
     request: GetStockListRequest,
   ): Promise<ApiReturn<GetStockListResponse>> {
     const isDebug = $mockMode.get();
@@ -193,9 +193,7 @@ export class StockService {
           }
 
           if (request.criteria?.type) {
-            filtered = filtered.filter(
-              (t) => t.type === request.criteria.type,
-            );
+            filtered = filtered.filter((t) => t.type === request.criteria.type);
           }
 
           // Sorting logic
@@ -235,19 +233,17 @@ export class StockService {
       method: "GET",
       params: request,
     });
-  }
+  },
 
-  static async stockIn(
-    data: CreateStockTransactionRequest,
-  ): Promise<ApiReturn<void>> {
+  async stockIn(data: CreateStockTransactionRequest): Promise<ApiReturn<void>> {
     return AxiosUtil.createRequest<void>({
       url: "/stock/in",
       method: "POST",
       data,
     });
-  }
+  },
 
-  static async stockOut(
+  async stockOut(
     data: CreateStockTransactionRequest,
   ): Promise<ApiReturn<void>> {
     // For mock/local validation if needed, but usually handled by backend
@@ -256,9 +252,9 @@ export class StockService {
       method: "POST",
       data,
     });
-  }
+  },
 
-  static async stockAdjust(
+  async stockAdjust(
     data: CreateStockTransactionRequest,
   ): Promise<ApiReturn<void>> {
     return AxiosUtil.createRequest<void>({
@@ -266,9 +262,9 @@ export class StockService {
       method: "POST",
       data,
     });
-  }
+  },
 
-  static async getStockSummary(
+  async getStockSummary(
     productId: string,
   ): Promise<ApiReturn<StockSummaryResponse>> {
     const isDebug = $mockMode.get();
@@ -280,7 +276,7 @@ export class StockService {
           const productTransactions = MOCK_TRANSACTIONS.filter(
             (t) => t.product_id === productId,
           );
-          
+
           let currentStock = 0;
           productTransactions.forEach((t) => {
             if (t.type === "IN") currentStock += t.quantity;
@@ -305,5 +301,5 @@ export class StockService {
       url: `/products/${productId}/stock-summary`,
       method: "GET",
     });
-  }
-}
+  },
+};

@@ -171,8 +171,8 @@ const MOCK_PRODUCTS: ProductList[] = [
   },
 ];
 
-export class ProductService {
-  static async getProductList(
+export const ProductService = {
+  async getProductList(
     request: GetProductListRequest,
   ): Promise<ApiReturn<GetProductListResponse>> {
     const isDebug = $mockMode.get();
@@ -229,18 +229,16 @@ export class ProductService {
       method: "GET",
       params: request,
     });
-  }
+  },
 
-  static async getProduct(
-    productId: string,
-  ): Promise<ApiReturn<GetProductResponse>> {
+  async getProduct(productId: string): Promise<ApiReturn<GetProductResponse>> {
     return AxiosUtil.createRequest<GetProductResponse>({
       url: `/product/${productId}`,
       method: "GET",
     });
-  }
+  },
 
-  static async saveProduct(
+  async saveProduct(
     request: SaveProductRequest,
   ): Promise<ApiReturn<SaveProductResponse>> {
     return AxiosUtil.createRequest<SaveProductResponse>({
@@ -248,12 +246,12 @@ export class ProductService {
       method: "POST",
       data: request,
     });
-  }
+  },
 
-  static async deleteProduct(productId: string): Promise<ApiReturn<void>> {
+  async deleteProduct(productId: string): Promise<ApiReturn<void>> {
     return AxiosUtil.createRequest<void>({
       url: `/product/${productId}`,
       method: "DELETE",
     });
-  }
-}
+  },
+};

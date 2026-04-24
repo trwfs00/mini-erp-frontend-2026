@@ -42,8 +42,8 @@ const MOCK_SUPPLIERS: SupplierList[] = [
   },
 ];
 
-export class SupplierService {
-  static async getSupplierList(
+export const SupplierService = {
+  async getSupplierList(
     request: GetSupplierListRequest,
   ): Promise<ApiReturn<GetSupplierListResponse>> {
     const isDebug = $mockMode.get();
@@ -88,18 +88,18 @@ export class SupplierService {
       method: "GET",
       params: request,
     });
-  }
+  },
 
-  static async getSupplier(
+  async getSupplier(
     supplierId: string,
   ): Promise<ApiReturn<GetSupplierResponse>> {
     return AxiosUtil.createRequest<GetSupplierResponse>({
       url: `/supplier/${supplierId}`,
       method: "GET",
     });
-  }
+  },
 
-  static async saveSupplier(
+  async saveSupplier(
     request: SaveSupplierRequest,
   ): Promise<ApiReturn<SaveSupplierResponse>> {
     return AxiosUtil.createRequest<SaveSupplierResponse>({
@@ -107,12 +107,12 @@ export class SupplierService {
       method: "POST",
       data: request,
     });
-  }
+  },
 
-  static async deleteSupplier(supplierId: string): Promise<ApiReturn<void>> {
+  async deleteSupplier(supplierId: string): Promise<ApiReturn<void>> {
     return AxiosUtil.createRequest<void>({
       url: `/supplier/${supplierId}`,
       method: "DELETE",
     });
-  }
-}
+  },
+};

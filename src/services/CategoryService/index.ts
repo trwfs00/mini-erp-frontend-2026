@@ -71,8 +71,8 @@ const MOCK_CATEGORIES: CategoryList[] = [
   },
 ];
 
-export class CategoryService {
-  static async getCategoryList(
+export const CategoryService = {
+  async getCategoryList(
     request: GetCategoryListRequest,
   ): Promise<ApiReturn<GetCategoryListResponse>> {
     const isDebug = $mockMode.get();
@@ -116,18 +116,18 @@ export class CategoryService {
       method: "GET",
       params: request,
     });
-  }
+  },
 
-  static async getCategory(
+  async getCategory(
     categoryId: string,
   ): Promise<ApiReturn<GetCategoryResponse>> {
     return AxiosUtil.createRequest<GetCategoryResponse>({
       url: `/category/${categoryId}`,
       method: "GET",
     });
-  }
+  },
 
-  static async saveCategory(
+  async saveCategory(
     request: SaveCategoryRequest,
   ): Promise<ApiReturn<SaveCategoryResponse>> {
     return AxiosUtil.createRequest<SaveCategoryResponse>({
@@ -135,12 +135,12 @@ export class CategoryService {
       method: "POST",
       data: request,
     });
-  }
+  },
 
-  static async deleteCategory(categoryId: string): Promise<ApiReturn<void>> {
+  async deleteCategory(categoryId: string): Promise<ApiReturn<void>> {
     return AxiosUtil.createRequest<void>({
       url: `/category/${categoryId}`,
       method: "DELETE",
     });
-  }
-}
+  },
+};

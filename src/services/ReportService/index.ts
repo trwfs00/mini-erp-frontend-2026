@@ -59,7 +59,12 @@ const computeStockSummary = async (): Promise<StockSummaryReport> => {
       total_selling_value: acc.total_selling_value + r.selling_value,
       low_stock_count: acc.low_stock_count + (r.is_low_stock ? 1 : 0),
     }),
-    { total_products: 0, total_cost_value: 0, total_selling_value: 0, low_stock_count: 0 },
+    {
+      total_products: 0,
+      total_cost_value: 0,
+      total_selling_value: 0,
+      low_stock_count: 0,
+    },
   );
 
   return { rows, totals };
@@ -100,7 +105,9 @@ const computeStockMovement = async (
     else point.adjust += r.quantity;
     dailyMap.set(date, point);
   }
-  const daily = Array.from(dailyMap.values()).sort((a, b) => a.date.localeCompare(b.date));
+  const daily = Array.from(dailyMap.values()).sort((a, b) =>
+    a.date.localeCompare(b.date),
+  );
 
   const totals = rows.reduce(
     (acc, r) => ({
@@ -178,7 +185,16 @@ const buildStockSummaryCsv = (report: StockSummaryReport): Blob => {
 };
 
 const buildStockMovementCsv = (report: StockMovementReport): Blob => {
-  const headers = ["Transaction ID", "Date", "Product", "Type", "Quantity", "Balance After", "Note", "By"];
+  const headers = [
+    "Transaction ID",
+    "Date",
+    "Product",
+    "Type",
+    "Quantity",
+    "Balance After",
+    "Note",
+    "By",
+  ];
   const rows = report.rows.map((r) => [
     r.transaction_id,
     r.created_at,
@@ -193,7 +209,15 @@ const buildStockMovementCsv = (report: StockMovementReport): Blob => {
 };
 
 const buildPurchaseSummaryCsv = (report: PurchaseSummaryReport): Blob => {
-  const headers = ["PO ID", "Supplier", "Status", "Items", "Total Amount", "Created At", "Created By"];
+  const headers = [
+    "PO ID",
+    "Supplier",
+    "Status",
+    "Items",
+    "Total Amount",
+    "Created At",
+    "Created By",
+  ];
   const rows = report.rows.map((r) => [
     r.purchase_order_id,
     r.supplier_name,
@@ -206,8 +230,8 @@ const buildPurchaseSummaryCsv = (report: PurchaseSummaryReport): Blob => {
   return ExportUtil.buildCsvBlob(headers, rows);
 };
 
-export class ReportService {
-  static async getStockSummary(): Promise<ApiReturn<GetStockSummaryResponse>> {
+export const ReportService = {
+  async getStockSummary(): Promise<ApiReturn<GetStockSummaryResponse>> {
     const isDebug = $mockMode.get();
 
     if (isDebug) {
@@ -224,9 +248,9 @@ export class ReportService {
       url: "/reports/stock-summary",
       method: "GET",
     });
-  }
+  },
 
-  static async getStockMovement(
+  async getStockMovement(
     request: StockMovementRangeRequest,
   ): Promise<ApiReturn<GetStockMovementResponse>> {
     const isDebug = $mockMode.get();
@@ -246,9 +270,9 @@ export class ReportService {
       method: "GET",
       params: request,
     });
-  }
+  },
 
-  static async getPurchaseSummary(
+  async getPurchaseSummary(
     request: PurchaseSummaryMonthRequest,
   ): Promise<ApiReturn<GetPurchaseSummaryResponse>> {
     const isDebug = $mockMode.get();
@@ -268,9 +292,9 @@ export class ReportService {
       method: "GET",
       params: request,
     });
-  }
+  },
 
-  static async exportStockSummary(): Promise<ApiReturn<Blob>> {
+  async exportStockSummary(): Promise<ApiReturn<Blob>> {
     const isDebug = $mockMode.get();
 
     if (isDebug) {
@@ -289,9 +313,9 @@ export class ReportService {
       params: { format: "csv" },
       responseType: "blob",
     });
-  }
+  },
 
-  static async exportStockMovement(
+  async exportStockMovement(
     request: StockMovementExportRequest,
   ): Promise<ApiReturn<Blob>> {
     const isDebug = $mockMode.get();
@@ -312,9 +336,9 @@ export class ReportService {
       params: request,
       responseType: "blob",
     });
-  }
+  },
 
-  static async exportPurchaseSummary(
+  async exportPurchaseSummary(
     request: PurchaseSummaryExportRequest,
   ): Promise<ApiReturn<Blob>> {
     const isDebug = $mockMode.get();
@@ -335,5 +359,5 @@ export class ReportService {
       params: request,
       responseType: "blob",
     });
-  }
-}
+  },
+};
