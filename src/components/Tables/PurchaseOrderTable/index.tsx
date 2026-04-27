@@ -26,12 +26,12 @@ export const PurchaseOrderTable: FC<Props> = ({
   isLoading,
 }) => {
   const columns: DataTableColumn<PurchaseOrderSummary>[] = [
-    { 
-      accessor: "purchase_order_id", 
-      title: "PO Number", 
-      sortable: true, 
+    {
+      accessor: "purchase_order_id",
+      title: "PO Number",
+      sortable: true,
       width: 150,
-      render: (p) => <Text fw={500}>{p.purchase_order_id}</Text>
+      render: (p) => <Text fw={500}>{p.purchase_order_id}</Text>,
     },
     { accessor: "supplier_name", title: "Supplier", sortable: true },
     {

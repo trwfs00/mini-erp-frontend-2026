@@ -22,7 +22,11 @@ const columns: DataTableColumn<PurchaseSummaryRow>[] = [
     title: "PO ID",
     sortable: true,
     width: 160,
-    render: (r) => <Text fz="sm" fw={500}>{r.purchase_order_id}</Text>,
+    render: (r) => (
+      <Text fz="sm" fw={500}>
+        {r.purchase_order_id}
+      </Text>
+    ),
   },
   {
     accessor: "supplier_name",
@@ -37,7 +41,13 @@ const columns: DataTableColumn<PurchaseSummaryRow>[] = [
     width: 120,
     render: (r) => <PurchaseOrderStatusBadge status={r.status} />,
   },
-  { accessor: "item_count", title: "Items", sortable: true, textAlign: "right", width: 90 },
+  {
+    accessor: "item_count",
+    title: "Items",
+    sortable: true,
+    textAlign: "right",
+    width: 90,
+  },
   {
     accessor: "total_amount",
     title: "Total",
@@ -51,13 +61,21 @@ const columns: DataTableColumn<PurchaseSummaryRow>[] = [
     title: "Created",
     sortable: true,
     width: 140,
-    render: (r) => <Text fz="sm" c="gray.6">{formatDate(r.created_at)}</Text>,
+    render: (r) => (
+      <Text fz="sm" c="gray.6">
+        {formatDate(r.created_at)}
+      </Text>
+    ),
   },
   {
     accessor: "created_by_name",
     title: "By",
     width: 160,
-    render: (r) => <Text fz="sm" c="gray.6">{r.created_by_name}</Text>,
+    render: (r) => (
+      <Text fz="sm" c="gray.6">
+        {r.created_by_name}
+      </Text>
+    ),
   },
 ];
 
