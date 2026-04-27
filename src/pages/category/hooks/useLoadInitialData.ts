@@ -3,6 +3,7 @@ import { useDidUpdate } from "@mantine/hooks";
 import { useDeepEqualDidUpdate } from "@/hooks/basic/useDeepEqualDidUpdate";
 import { NotificationUtil } from "@/utils/NotificationUtil";
 import type { CategoryList } from "@/types/category/CategoryList";
+import type { OrderBy } from "@/types/SortOrder";
 // TODO: ลบ useMockCategoryData เมื่อ integrate API จริง
 import { useMockCategoryData } from "./useMockCategoryData";
 
@@ -10,6 +11,8 @@ type Params = {
   page: number;
   limit: number;
   search: string;
+  sortBy: string | null;
+  orderBy: OrderBy;
   setTotalPage: (total: number) => void;
   setTotalCount: (count: number) => void;
   setPage: (page: number) => void;
@@ -19,6 +22,8 @@ export const useLoadInitialData = ({
   page,
   limit,
   search,
+  sortBy,
+  orderBy,
   setTotalPage,
   setTotalCount,
   setPage,
@@ -39,7 +44,8 @@ export const useLoadInitialData = ({
       criteria: {
         search: search || undefined,
       },
-      sort_bys: [],
+      sort_bys:
+        sortBy && orderBy ? [{ field: sortBy, direction: orderBy }] : [],
     });
 
     setCategories(response.data.data);
@@ -79,10 +85,10 @@ export const useLoadInitialData = ({
     loadInitialData();
   }, []);
 
-  // CRITICAL: Run when page or limit changes
+  // CRITICAL: Run when page, limit, sortBy, or orderBy changes
   useDidUpdate(() => {
     reloadCategoryList();
-  }, [page, limit]);
+  }, [page, limit, sortBy, orderBy]);
 
   // เฝ้า search แยก เพราะต้องการ handle กรณีย้อนกลับมาหน้า 1
   useDeepEqualDidUpdate(() => {

@@ -35,6 +35,8 @@ export const CategoryPage = () => {
       search: debouncedSearch,
       page: pagination.page,
       limit: pagination.limit,
+      sortBy: sortHandler.sortBy,
+      orderBy: sortHandler.orderBy,
       setTotalPage: pagination.setTotalPage,
       setTotalCount: pagination.setTotalCount,
       setPage: pagination.setPage,
