@@ -1,0 +1,28 @@
+.root {
+  background-color: var(--mantine-color-info-1) !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+
+.description,
+.title {
+  color: var(--mantine-color-info-6) !important;
+  font-size: 16px !important;
+  margin-bottom: 0 !important;
+  padding-top: 3px !important;
+}
+
+.closeButton {
+  color: var(--mantine-color-info-6) !important;
+  @mixin hover {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+  }
+}
+
+.icon {
+  background: transparent !important;
+  color: var(--mantine-color-info-6) !important;
+  width: 32px !important;
+  height: 32px !important;
+  margin-right: 8px !important;
+}

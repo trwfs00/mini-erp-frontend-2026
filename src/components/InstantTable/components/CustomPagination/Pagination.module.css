@@ -1,0 +1,58 @@
+.control {
+  border-radius: 8px;
+  border-color: var(--mantine-color-gray-3);
+  color: var(--mantine-color-gray-7);
+  font-weight: 500;
+  transition: background-color 120ms ease, color 120ms ease,
+    border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.control:hover:not([data-active]):not([data-disabled="true"]) {
+  background-color: var(--mantine-color-gray-1);
+  border-color: var(--mantine-color-gray-4);
+  color: var(--mantine-color-dark-9);
+}
+
+.control[data-active] {
+  background: var(--mantine-color-blue-6) !important;
+  border-color: transparent !important;
+  color: #fff !important;
+  box-shadow: 0 4px 14px rgba(34, 139, 230, 0.25);
+}
+
+.control[data-disabled="true"] {
+  background-color: var(--mantine-color-gray-1);
+  border-color: var(--mantine-color-gray-2);
+  color: var(--mantine-color-gray-5);
+  opacity: 1;
+}
+
+/* Shared font styles สำหรับ Select */
+.selectInput,
+.selectOption {
+  font-size: 12px !important;
+  line-height: 18px !important;
+  font-weight: 500 !important;
+}
+
+/* Input field specific styles */
+.selectInput {
+  height: 30px;
+  min-height: 30px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  border-color: var(--mantine-color-gray-3);
+}
+
+.selectInput:focus,
+.selectInput:focus-within {
+  border-color: var(--mantine-color-indigo-5);
+}
+
+/* ข้อความ pagination */
+.paginationText {
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--mantine-color-gray-6);
+}

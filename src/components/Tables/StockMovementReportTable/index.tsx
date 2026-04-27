@@ -1,0 +1,97 @@
+import { Text } from "@mantine/core";
+import type { DataTableColumn } from "mantine-datatable";
+import type { FC } from "react";
+import { InstantTable } from "@/components/InstantTable";
+import { TransactionTypeBadge } from "@/components/Badges/TransactionTypeBadge";
+import { formatDate } from "@/utils/DateUtil";
+import type { StockMovementRow } from "@/types/report/StockMovementReport";
+import type { UsePaginationStateReturnType } from "@/hooks/pagination/usePaginationState";
+import type { UseTableSortReturn } from "@/hooks/table/useTableSort";
+
+type Props = {
+  records: StockMovementRow[];
+  pagination: UsePaginationStateReturnType;
+  sortHandler: UseTableSortReturn;
+  isLoading?: boolean;
+};
+
+const columns: DataTableColumn<StockMovementRow>[] = [
+  {
+    accessor: "created_at",
+    title: "Date",
+    sortable: true,
+    width: 130,
+    render: (r) => (
+      <Text fz="sm" c="gray.6">
+        {formatDate(r.created_at)}
+      </Text>
+    ),
+  },
+  {
+    accessor: "product_name",
+    title: "Product",
+    sortable: true,
+    render: (r) => (
+      <Text fz="sm" fw={500}>
+        {r.product_name}
+      </Text>
+    ),
+  },
+  {
+    accessor: "type",
+    title: "Type",
+    sortable: true,
+    width: 110,
+    render: (r) => <TransactionTypeBadge type={r.type} />,
+  },
+  {
+    accessor: "quantity",
+    title: "Qty",
+    sortable: true,
+    textAlign: "right",
+    width: 90,
+  },
+  {
+    accessor: "balance_after",
+    title: "Balance",
+    sortable: true,
+    textAlign: "right",
+    width: 100,
+  },
+  {
+    accessor: "created_by_name",
+    title: "By",
+    width: 160,
+    render: (r) => (
+      <Text fz="sm" c="gray.6">
+        {r.created_by_name}
+      </Text>
+    ),
+  },
+  {
+    accessor: "note",
+    title: "Note",
+    render: (r) => (
+      <Text fz="sm" c="gray.6">
+        {r.note ?? r.reason ?? "-"}
+      </Text>
+    ),
+  },
+];
+
+export const StockMovementReportTable: FC<Props> = ({
+  records,
+  pagination,
+  sortHandler,
+  isLoading,
+}) => (
+  <InstantTable<StockMovementRow>
+    idAccessor="transaction_id"
+    columns={columns}
+    records={records}
+    pagination={pagination}
+    sortHandler={sortHandler}
+    entityName="stock movement"
+    fetching={isLoading}
+  />
+);

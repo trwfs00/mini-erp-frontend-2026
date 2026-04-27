@@ -1,0 +1,15 @@
+export const ROUTE_PATHS = {
+  LOGIN: "/",
+  DASHBOARD: "/dashboard",
+  PRODUCT: "/product",
+  CATEGORY: "/category",
+  STOCK: "/stock",
+  SUPPLIERS: "/suppliers",
+  PURCHASE_ORDERS: "/purchase-orders",
+  PO_CREATE: "/purchase-orders/create",
+  PO_DETAIL: "/purchase-orders/:id",
+  REPORT: "/report",
+  REPORT_STOCK_SUMMARY: "/report/stock-summary",
+  REPORT_STOCK_MOVEMENT: "/report/stock-movement",
+  REPORT_PURCHASE_SUMMARY: "/report/purchase-summary",
+} as const;
