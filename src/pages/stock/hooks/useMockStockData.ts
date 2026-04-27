@@ -35,7 +35,7 @@ const MOCK_TRANSACTION_LIST: StockTransaction[] = [
     quantity: 100,
     balance_after: 120,
     note: "Initial stock",
-    created_at: "2024-02-01T09:00:00Z",
+    created_at: "2026-04-14T09:00:00Z",
     created_by_name: "admin",
   },
   {
@@ -46,7 +46,7 @@ const MOCK_TRANSACTION_LIST: StockTransaction[] = [
     quantity: 50,
     balance_after: 50,
     note: "Restock",
-    created_at: "2024-02-02T10:30:00Z",
+    created_at: "2026-04-15T10:30:00Z",
     created_by_name: "admin",
   },
   {
@@ -57,7 +57,7 @@ const MOCK_TRANSACTION_LIST: StockTransaction[] = [
     quantity: 32,
     balance_after: 18,
     note: "Sale order #1024",
-    created_at: "2024-02-03T14:15:00Z",
+    created_at: "2026-04-16T14:15:00Z",
     created_by_name: "staff1",
   },
   {
@@ -68,7 +68,7 @@ const MOCK_TRANSACTION_LIST: StockTransaction[] = [
     quantity: 24,
     balance_after: 24,
     note: "Daily delivery",
-    created_at: "2024-02-04T07:00:00Z",
+    created_at: "2026-04-17T07:00:00Z",
     created_by_name: "admin",
   },
   {
@@ -79,7 +79,7 @@ const MOCK_TRANSACTION_LIST: StockTransaction[] = [
     quantity: 16,
     balance_after: 8,
     note: "Sale orders",
-    created_at: "2024-02-05T16:00:00Z",
+    created_at: "2026-04-18T16:00:00Z",
     created_by_name: "staff2",
   },
   {
@@ -90,7 +90,7 @@ const MOCK_TRANSACTION_LIST: StockTransaction[] = [
     quantity: -3,
     balance_after: 5,
     reason: "Damaged units",
-    created_at: "2024-02-06T11:00:00Z",
+    created_at: "2026-04-19T11:00:00Z",
     created_by_name: "admin",
   },
   {
@@ -101,7 +101,7 @@ const MOCK_TRANSACTION_LIST: StockTransaction[] = [
     quantity: 75,
     balance_after: 75,
     note: "Restock",
-    created_at: "2024-02-07T09:30:00Z",
+    created_at: "2026-04-20T09:30:00Z",
     created_by_name: "admin",
   },
   {
@@ -112,7 +112,7 @@ const MOCK_TRANSACTION_LIST: StockTransaction[] = [
     quantity: 22,
     balance_after: 22,
     note: "Bakery delivery",
-    created_at: "2024-02-08T06:00:00Z",
+    created_at: "2026-04-21T06:00:00Z",
     created_by_name: "admin",
   },
   {
@@ -123,7 +123,7 @@ const MOCK_TRANSACTION_LIST: StockTransaction[] = [
     quantity: 40,
     balance_after: 40,
     note: "Restock",
-    created_at: "2024-02-09T10:00:00Z",
+    created_at: "2026-04-22T10:00:00Z",
     created_by_name: "staff1",
   },
   {
@@ -134,7 +134,7 @@ const MOCK_TRANSACTION_LIST: StockTransaction[] = [
     quantity: 25,
     balance_after: 50,
     note: "Sale orders",
-    created_at: "2024-02-10T13:30:00Z",
+    created_at: "2026-04-23T13:30:00Z",
     created_by_name: "staff2",
   },
   {
@@ -145,7 +145,7 @@ const MOCK_TRANSACTION_LIST: StockTransaction[] = [
     quantity: 2,
     balance_after: 60,
     reason: "Found missing units",
-    created_at: "2024-02-11T15:00:00Z",
+    created_at: "2026-04-24T15:00:00Z",
     created_by_name: "admin",
   },
   {
@@ -156,7 +156,7 @@ const MOCK_TRANSACTION_LIST: StockTransaction[] = [
     quantity: 95,
     balance_after: 95,
     note: "New batch",
-    created_at: "2024-02-12T08:30:00Z",
+    created_at: "2026-04-25T08:30:00Z",
     created_by_name: "admin",
   },
 ];

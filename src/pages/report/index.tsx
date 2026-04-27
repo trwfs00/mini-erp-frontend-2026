@@ -22,7 +22,7 @@ const TABS = [
   },
 ];
 
-const ReportPage = () => {
+export const ReportPage = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -73,4 +73,3 @@ const ReportPage = () => {
   );
 };
 
-export default ReportPage;

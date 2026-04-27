@@ -1,6 +1,7 @@
 import {
   Alert,
   Group,
+  LoadingOverlay,
   SimpleGrid,
   Stack,
   Text,
@@ -13,27 +14,30 @@ import { RefreshButton } from "@/components/RefreshButton";
 import { StatTile } from "@/components/StatTile";
 import { SurfaceCard } from "@/components/SurfaceCard";
 import { StockMovementReportTable } from "@/components/Tables/StockMovementReportTable";
-import { ReportService } from "@/services/ReportService";
 import { getLastNDaysRange } from "@/utils/DateUtil";
-import { useLoadStockMovementData } from "../../hooks/useLoadStockMovementData";
+import { useLoadInitialData } from "./hooks/useLoadInitialData";
 import { ExportButton } from "../ExportButton";
+// TODO: เปลี่ยนเป็น ReportService.exportStockMovement เมื่อ integrate API จริง
+import { MockReportExportUtil } from "../../utils/mockReportExport";
 
 const defaultRange = () => getLastNDaysRange(14);
 
-const StockMovementReportPage = () => {
+export const StockMovementReportPage = () => {
   const [range, setRange] = useState(defaultRange);
   const {
+    report,
     totals,
     daily,
     rows,
-    isLoading,
+    isLoadingInitialData,
+    isReloading,
     pagination,
     sortHandler,
-    reloadStockMovement,
-  } = useLoadStockMovementData(range);
+    reloadReport,
+  } = useLoadInitialData({ range });
   const [exportError, setExportError] = useState<string | null>(null);
 
-  const chartData = daily.map((d) => ({
+  const chartData = (daily ?? []).map((d) => ({
     date: d.date.slice(5),
     In: d.in,
     Out: d.out,
@@ -41,7 +45,8 @@ const StockMovementReportPage = () => {
   }));
 
   return (
-    <Stack gap="md">
+    <Stack gap="md" pos="relative" mih={300}>
+      <LoadingOverlay visible={isLoadingInitialData} />
       <Group justify="space-between" wrap="wrap" gap="md" align="flex-end">
         <Group gap="sm">
           <TextInput
@@ -64,12 +69,15 @@ const StockMovementReportPage = () => {
           />
         </Group>
         <Group>
-          <RefreshButton onClick={reloadStockMovement} />
+          <RefreshButton onClick={async () => await reloadReport()} />
           <ExportButton
-            label="Export Excel"
+            label="Export CSV"
             filename={`stock-movement-${range.from}-to-${range.to}.csv`}
-            onExport={() =>
-              ReportService.exportStockMovement({ ...range, format: "xlsx" })
+            disabled={!report}
+            onExport={async () =>
+              report
+                ? { ok: true, data: MockReportExportUtil.exportStockMovement(report) }
+                : { ok: false, message: "Report not loaded" }
             }
             onError={setExportError}
           />
@@ -88,23 +96,25 @@ const StockMovementReportPage = () => {
         </Alert>
       )}
 
-      <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="md">
-        <StatTile
-          label="Total IN"
-          value={totals.total_in.toLocaleString()}
-          color="teal.7"
-        />
-        <StatTile
-          label="Total OUT"
-          value={totals.total_out.toLocaleString()}
-          color="red.7"
-        />
-        <StatTile
-          label="Adjustments"
-          value={totals.total_adjust.toLocaleString()}
-          color="gray.7"
-        />
-      </SimpleGrid>
+      {totals && (
+        <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="md">
+          <StatTile
+            label="Total IN"
+            value={totals.total_in.toLocaleString()}
+            color="teal.7"
+          />
+          <StatTile
+            label="Total OUT"
+            value={totals.total_out.toLocaleString()}
+            color="red.7"
+          />
+          <StatTile
+            label="Adjustments"
+            value={totals.total_adjust.toLocaleString()}
+            color="gray.7"
+          />
+        </SimpleGrid>
+      )}
 
       <SurfaceCard>
         <Stack gap="sm">
@@ -136,10 +146,8 @@ const StockMovementReportPage = () => {
         records={rows}
         pagination={pagination}
         sortHandler={sortHandler}
-        isLoading={isLoading}
+        isLoading={isReloading}
       />
     </Stack>
   );
 };
-
-export default StockMovementReportPage;

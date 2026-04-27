@@ -1,4 +1,11 @@
-import { Alert, Group, SimpleGrid, Stack, TextInput } from "@mantine/core";
+import {
+  Alert,
+  Group,
+  LoadingOverlay,
+  SimpleGrid,
+  Stack,
+  TextInput,
+} from "@mantine/core";
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { RefreshButton } from "@/components/RefreshButton";
@@ -6,24 +13,28 @@ import { StatTile } from "@/components/StatTile";
 import { PurchaseSummaryReportTable } from "@/components/Tables/PurchaseSummaryReportTable";
 import { formatCurrency } from "@/utils/CurrencyUtil";
 import { currentYearMonth } from "@/utils/DateUtil";
-import { ReportService } from "@/services/ReportService";
-import { useLoadPurchaseSummaryData } from "../../hooks/useLoadPurchaseSummaryData";
+import { useLoadInitialData } from "./hooks/useLoadInitialData";
 import { ExportButton } from "../ExportButton";
+// TODO: เปลี่ยนเป็น ReportService.exportPurchaseSummary เมื่อ integrate API จริง
+import { MockReportExportUtil } from "../../utils/mockReportExport";
 
-const PurchaseSummaryReportPage = () => {
+export const PurchaseSummaryReportPage = () => {
   const [month, setMonth] = useState(currentYearMonth);
   const {
+    report,
     totals,
     rows,
-    isLoading,
+    isLoadingInitialData,
+    isReloading,
     pagination,
     sortHandler,
-    reloadPurchaseSummary,
-  } = useLoadPurchaseSummaryData(month);
+    reloadReport,
+  } = useLoadInitialData({ month });
   const [exportError, setExportError] = useState<string | null>(null);
 
   return (
-    <Stack gap="md">
+    <Stack gap="md" pos="relative" mih={300}>
+      <LoadingOverlay visible={isLoadingInitialData} />
       <Group justify="space-between" wrap="wrap" gap="md" align="flex-end">
         <TextInput
           type="month"
@@ -33,12 +44,15 @@ const PurchaseSummaryReportPage = () => {
           size="sm"
         />
         <Group>
-          <RefreshButton onClick={reloadPurchaseSummary} />
+          <RefreshButton onClick={async () => await reloadReport()} />
           <ExportButton
-            label="Export Excel"
+            label="Export CSV"
             filename={`purchase-summary-${month}.csv`}
-            onExport={() =>
-              ReportService.exportPurchaseSummary({ month, format: "xlsx" })
+            disabled={!report}
+            onExport={async () =>
+              report
+                ? { ok: true, data: MockReportExportUtil.exportPurchaseSummary(report) }
+                : { ok: false, message: "Report not loaded" }
             }
             onError={setExportError}
           />
@@ -57,32 +71,38 @@ const PurchaseSummaryReportPage = () => {
         </Alert>
       )}
 
-      <SimpleGrid cols={{ base: 2, sm: 3, md: 6 }} spacing="md">
-        <StatTile label="Orders" value={totals.total_orders.toLocaleString()} />
-        <StatTile label="Amount" value={formatCurrency(totals.total_amount)} />
-        <StatTile label="Draft" value={totals.by_status.DRAFT.toString()} />
-        <StatTile
-          label="Confirmed"
-          value={totals.by_status.CONFIRMED.toString()}
-        />
-        <StatTile
-          label="Received"
-          value={totals.by_status.RECEIVED.toString()}
-        />
-        <StatTile
-          label="Cancelled"
-          value={totals.by_status.CANCELLED.toString()}
-        />
-      </SimpleGrid>
+      {totals && (
+        <SimpleGrid cols={{ base: 2, sm: 3, md: 6 }} spacing="md">
+          <StatTile
+            label="Orders"
+            value={totals.total_orders.toLocaleString()}
+          />
+          <StatTile
+            label="Amount"
+            value={formatCurrency(totals.total_amount)}
+          />
+          <StatTile label="Draft" value={totals.by_status.DRAFT.toString()} />
+          <StatTile
+            label="Confirmed"
+            value={totals.by_status.CONFIRMED.toString()}
+          />
+          <StatTile
+            label="Received"
+            value={totals.by_status.RECEIVED.toString()}
+          />
+          <StatTile
+            label="Cancelled"
+            value={totals.by_status.CANCELLED.toString()}
+          />
+        </SimpleGrid>
+      )}
 
       <PurchaseSummaryReportTable
         records={rows}
         pagination={pagination}
         sortHandler={sortHandler}
-        isLoading={isLoading}
+        isLoading={isReloading}
       />
     </Stack>
   );
 };
-
-export default PurchaseSummaryReportPage;
