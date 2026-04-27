@@ -89,7 +89,7 @@ export const AuthLayout: FC = () => {
   return (
     <AppShell
       layout="alt"
-      header={{ height: 64 }}
+      header={{ height: 56 }}
       navbar={{
         width: desktopOpened ? 260 : 76,
         breakpoint: "sm",
