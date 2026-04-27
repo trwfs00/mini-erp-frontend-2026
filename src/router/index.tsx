@@ -4,7 +4,7 @@ import { DashboardPage } from "@/pages/dashboard";
 import { ProductsPage } from "@/pages/product";
 import { CategoryPage } from "@/pages/category";
 import { StockPage } from "@/pages/stock";
-import SupplierPage from "@/pages/supplier";
+import { SupplierPage } from "@/pages/supplier";
 import PurchaseOrderPage from "@/pages/purchase-order";
 import PurchaseOrderCreatePage from "@/pages/purchase-order/components/PurchaseOrderCreate";
 import PurchaseOrderDetailPage from "@/pages/purchase-order/components/PurchaseOrderDetail";

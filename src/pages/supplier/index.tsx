@@ -1,6 +1,6 @@
 import { PageLayout } from "@/components/Layouts/Page";
 import { SupplierListTable } from "@/components/Tables/SupplierListTable";
-import { useLoadSupplierData } from "@/pages/supplier/hooks/useLoadSupplierData";
+import { useLoadInitialData } from "@/pages/supplier/hooks/useLoadInitialData";
 import { Stack, Text, Title, Group, TextInput, Button } from "@mantine/core";
 import { Search, Plus } from "lucide-react";
 import type { SupplierList } from "@/types/supplier/SupplierList";
@@ -13,8 +13,10 @@ import { modals } from "@mantine/modals";
 import type { SaveSupplierRequest } from "@/services/SupplierService/types/SupplierRequest";
 import { NotificationUtil } from "@/utils/NotificationUtil";
 import { ROUTE_PATHS } from "@/router/routePaths";
+import { usePaginationState } from "@/hooks/pagination/usePaginationState";
+import { useTableSort } from "@/hooks/table/useTableSort";
 
-const SupplierPage = () => {
+export const SupplierPage = () => {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
   const [drawerOpened, setDrawerOpened] = useState(false);
@@ -23,8 +25,24 @@ const SupplierPage = () => {
   );
   const [isSaving, setIsSaving] = useState(false);
 
-  const { suppliers, pagination, sortHandler, reloadSuppliers, isLoading } =
-    useLoadSupplierData(debouncedSearch);
+  const pagination = usePaginationState();
+  const sortHandler = useTableSort("name", "asc");
+
+  const {
+    suppliers,
+    isLoadingInitialData,
+    isReloading,
+    reloadSupplierList,
+  } = useLoadInitialData({
+    search: debouncedSearch,
+    page: pagination.page,
+    limit: pagination.limit,
+    sortBy: sortHandler.sortBy,
+    orderBy: sortHandler.orderBy,
+    setTotalPage: pagination.setTotalPage,
+    setTotalCount: pagination.setTotalCount,
+    setPage: pagination.setPage,
+  });
 
   const handleDelete = (supplier: SupplierList) => {
     modals.openConfirmModal({
@@ -45,10 +63,11 @@ const SupplierPage = () => {
         if (!response.ok) {
           NotificationUtil.notifyError({
             title: "Failed to delete supplier",
+            message: response.message,
           });
           return;
         }
-        await reloadSuppliers();
+        await reloadSupplierList();
       },
     });
   };
@@ -63,16 +82,19 @@ const SupplierPage = () => {
     if (!response.ok) {
       NotificationUtil.notifyError({
         title: "Failed to save supplier",
+        message: response.message,
       });
+      setIsSaving(false);
       return;
     }
-    await reloadSuppliers();
+    await reloadSupplierList();
     setDrawerOpened(false);
     setIsSaving(false);
   };
 
   return (
     <PageLayout
+      isLoading={isLoadingInitialData}
       breadcrumbs={{ label: "Suppliers", path: ROUTE_PATHS.SUPPLIERS }}
     >
       <Stack gap="lg">
@@ -94,11 +116,7 @@ const SupplierPage = () => {
               onChange={(e) => setSearch(e.currentTarget.value)}
               w={{ base: "100%", sm: 300 }}
             />
-            <RefreshButton
-              onClick={async () => {
-                await reloadSuppliers();
-              }}
-            />
+            <RefreshButton onClick={async () => await reloadSupplierList()} />
             <Button
               leftSection={<Plus size={16} />}
               onClick={() => {
@@ -120,7 +138,7 @@ const SupplierPage = () => {
             setDrawerOpened(true);
           }}
           onDelete={handleDelete}
-          isLoading={isLoading}
+          isLoading={isReloading}
         />
 
         <SupplierFormDrawer
@@ -134,5 +152,3 @@ const SupplierPage = () => {
     </PageLayout>
   );
 };
-
-export default SupplierPage;
