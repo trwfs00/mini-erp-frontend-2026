@@ -7,6 +7,7 @@ import { SummaryCards } from "./components/SummaryCards";
 import { StockMovementChart } from "./components/StockMovementChart";
 import { PurchaseTrendChart } from "./components/PurchaseTrendChart";
 import { LowStockWarningList } from "./components/LowStockWarningList";
+import { DashboardSkeleton } from "./components/DashboardSkeleton";
 
 export const DashboardPage = () => {
   const { dashboardData, isLoadingInitialData, reloadDashboard } =
@@ -31,7 +32,9 @@ export const DashboardPage = () => {
           <RefreshButton onClick={reloadDashboard} />
         </Group>
 
-        {dashboardData && (
+        {isLoadingInitialData && <DashboardSkeleton />}
+
+        {!isLoadingInitialData && dashboardData && (
           <>
             <SummaryCards summary={dashboardData.summary} />
 

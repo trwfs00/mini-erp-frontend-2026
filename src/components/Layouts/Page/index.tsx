@@ -29,19 +29,24 @@ export const PageLayout: FC<Props> = ({
   stackProps,
 }) => {
   return (
-    <Stack gap="lg" {...stackProps}>
-      <Breadcrumb current={breadcrumbs} />
-      <Container
-        size={size}
-        w="100%"
-        py="md"
-        pos="relative"
-        {...containerProps}
-      >
-        <LoadingOverlay visible={isLoading} />
+    <Container
+      size={size}
+      py="md"
+      pos="relative"
+      mih="calc(100vh - 120px)"
+      {...containerProps}
+    >
+      <LoadingOverlay
+        visible={isLoading}
+        zIndex={50}
+        overlayProps={{ blur: 1, backgroundOpacity: 0.35 }}
+        loaderProps={{ type: "oval", size: "lg" }}
+      />
+      <Stack gap="lg" {...stackProps}>
+        {breadcrumbs && <Breadcrumb current={breadcrumbs} />}
         {variant === "stack" && <Stack gap="lg">{children}</Stack>}
         {variant === "fluid" && children}
-      </Container>
-    </Stack>
+      </Stack>
+    </Container>
   );
 };

@@ -1,11 +1,6 @@
 import type { FC } from "react";
 import { useEffect, useState } from "react";
-import {
-  Anchor,
-  Breadcrumbs,
-  Container,
-  type AnchorProps,
-} from "@mantine/core";
+import { Anchor, Breadcrumbs, type AnchorProps } from "@mantine/core";
 import { ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { BreadcrumbItem } from "@/types/Global";
@@ -86,32 +81,23 @@ export const Breadcrumb: FC<Props> = ({ current, useHome = true }) => {
   );
 
   return (
-    <Container
-      fluid
-      px={16}
-      py={8}
-      w="100%"
-      bg="white"
-      style={{ borderBottom: "1px solid var(--mantine-color-gray-3)" }}
-    >
-      <Breadcrumbs separator={<ChevronRight size={16} />}>
-        {useHome && home}
-        {journey.map((item, index) => {
-          const isLast = index === journey.length - 1;
-          return (
-            <Anchor
-              key={`${item.label}-${index}`}
-              onClick={() => item.path && navigate(item.path)}
-              {...anchorProps}
-              fw={isLast ? 500 : 400}
-              c={isLast ? "black" : "gray.7"}
-              style={{ cursor: item.path ? "pointer" : "default" }}
-            >
-              {item.label}
-            </Anchor>
-          );
-        })}
-      </Breadcrumbs>
-    </Container>
+    <Breadcrumbs separator={<ChevronRight size={14} />} separatorMargin="xs">
+      {useHome && home}
+      {journey.map((item, index) => {
+        const isLast = index === journey.length - 1;
+        return (
+          <Anchor
+            key={`${item.label}-${index}`}
+            onClick={() => item.path && navigate(item.path)}
+            {...anchorProps}
+            fw={isLast ? 600 : 400}
+            c={isLast ? "gray.9" : "gray.6"}
+            style={{ cursor: item.path ? "pointer" : "default" }}
+          >
+            {item.label}
+          </Anchor>
+        );
+      })}
+    </Breadcrumbs>
   );
 };
