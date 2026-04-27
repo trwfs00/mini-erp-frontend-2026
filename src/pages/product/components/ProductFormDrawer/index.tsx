@@ -12,7 +12,7 @@ import { useForm } from "@mantine/form";
 import { yupResolver } from "mantine-form-yup-resolver";
 import { productSchema, type ProductFormValues } from "@/schemas/productSchema";
 import type { ProductList } from "@/types/product/ProductList";
-import { useCategoryOptions } from "@/hooks/category/useCategoryOptions";
+import { useLoadInitialData } from "./hooks/useLoadInitialData";
 
 type Props = {
   opened: boolean;
@@ -30,8 +30,7 @@ export const ProductFormDrawer = ({
   isLoading = false,
 }: Props) => {
   const isEditing = !!product;
-  const { options: categoryOptions, isLoading: isLoadingCategories } =
-    useCategoryOptions();
+  const { categoryOptions } = useLoadInitialData({ opened });
 
   const form = useForm<ProductFormValues>({
     validate: yupResolver(productSchema),
@@ -102,12 +101,9 @@ export const ProductFormDrawer = ({
 
           <Select
             label="Category"
-            placeholder={
-              isLoadingCategories ? "Loading..." : "Select a category"
-            }
+            placeholder="Select a category"
             withAsterisk
             data={categoryOptions}
-            disabled={isLoadingCategories}
             {...form.getInputProps("category_id")}
           />
 

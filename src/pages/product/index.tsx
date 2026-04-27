@@ -1,19 +1,20 @@
 import { PageLayout } from "@/components/Layouts/Page";
 import { ProductListTable } from "@/components/Tables/ProductListTable";
-import { useLoadProductData } from "@/pages/product/hooks/useLoadProductData";
-import { Stack, Text, Title, Group, TextInput } from "@mantine/core";
-import { Search } from "lucide-react";
+import { useLoadInitialData } from "@/pages/product/hooks/useLoadInitialData";
+import { Stack, Text, Title, Group, TextInput, Button } from "@mantine/core";
+import { Search, Plus } from "lucide-react";
 import type { ProductList } from "@/types/product/ProductList";
 import { useState } from "react";
 import { ProductService } from "@/services/ProductService";
 import { RefreshButton } from "@/components/RefreshButton";
 import { useDebouncedValue } from "@mantine/hooks";
-import { Button } from "@mantine/core";
-import { Plus } from "lucide-react";
 import { ProductFormDrawer } from "./components/ProductFormDrawer";
 import { modals } from "@mantine/modals";
 import type { ProductFormValues } from "@/schemas/productSchema";
 import type { SaveProductRequest } from "@/services/ProductService/types/ProductRequest";
+import { usePaginationState } from "@/hooks/pagination/usePaginationState";
+import { useTableSort } from "@/hooks/table/useTableSort";
+import { NotificationUtil } from "@/utils/NotificationUtil";
 
 const ProductsPage = () => {
   const [search, setSearch] = useState("");
@@ -24,8 +25,24 @@ const ProductsPage = () => {
   );
   const [isSaving, setIsSaving] = useState(false);
 
-  const { products, pagination, sortHandler, reloadProducts, isLoading } =
-    useLoadProductData(debouncedSearch);
+  const pagination = usePaginationState();
+  const sortHandler = useTableSort("name", "asc");
+
+  const {
+    products,
+    isLoadingInitialData,
+    isReloading,
+    reloadProductList,
+  } = useLoadInitialData({
+    search: debouncedSearch,
+    page: pagination.page,
+    limit: pagination.limit,
+    sortBy: sortHandler.sortBy,
+    orderBy: sortHandler.orderBy,
+    setTotalPage: pagination.setTotalPage,
+    setTotalCount: pagination.setTotalCount,
+    setPage: pagination.setPage,
+  });
 
   const handleDelete = (product: ProductList) => {
     modals.openConfirmModal({
@@ -42,9 +59,12 @@ const ProductsPage = () => {
       onConfirm: async () => {
         const response = await ProductService.deleteProduct(product.product_id);
         if (response.ok) {
-          await reloadProducts();
+          await reloadProductList();
         } else {
-          console.error("Failed to delete product:", response.message);
+          NotificationUtil.notifyError({
+            title: "Failed to delete product",
+            message: response.message,
+          });
         }
       },
     });
@@ -54,20 +74,23 @@ const ProductsPage = () => {
     setIsSaving(true);
     const response = await ProductService.saveProduct({
       ...values,
-      product_id: selectedProduct?.product_id, // include ID if editing
+      product_id: selectedProduct?.product_id,
     } as SaveProductRequest);
 
     if (response.ok) {
-      await reloadProducts();
+      await reloadProductList();
       setDrawerOpened(false);
     } else {
-      console.error("Failed to save product:", response.message);
+      NotificationUtil.notifyError({
+        title: "Failed to save product",
+        message: response.message,
+      });
     }
     setIsSaving(false);
   };
 
   return (
-    <PageLayout>
+    <PageLayout isLoading={isLoadingInitialData}>
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
@@ -87,7 +110,7 @@ const ProductsPage = () => {
               onChange={(e) => setSearch(e.currentTarget.value)}
               w={{ base: "100%", sm: 250 }}
             />
-            <RefreshButton onClick={async () => await reloadProducts()} />
+            <RefreshButton onClick={async () => await reloadProductList()} />
             <Button
               leftSection={<Plus size={16} />}
               onClick={() => {
@@ -109,7 +132,7 @@ const ProductsPage = () => {
             setDrawerOpened(true);
           }}
           onDelete={handleDelete}
-          isLoading={isLoading}
+          isLoading={isReloading}
         />
 
         <ProductFormDrawer
