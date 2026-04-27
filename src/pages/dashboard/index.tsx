@@ -1,24 +1,18 @@
 import { PageLayout } from "@/components/Layouts/Page";
 import { RefreshButton } from "@/components/RefreshButton";
 import { Grid, Group, Stack, Text, Title } from "@mantine/core";
-import { useLoadDashboardStats } from "./hooks/useLoadDashboardStats";
+import { useLoadInitialData } from "./hooks/useLoadInitialData";
 import { SummaryCards } from "./components/SummaryCards";
 import { StockMovementChart } from "./components/StockMovementChart";
 import { PurchaseTrendChart } from "./components/PurchaseTrendChart";
 import { LowStockWarningList } from "./components/LowStockWarningList";
 
-const DashboardPage = () => {
-  const {
-    summary,
-    stockMovement,
-    purchaseTrend,
-    lowStockProducts,
-    isLoading,
-    reloadDashboardStats,
-  } = useLoadDashboardStats();
+export const DashboardPage = () => {
+  const { dashboardData, isLoadingInitialData, reloadDashboard } =
+    useLoadInitialData();
 
   return (
-    <PageLayout>
+    <PageLayout isLoading={isLoadingInitialData}>
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
@@ -30,28 +24,36 @@ const DashboardPage = () => {
             </Text>
           </Stack>
 
-          <RefreshButton onClick={reloadDashboardStats} />
+          <RefreshButton onClick={reloadDashboard} />
         </Group>
 
-        <SummaryCards summary={summary} />
+        {dashboardData && (
+          <>
+            <SummaryCards summary={dashboardData.summary} />
 
-        <Grid align="stretch">
-          <Grid.Col span={{ base: 12, lg: 8 }}>
-            <StockMovementChart data={stockMovement} isLoading={isLoading} />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, lg: 4 }}>
-            <LowStockWarningList
-              products={lowStockProducts}
-              isLoading={isLoading}
-            />
-          </Grid.Col>
-          <Grid.Col span={12}>
-            <PurchaseTrendChart data={purchaseTrend} isLoading={isLoading} />
-          </Grid.Col>
-        </Grid>
+            <Grid align="stretch">
+              <Grid.Col span={{ base: 12, lg: 8 }}>
+                <StockMovementChart
+                  data={dashboardData.stock_movement}
+                  isLoading={isLoadingInitialData}
+                />
+              </Grid.Col>
+              <Grid.Col span={{ base: 12, lg: 4 }}>
+                <LowStockWarningList
+                  products={dashboardData.low_stock_products}
+                  isLoading={isLoadingInitialData}
+                />
+              </Grid.Col>
+              <Grid.Col span={12}>
+                <PurchaseTrendChart
+                  data={dashboardData.purchase_trend}
+                  isLoading={isLoadingInitialData}
+                />
+              </Grid.Col>
+            </Grid>
+          </>
+        )}
       </Stack>
     </PageLayout>
   );
 };
-
-export default DashboardPage;

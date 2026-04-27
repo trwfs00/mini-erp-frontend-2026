@@ -1,8 +1,16 @@
-import { Badge, Group, ScrollArea, Skeleton, Stack, Text, Title } from "@mantine/core";
+import {
+  Badge,
+  Group,
+  ScrollArea,
+  Skeleton,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import { AlertTriangle, PackageCheck } from "lucide-react";
 import type { FC } from "react";
 import { SurfaceCard } from "@/components/SurfaceCard";
-import type { LowStockProduct } from "@/types/dashboard/DashboardStats";
+import type { LowStockProduct } from "@/types/dashboard/DashboardDetail";
 
 type Props = {
   products: LowStockProduct[];
@@ -47,7 +55,11 @@ export const LowStockWarningList: FC<Props> = ({ products, isLoading }) => {
     if (products.length === 0) {
       return (
         <Stack align="center" justify="center" gap={8} h={LIST_MAX_HEIGHT}>
-          <PackageCheck size={32} color="var(--mantine-color-green-6)" strokeWidth={1.5} />
+          <PackageCheck
+            size={32}
+            color="var(--mantine-color-green-6)"
+            strokeWidth={1.5}
+          />
           <Text fz="sm" c="gray.6" ta="center">
             All products above minimum stock.
           </Text>

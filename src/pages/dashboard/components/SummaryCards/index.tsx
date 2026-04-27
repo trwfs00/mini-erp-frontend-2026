@@ -1,7 +1,7 @@
 import { SimpleGrid, Stack, Text, ThemeIcon } from "@mantine/core";
 import { SurfaceCard } from "@/components/SurfaceCard";
 import { formatCurrency } from "@/utils/CurrencyUtil";
-import type { DashboardSummary } from "@/types/dashboard/DashboardStats";
+import type { DashboardSummary } from "@/types/dashboard/DashboardDetail";
 import {
   Package,
   Wallet,

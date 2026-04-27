@@ -19,7 +19,7 @@ export type DashboardSummary = {
   received_po_this_month: number;
 };
 
-export type DashboardStats = {
+export type DashboardDetail = {
   summary: DashboardSummary;
   stock_movement: StockMovementDailyPoint[];
   purchase_trend: PurchaseTrendPoint[];

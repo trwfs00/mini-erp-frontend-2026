@@ -1,6 +1,5 @@
 import { PageLayout } from "@/components/Layouts/Page";
 import { CategoryListTable } from "@/components/Tables/CategoryListTable";
-import { useLoadCategoryData } from "@/pages/category/hooks/useLoadCategoryData";
 import { Stack, Text, Title, Group, TextInput } from "@mantine/core";
 import { Search } from "lucide-react";
 import type { CategoryList } from "@/types/category/CategoryList";
@@ -10,9 +9,13 @@ import { RefreshButton } from "@/components/RefreshButton";
 import { useDebouncedValue } from "@mantine/hooks";
 import { Button } from "@mantine/core";
 import { Plus } from "lucide-react";
-import { CategoryFormDrawer } from "./components/CategoryFormDrawer";
+import { useLoadInitialData } from "./hooks/useLoadInitialData";
+import { usePaginationState } from "@/hooks/pagination/usePaginationState";
+import { useTableSort } from "@/hooks/table/useTableSort";
 import { modals } from "@mantine/modals";
 import type { SaveCategoryRequest } from "@/services/CategoryService/types/CategoryRequest";
+import { CategoryFormDrawer } from "./components/CategoryFormDrawer";
+import { NotificationUtil } from "@/utils/NotificationUtil";
 
 const CategoryPage = () => {
   const [search, setSearch] = useState("");
@@ -23,8 +26,18 @@ const CategoryPage = () => {
   );
   const [isSaving, setIsSaving] = useState(false);
 
-  const { categories, pagination, sortHandler, reloadCategories, isLoading } =
-    useLoadCategoryData(debouncedSearch);
+  const pagination = usePaginationState();
+  const sortHandler = useTableSort();
+
+  const { categories, isLoadingInitialData, isReloading, reloadCategoryList } =
+    useLoadInitialData({
+      search: debouncedSearch,
+      page: pagination.page,
+      limit: pagination.limit,
+      setTotalPage: pagination.setTotalPage,
+      setTotalCount: pagination.setTotalCount,
+      setPage: pagination.setPage,
+    });
 
   const handleDelete = (category: CategoryList) => {
     modals.openConfirmModal({
@@ -42,10 +55,11 @@ const CategoryPage = () => {
         const response = await CategoryService.deleteCategory(
           category.category_id,
         );
-        if (response.ok) {
-          await reloadCategories();
-        } else {
-          console.error("Failed to delete category:", response.message);
+        if (!response.ok) {
+          NotificationUtil.notifyError({
+            title: "Failed to delete category",
+            message: response.message,
+          });
         }
       },
     });
@@ -58,17 +72,17 @@ const CategoryPage = () => {
       category_id: selectedCategory?.category_id,
     });
 
-    if (response.ok) {
-      await reloadCategories();
-      setDrawerOpened(false);
-    } else {
-      console.error("Failed to save category:", response.message);
+    if (!response.ok) {
+      NotificationUtil.notifyError({
+        title: "Failed to save category",
+        message: response.message,
+      });
     }
     setIsSaving(false);
   };
 
   return (
-    <PageLayout>
+    <PageLayout isLoading={isLoadingInitialData}>
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
@@ -86,13 +100,9 @@ const CategoryPage = () => {
               leftSection={<Search size={16} />}
               value={search}
               onChange={(e) => setSearch(e.currentTarget.value)}
-              w={{ base: "100%", sm: 280 }}
+              w={{ base: "100%", sm: 250 }}
             />
-            <RefreshButton
-              onClick={async () => {
-                await reloadCategories();
-              }}
-            />
+            <RefreshButton onClick={async () => await reloadCategoryList()} />
             <Button
               leftSection={<Plus size={16} />}
               onClick={() => {
@@ -114,7 +124,7 @@ const CategoryPage = () => {
             setDrawerOpened(true);
           }}
           onDelete={handleDelete}
-          isLoading={isLoading}
+          isLoading={isReloading}
         />
 
         <CategoryFormDrawer

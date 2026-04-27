@@ -1,3 +1,3 @@
-import type { DashboardStats } from "@/types/dashboard/DashboardStats";
+import type { DashboardDetail } from "@/types/dashboard/DashboardDetail";
 
-export type GetDashboardStatsResponse = DashboardStats;
+export type GetDashboardStatsResponse = DashboardDetail;
