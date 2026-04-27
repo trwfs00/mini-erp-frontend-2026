@@ -170,7 +170,7 @@ const PurchaseOrderCreatePage = () => {
   ));
 
   return (
-    <PageLayout>
+    <PageLayout breadcrumbs={{ label: "Create" }}>
       <Stack gap="lg">
         <Group justify="space-between">
           <Group gap="sm">

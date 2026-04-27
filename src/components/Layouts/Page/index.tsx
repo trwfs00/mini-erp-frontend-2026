@@ -1,22 +1,47 @@
-import { Center, Container, Loader, type ContainerProps } from "@mantine/core";
-import type { ReactNode } from "react";
+import {
+  Container,
+  LoadingOverlay,
+  Stack,
+  type ContainerProps,
+  type StackProps,
+} from "@mantine/core";
+import type { FC, ReactNode } from "react";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import type { BreadcrumbItem } from "@/types/Global";
 
 type Props = {
-  children: ReactNode;
-  size?: ContainerProps["size"];
+  variant?: "stack" | "fluid";
+  breadcrumbs?: BreadcrumbItem | BreadcrumbItem[];
+  children?: ReactNode;
   isLoading?: boolean;
+  size?: ContainerProps["size"];
+  containerProps?: ContainerProps;
+  stackProps?: StackProps;
 };
 
-export const PageLayout = ({ children, size = "xl", isLoading }: Props) => {
+export const PageLayout: FC<Props> = ({
+  variant = "stack",
+  breadcrumbs,
+  children,
+  isLoading,
+  size = "xl",
+  containerProps,
+  stackProps,
+}) => {
   return (
-    <Container size={size} py="md">
-      {isLoading ? (
-        <Center mih={400}>
-          <Loader size="lg" />
-        </Center>
-      ) : (
-        children
-      )}
-    </Container>
+    <Stack gap="lg" {...stackProps}>
+      <Breadcrumb current={breadcrumbs} />
+      <Container
+        size={size}
+        w="100%"
+        py="md"
+        pos="relative"
+        {...containerProps}
+      >
+        <LoadingOverlay visible={isLoading} />
+        {variant === "stack" && <Stack gap="lg">{children}</Stack>}
+        {variant === "fluid" && children}
+      </Container>
+    </Stack>
   );
 };

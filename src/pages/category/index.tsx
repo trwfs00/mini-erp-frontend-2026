@@ -16,8 +16,9 @@ import { modals } from "@mantine/modals";
 import type { SaveCategoryRequest } from "@/services/CategoryService/types/CategoryRequest";
 import { CategoryFormDrawer } from "./components/CategoryFormDrawer";
 import { NotificationUtil } from "@/utils/NotificationUtil";
+import { ROUTE_PATHS } from "@/router/routePaths";
 
-const CategoryPage = () => {
+export const CategoryPage = () => {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
   const [drawerOpened, setDrawerOpened] = useState(false);
@@ -82,7 +83,10 @@ const CategoryPage = () => {
   };
 
   return (
-    <PageLayout isLoading={isLoadingInitialData}>
+    <PageLayout
+      isLoading={isLoadingInitialData}
+      breadcrumbs={{ label: "Categories", path: ROUTE_PATHS.CATEGORY }}
+    >
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
@@ -138,5 +142,3 @@ const CategoryPage = () => {
     </PageLayout>
   );
 };
-
-export default CategoryPage;

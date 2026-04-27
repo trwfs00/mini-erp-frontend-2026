@@ -16,9 +16,8 @@ import {
   stockTransactionSchema,
   type StockTransactionFormValues,
 } from "@/schemas/stockSchema";
-import { useProductOptions } from "@/hooks/product/useProductOptions";
-import { useStockSummary } from "@/hooks/stock/useStockSummary";
 import { AlertCircle } from "lucide-react";
+import { useLoadInitialData } from "./hooks/useLoadInitialData";
 
 type Props = {
   opened: boolean;
@@ -33,10 +32,9 @@ export const StockTransactionFormDrawer: FC<Props> = ({
   onSave,
   isLoading,
 }) => {
-  const { options: productOptions, isLoading: isLoadingProducts } =
-    useProductOptions();
-  const { summary, fetchSummary } =
-    useStockSummary();
+  const { productOptions, summary, fetchSummary } = useLoadInitialData({
+    opened,
+  });
 
   const form = useForm<StockTransactionFormValues>({
     initialValues: {
@@ -49,15 +47,21 @@ export const StockTransactionFormDrawer: FC<Props> = ({
     validate: yupResolver(stockTransactionSchema),
   });
 
+  // Reset form whenever drawer reopens
+  useEffect(() => {
+    if (opened) {
+      form.reset();
+    }
+  }, [opened]);
+
   // Watch product_id to fetch current stock
   useEffect(() => {
     if (form.values.product_id) {
       fetchSummary(form.values.product_id);
     }
-  }, [form.values.product_id, fetchSummary]);
+  }, [form.values.product_id]);
 
   const handleSubmit = async (values: StockTransactionFormValues) => {
-    // Advanced check: No negative stock on OUT
     if (values.type === "OUT" && summary) {
       if (values.quantity > summary.current_stock) {
         form.setFieldError(
@@ -87,7 +91,6 @@ export const StockTransactionFormDrawer: FC<Props> = ({
             placeholder="Select product"
             data={productOptions}
             searchable
-            disabled={isLoadingProducts}
             {...form.getInputProps("product_id")}
           />
 
@@ -98,7 +101,7 @@ export const StockTransactionFormDrawer: FC<Props> = ({
               color={summary.is_low_stock ? "orange" : "blue"}
               variant="light"
             >
-              Current Stock: <strong>{summary.current_stock}</strong> 
+              Current Stock: <strong>{summary.current_stock}</strong>
               {summary.is_low_stock && " (Low Stock Alert!)"}
             </Alert>
           )}

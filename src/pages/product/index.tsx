@@ -15,8 +15,9 @@ import type { SaveProductRequest } from "@/services/ProductService/types/Product
 import { usePaginationState } from "@/hooks/pagination/usePaginationState";
 import { useTableSort } from "@/hooks/table/useTableSort";
 import { NotificationUtil } from "@/utils/NotificationUtil";
+import { ROUTE_PATHS } from "@/router/routePaths";
 
-const ProductsPage = () => {
+export const ProductsPage = () => {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
   const [drawerOpened, setDrawerOpened] = useState(false);
@@ -28,21 +29,17 @@ const ProductsPage = () => {
   const pagination = usePaginationState();
   const sortHandler = useTableSort("name", "asc");
 
-  const {
-    products,
-    isLoadingInitialData,
-    isReloading,
-    reloadProductList,
-  } = useLoadInitialData({
-    search: debouncedSearch,
-    page: pagination.page,
-    limit: pagination.limit,
-    sortBy: sortHandler.sortBy,
-    orderBy: sortHandler.orderBy,
-    setTotalPage: pagination.setTotalPage,
-    setTotalCount: pagination.setTotalCount,
-    setPage: pagination.setPage,
-  });
+  const { products, isLoadingInitialData, isReloading, reloadProductList } =
+    useLoadInitialData({
+      search: debouncedSearch,
+      page: pagination.page,
+      limit: pagination.limit,
+      sortBy: sortHandler.sortBy,
+      orderBy: sortHandler.orderBy,
+      setTotalPage: pagination.setTotalPage,
+      setTotalCount: pagination.setTotalCount,
+      setPage: pagination.setPage,
+    });
 
   const handleDelete = (product: ProductList) => {
     modals.openConfirmModal({
@@ -90,7 +87,10 @@ const ProductsPage = () => {
   };
 
   return (
-    <PageLayout isLoading={isLoadingInitialData}>
+    <PageLayout
+      isLoading={isLoadingInitialData}
+      breadcrumbs={{ label: "Products", path: ROUTE_PATHS.PRODUCT }}
+    >
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
@@ -146,5 +146,3 @@ const ProductsPage = () => {
     </PageLayout>
   );
 };
-
-export default ProductsPage;

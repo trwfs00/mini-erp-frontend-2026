@@ -1,5 +1,4 @@
 import { CategoryService } from "@/services/CategoryService";
-import { ProductService } from "@/services/ProductService";
 import type { CategoryDropdown } from "@/types/category/CategoryDropdown";
 import type { ComboboxData } from "@mantine/core";
 import { useState } from "react";

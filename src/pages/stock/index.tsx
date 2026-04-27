@@ -1,6 +1,6 @@
 import { PageLayout } from "@/components/Layouts/Page";
 import { StockTransactionTable } from "@/components/Tables/StockTransactionTable";
-import { useLoadStockTransactions } from "@/pages/stock/hooks/useLoadStockTransactions";
+import { useLoadInitialData } from "@/pages/stock/hooks/useLoadInitialData";
 import {
   Stack,
   Text,
@@ -9,8 +9,10 @@ import {
   TextInput,
   Select,
   Button,
+  Alert,
+  Badge,
 } from "@mantine/core";
-import { Search, Plus } from "lucide-react";
+import { Search, Plus, AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { StockService } from "@/services/StockService";
 import { RefreshButton } from "@/components/RefreshButton";
@@ -19,42 +21,44 @@ import { StockTransactionFormDrawer } from "./components/StockTransactionFormDra
 import type { StockTransactionFormValues } from "@/schemas/stockSchema";
 import type { TransactionType } from "@/types/stock/StockTransaction";
 import type { CreateStockTransactionRequest } from "@/services/StockService/types/StockRequest";
-import { useProductOptions } from "@/hooks/product/useProductOptions";
-import { useStockSummary } from "@/hooks/stock/useStockSummary";
-import { useEffect } from "react";
-import { Alert, Badge } from "@mantine/core";
-import { AlertCircle } from "lucide-react";
+import { usePaginationState } from "@/hooks/pagination/usePaginationState";
+import { useTableSort } from "@/hooks/table/useTableSort";
+import { useStockFilter } from "./hooks/useStockFilter";
+import { NotificationUtil } from "@/utils/NotificationUtil";
+import { ROUTE_PATHS } from "@/router/routePaths";
 
-const StockPage = () => {
+export const StockPage = () => {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
-  const [typeFilter, setTypeFilter] = useState<TransactionType | "">("");
-  const [productFilter, setProductFilter] = useState<string | "">("");
 
   const [drawerOpened, setDrawerOpened] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  const { options: productOptions } = useProductOptions();
-  const { summary, fetchSummary } = useStockSummary();
+  const pagination = usePaginationState();
+  const sortHandler = useTableSort("created_at", "desc");
+  const { form: filterForm, filterState } = useStockFilter();
+  const productFilter = filterState.product_id ?? "";
 
   const {
     transactions,
-    pagination,
-    sortHandler,
+    productOptions,
+    summary,
+    fetchSummary,
+    isLoadingInitialData,
+    isReloading,
     reloadTransactions,
-    isLoading,
-  } = useLoadStockTransactions({
+  } = useLoadInitialData({
     search: debouncedSearch,
-    type: typeFilter,
-    product_id: productFilter,
+    typeFilter: filterState.type ?? "",
+    productFilter,
+    page: pagination.page,
+    limit: pagination.limit,
+    sortBy: sortHandler.sortBy,
+    orderBy: sortHandler.orderBy,
+    setTotalPage: pagination.setTotalPage,
+    setTotalCount: pagination.setTotalCount,
+    setPage: pagination.setPage,
   });
-
-  // Fetch summary when product filter changes
-  useEffect(() => {
-    if (productFilter) {
-      fetchSummary(productFilter);
-    }
-  }, [productFilter, fetchSummary]);
 
   const handleSave = async (values: StockTransactionFormValues) => {
     setIsSaving(true);
@@ -78,14 +82,20 @@ const StockPage = () => {
       await reloadTransactions();
       setDrawerOpened(false);
     } else {
-      console.error("Failed to save transaction:", response.message);
+      NotificationUtil.notifyError({
+        title: "Failed to save transaction",
+        message: response.message,
+      });
     }
 
     setIsSaving(false);
   };
 
   return (
-    <PageLayout>
+    <PageLayout
+      isLoading={isLoadingInitialData}
+      breadcrumbs={{ label: "Stock", path: ROUTE_PATHS.STOCK }}
+    >
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
@@ -100,9 +110,7 @@ const StockPage = () => {
           <Group>
             <Button
               leftSection={<Plus size={16} />}
-              onClick={() => {
-                setDrawerOpened(true);
-              }}
+              onClick={() => setDrawerOpened(true)}
             >
               New Transaction
             </Button>
@@ -134,8 +142,10 @@ const StockPage = () => {
               { value: "OUT", label: "Stock OUT" },
               { value: "ADJUST", label: "Stock ADJUST" },
             ]}
-            value={typeFilter}
-            onChange={(val) => setTypeFilter((val as TransactionType) || "")}
+            value={filterForm.values.type}
+            onChange={(val) =>
+              filterForm.setFieldValue("type", (val as TransactionType) ?? null)
+            }
             w={150}
           />
           <Select
@@ -144,8 +154,10 @@ const StockPage = () => {
             clearable
             searchable
             data={productOptions}
-            value={productFilter}
-            onChange={(val) => setProductFilter(val || "")}
+            value={filterForm.values.product_id}
+            onChange={(val) =>
+              filterForm.setFieldValue("product_id", val ?? null)
+            }
             w={250}
           />
         </Group>
@@ -155,7 +167,11 @@ const StockPage = () => {
             variant="light"
             color={summary.is_low_stock ? "red" : "blue"}
             title={`Stock Summary: ${
-              productOptions.find((o) => o.value === productFilter)?.label || ""
+              productOptions
+                .flatMap((o) =>
+                  typeof o === "object" && "value" in o ? [o] : [],
+                )
+                .find((o) => o.value === productFilter)?.label ?? ""
             }`}
             icon={<AlertCircle size={18} />}
           >
@@ -189,7 +205,7 @@ const StockPage = () => {
           records={transactions}
           pagination={pagination}
           sortHandler={sortHandler}
-          isLoading={isLoading}
+          isLoading={isReloading}
         />
 
         <StockTransactionFormDrawer
@@ -202,5 +218,3 @@ const StockPage = () => {
     </PageLayout>
   );
 };
-
-export default StockPage;

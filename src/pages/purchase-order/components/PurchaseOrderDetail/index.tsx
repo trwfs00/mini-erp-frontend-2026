@@ -98,7 +98,9 @@ const PurchaseOrderDetailPage = () => {
   const canCancel = order?.status === "DRAFT" || order?.status === "CONFIRMED";
 
   return (
-    <PageLayout>
+    <PageLayout
+      breadcrumbs={{ label: order?.purchase_order_id ?? "Detail" }}
+    >
       <Box pos="relative" mih={400}>
         <LoadingOverlay visible={isLoading} overlayProps={{ blur: 2 }} />
 

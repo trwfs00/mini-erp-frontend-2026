@@ -1,5 +1,6 @@
 import { PageLayout } from "@/components/Layouts/Page";
 import { RefreshButton } from "@/components/RefreshButton";
+import { ROUTE_PATHS } from "@/router/routePaths";
 import { Grid, Group, Stack, Text, Title } from "@mantine/core";
 import { useLoadInitialData } from "./hooks/useLoadInitialData";
 import { SummaryCards } from "./components/SummaryCards";
@@ -12,7 +13,10 @@ export const DashboardPage = () => {
     useLoadInitialData();
 
   return (
-    <PageLayout isLoading={isLoadingInitialData}>
+    <PageLayout
+      isLoading={isLoadingInitialData}
+      breadcrumbs={{ label: "Dashboard", path: ROUTE_PATHS.DASHBOARD }}
+    >
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>

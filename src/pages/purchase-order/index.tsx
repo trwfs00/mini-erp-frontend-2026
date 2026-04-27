@@ -33,7 +33,12 @@ const PurchaseOrderPage = () => {
     );
 
   return (
-    <PageLayout>
+    <PageLayout
+      breadcrumbs={{
+        label: "Purchase Orders",
+        path: ROUTE_PATHS.PURCHASE_ORDERS,
+      }}
+    >
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>

@@ -28,9 +28,17 @@ const ReportPage = () => {
 
   const active =
     TABS.find((t) => pathname.startsWith(t.value))?.value ?? TABS[0].value;
+  const activeTab = TABS.find((t) => t.value === active);
 
   return (
-    <PageLayout>
+    <PageLayout
+      breadcrumbs={[
+        { label: "Report", path: ROUTE_PATHS.REPORT },
+        ...(activeTab
+          ? [{ label: activeTab.label, path: activeTab.value }]
+          : []),
+      ]}
+    >
       <Stack gap="lg">
         <Stack gap={4}>
           <Title order={2} fw={700} c="gray.9">

@@ -1,41 +1,117 @@
 import type { FC } from "react";
-import { Anchor, Breadcrumbs, Text } from "@mantine/core";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  Anchor,
+  Breadcrumbs,
+  Container,
+  type AnchorProps,
+} from "@mantine/core";
+import { ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import type { BreadcrumbItem } from "@/types/Global";
+import { SessionStorageUtil } from "@/utils/SessionStorageUtil";
+import { NAV_ITEMS } from "@/consts/navConfig";
+import { ROUTE_PATHS } from "@/router/routePaths";
 
 type Props = {
-  items: BreadcrumbItem[];
+  current?: BreadcrumbItem | BreadcrumbItem[];
+  useHome?: boolean;
 };
 
-export const Breadcrumb: FC<Props> = ({ items }) => {
-  const links = items.map((item, index) => {
-    const isLast = index === items.length - 1;
+const anchorProps: AnchorProps = {
+  fz: "sm",
+  fw: 400,
+};
 
-    if (isLast || !item.path) {
-      return (
-        <Text key={item.label} c="gray.9" fz="sm" fw={600}>
-          {item.label}
-        </Text>
-      );
+const FIRST_LAYER_LABELS = NAV_ITEMS.map((item) => item.label);
+
+export const Breadcrumb: FC<Props> = ({ current, useHome = true }) => {
+  const navigate = useNavigate();
+
+  const [journey, setJourney] = useState<BreadcrumbItem[]>(() =>
+    SessionStorageUtil.loadBreadcrumbJourney(),
+  );
+
+  useEffect(() => {
+    if (!current) {
+      SessionStorageUtil.saveBreadcrumbJourney([]);
+      setJourney([]);
+      return;
     }
 
-    return (
-      <Anchor
-        key={item.label}
-        component={Link}
-        to={item.path}
-        c="gray.6"
-        fz="sm"
-        underline="never"
-      >
-        {item.label}
-      </Anchor>
+    // ถ้าเป็น array → replace journey ทั้งหมด (multi-level page เช่น Report > Tab)
+    if (Array.isArray(current)) {
+      SessionStorageUtil.saveBreadcrumbJourney(current);
+      setJourney(current);
+      return;
+    }
+
+    const freshJourney = SessionStorageUtil.loadBreadcrumbJourney();
+
+    // ถ้า current เป็น first-layer menu → reset journey เหลือแค่ตัวเดียว
+    if (FIRST_LAYER_LABELS.includes(current.label)) {
+      const newJourney = [current];
+      SessionStorageUtil.saveBreadcrumbJourney(newJourney);
+      setJourney(newJourney);
+      return;
+    }
+
+    // ถ้า current มีอยู่แล้วใน journey → slice กลับมาตรงนั้น (back-navigation)
+    const foundIndex = freshJourney.findIndex(
+      (item) => item.label === current.label,
     );
-  });
+    if (foundIndex !== -1) {
+      const newJourney = freshJourney.slice(0, foundIndex + 1);
+      SessionStorageUtil.saveBreadcrumbJourney(newJourney);
+      setJourney(newJourney);
+      return;
+    }
+
+    // ไม่งั้น append
+    const newJourney = [...freshJourney, current];
+    SessionStorageUtil.saveBreadcrumbJourney(newJourney);
+    setJourney(newJourney);
+  }, [current]);
+
+  const home = (
+    <Anchor
+      onClick={() => navigate(ROUTE_PATHS.DASHBOARD)}
+      fz="sm"
+      fw={500}
+      c="black"
+      style={{ cursor: "pointer" }}
+    >
+      Home
+    </Anchor>
+  );
 
   return (
-    <Breadcrumbs separator="/" separatorMargin="xs">
-      {links}
-    </Breadcrumbs>
+    <Container
+      fluid
+      px={16}
+      py={8}
+      w="100%"
+      bg="white"
+      style={{ borderBottom: "1px solid var(--mantine-color-gray-3)" }}
+    >
+      <Breadcrumbs separator={<ChevronRight size={16} />}>
+        {useHome && home}
+        {journey.map((item, index) => {
+          const isLast = index === journey.length - 1;
+          return (
+            <Anchor
+              key={`${item.label}-${index}`}
+              onClick={() => item.path && navigate(item.path)}
+              {...anchorProps}
+              fw={isLast ? 500 : 400}
+              c={isLast ? "black" : "gray.7"}
+              style={{ cursor: item.path ? "pointer" : "default" }}
+            >
+              {item.label}
+            </Anchor>
+          );
+        })}
+      </Breadcrumbs>
+    </Container>
   );
 };

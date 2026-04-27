@@ -12,6 +12,7 @@ import { SupplierFormDrawer } from "./components/SupplierFormDrawer";
 import { modals } from "@mantine/modals";
 import type { SaveSupplierRequest } from "@/services/SupplierService/types/SupplierRequest";
 import { NotificationUtil } from "@/utils/NotificationUtil";
+import { ROUTE_PATHS } from "@/router/routePaths";
 
 const SupplierPage = () => {
   const [search, setSearch] = useState("");
@@ -71,7 +72,9 @@ const SupplierPage = () => {
   };
 
   return (
-    <PageLayout>
+    <PageLayout
+      breadcrumbs={{ label: "Suppliers", path: ROUTE_PATHS.SUPPLIERS }}
+    >
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
