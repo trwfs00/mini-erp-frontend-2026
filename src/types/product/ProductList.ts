@@ -3,6 +3,7 @@ export type ProductList = {
   sku: string;
   name: string;
   category_id: string;
+  category_name: string;
   cost_price: number;
   selling_price: number;
   unit: string;

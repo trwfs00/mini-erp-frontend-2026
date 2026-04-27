@@ -29,7 +29,12 @@ export const ProductListTable: FC<Props> = ({
   const columns: DataTableColumn<ProductList>[] = [
     { accessor: "sku", title: "SKU", sortable: true, width: 120 },
     { accessor: "name", title: "Product Name", sortable: true },
-    { accessor: "category_id", title: "Category", sortable: true, width: 130 },
+    {
+      accessor: "category_name",
+      title: "Category",
+      sortable: true,
+      width: 130,
+    },
     {
       accessor: "cost_price",
       title: "Cost",
