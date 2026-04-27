@@ -54,10 +54,11 @@ export const useLoadInitialData = ({
 
   const loadInitialData = async (): Promise<void> => {
     setIsLoadingInitialData(true);
-    const success = await callGetProductList();
+    const promises = [callGetProductList()];
+    const success = await Promise.all(promises);
     setIsLoadingInitialData(false);
 
-    if (!success) {
+    if (success.some((result) => !result)) {
       NotificationUtil.notifyError({
         title: "An error occurred. Please try again",
       });

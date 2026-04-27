@@ -14,14 +14,10 @@ import {
   Divider,
 } from "@mantine/core";
 import { Plus, Trash2, Save, ArrowLeft } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATHS } from "@/router/routePaths";
-import { SupplierService } from "@/services/SupplierService";
-import { ProductService } from "@/services/ProductService";
 import { PurchaseOrderService } from "@/services/PurchaseOrderService";
-import type { SupplierList } from "@/types/supplier/SupplierList";
-import type { ProductList } from "@/types/product/ProductList";
 import { useForm } from "@mantine/form";
 import { yupResolver } from "mantine-form-yup-resolver";
 import {
@@ -29,18 +25,18 @@ import {
   type POFormValues,
 } from "@/schemas/purchaseOrderSchema";
 import { formatCurrency } from "@/utils/CurrencyUtil";
-import { modals } from "@mantine/modals";
 import { $authUser } from "@/stores/authUserStore";
 import { useStore } from "@nanostores/react";
+import { NotificationUtil } from "@/utils/NotificationUtil";
+import { useLoadInitialData } from "./hooks/useLoadInitialData";
 
-
-
-const PurchaseOrderCreatePage = () => {
+export const PurchaseOrderCreatePage = () => {
   const navigate = useNavigate();
-  const [suppliers, setSuppliers] = useState<SupplierList[]>([]);
-  const [products, setProducts] = useState<ProductList[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const authUser = useStore($authUser);
+
+  const { isLoadingInitialData, productOptions, products, supplierOptions } =
+    useLoadInitialData();
 
   const form = useForm<POFormValues>({
     initialValues: {
@@ -50,28 +46,6 @@ const PurchaseOrderCreatePage = () => {
     },
     validate: yupResolver(purchaseOrderSchema),
   });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const [supRes, prodRes] = await Promise.all([
-        SupplierService.getSupplierList({
-          page: 1,
-          limit: 100,
-          criteria: {},
-          sort_bys: [],
-        }),
-        ProductService.getProductList({
-          page: 1,
-          limit: 100,
-          criteria: {},
-          sort_bys: [],
-        }),
-      ]);
-      if (supRes.ok) setSuppliers(supRes.data?.data || []);
-      if (prodRes.ok) setProducts(prodRes.data?.data || []);
-    };
-    fetchData();
-  }, []);
 
   const handleAddItem = () => {
     form.insertListItem("items", {
@@ -89,7 +63,7 @@ const PurchaseOrderCreatePage = () => {
   };
 
   const calculateTotal = () => {
-    return form.values.items.reduce(
+    return (form.values.items ?? []).reduce(
       (sum, item) => sum + item.quantity * item.unit_price,
       0,
     );
@@ -102,7 +76,7 @@ const PurchaseOrderCreatePage = () => {
       supplier_id: values.supplier_id,
       created_by: authUser?.user_id || "",
       total_amount: calculateTotal(),
-      items: values.items.map((item) => ({
+      items: (values.items ?? []).map((item) => ({
         product_id: item.product_id,
         quantity: item.quantity,
         unit_price: item.unit_price,
@@ -110,26 +84,25 @@ const PurchaseOrderCreatePage = () => {
     });
 
     if (response.ok) {
-      modals.openContextModal({
-        modal: "success",
-        innerProps: { message: "Purchase Order created successfully" },
-      } as any);
+      NotificationUtil.notifySuccess({
+        title: "Purchase Order created successfully",
+      });
       navigate(ROUTE_PATHS.PURCHASE_ORDERS);
     } else {
-      console.error(response.message || "Failed to create PO");
+      NotificationUtil.notifyError({
+        title: "Failed to create purchase order",
+        message: response.message,
+      });
     }
     setIsSubmitting(false);
   };
 
-  const itemRows = form.values.items.map((item, index) => (
+  const itemRows = (form.values.items ?? []).map((item, index) => (
     <Table.Tr key={index}>
       <Table.Td>
         <Select
           placeholder="Select Product"
-          data={products.map((p) => ({
-            value: p.product_id,
-            label: `${p.sku} - ${p.name}`,
-          }))}
+          data={productOptions}
           {...form.getInputProps(`items.${index}.product_id`)}
           onChange={(val) => {
             form.setFieldValue(`items.${index}.product_id`, val || "");
@@ -161,7 +134,7 @@ const PurchaseOrderCreatePage = () => {
           color="red"
           variant="subtle"
           onClick={() => form.removeListItem("items", index)}
-          disabled={form.values.items.length === 1}
+          disabled={(form.values.items ?? []).length === 1}
         >
           <Trash2 size={16} />
         </ActionIcon>
@@ -170,7 +143,10 @@ const PurchaseOrderCreatePage = () => {
   ));
 
   return (
-    <PageLayout breadcrumbs={{ label: "Create" }}>
+    <PageLayout
+      isLoading={isLoadingInitialData}
+      breadcrumbs={{ label: "Create" }}
+    >
       <Stack gap="lg">
         <Group justify="space-between">
           <Group gap="sm">
@@ -212,10 +188,7 @@ const PurchaseOrderCreatePage = () => {
                 <Select
                   label="Supplier"
                   placeholder="Choose supplier"
-                  data={suppliers.map((s) => ({
-                    value: s.supplier_id,
-                    label: s.name,
-                  }))}
+                  data={supplierOptions}
                   {...form.getInputProps("supplier_id")}
                   searchable
                   required

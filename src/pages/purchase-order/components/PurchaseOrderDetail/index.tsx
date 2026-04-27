@@ -11,48 +11,30 @@ import {
   Divider,
   Grid,
   Badge,
-  LoadingOverlay,
-  Box,
 } from "@mantine/core";
 import { ArrowLeft, Check, Package, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { PurchaseOrderService } from "@/services/PurchaseOrderService";
-import type {
-  PurchaseOrder,
-  PurchaseOrderStatus,
-} from "@/types/purchase-order/PurchaseOrder";
+import type { PurchaseOrderStatus } from "@/types/purchase-order/PurchaseOrder";
 import { formatCurrency } from "@/utils/CurrencyUtil";
 import { formatDate } from "@/utils/DateUtil";
 import { PurchaseOrderStatusBadge } from "@/components/Badges/PurchaseOrderStatusBadge";
 import { modals } from "@mantine/modals";
 import { $authUser } from "@/stores/authUserStore";
 import { useStore } from "@nanostores/react";
+import { NotificationUtil } from "@/utils/NotificationUtil";
+import { useLoadInitialData } from "./hooks/useLoadInitialData";
 
-const PurchaseOrderDetailPage = () => {
+export const PurchaseOrderDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [order, setOrder] = useState<PurchaseOrder | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
   const authUser = useStore($authUser);
 
-  const fetchOrderDetail = async () => {
-    if (!id) return;
-    setIsLoading(true);
-    const response = await PurchaseOrderService.getPurchaseOrder(id);
-    if (response.ok && response.data) {
-      setOrder(response.data);
-    } else {
-      console.error(response.message || "Failed to load PO details");
-      navigate(-1);
-    }
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    fetchOrderDetail();
-  }, [id]);
+  const { order, isLoadingInitialData, reloadOrder } = useLoadInitialData({
+    id,
+  });
 
   const handleUpdateStatus = async (newStatus: PurchaseOrderStatus) => {
     if (!order) return;
@@ -81,9 +63,12 @@ const PurchaseOrderDetailPage = () => {
             { status: newStatus, updated_by: authUser?.user_id || "" },
           );
           if (response.ok) {
-            await fetchOrderDetail();
+            await reloadOrder();
           } else {
-            console.error(response.message || "Failed to update status");
+            NotificationUtil.notifyError({
+              title: "Failed to update status",
+              message: response.message,
+            });
           }
           setIsUpdating(false);
         },
@@ -99,12 +84,10 @@ const PurchaseOrderDetailPage = () => {
 
   return (
     <PageLayout
+      isLoading={isLoadingInitialData}
       breadcrumbs={{ label: order?.purchase_order_id ?? "Detail" }}
     >
-      <Box pos="relative" mih={400}>
-        <LoadingOverlay visible={isLoading} overlayProps={{ blur: 2 }} />
-
-        {order && (
+      {order && (
           <Stack gap="lg">
             <Group justify="space-between">
               <Group gap="sm">
@@ -275,11 +258,8 @@ const PurchaseOrderDetailPage = () => {
                 </Stack>
               </Grid.Col>
             </Grid>
-          </Stack>
-        )}
-      </Box>
+        </Stack>
+      )}
     </PageLayout>
   );
 };
-
-export default PurchaseOrderDetailPage;
