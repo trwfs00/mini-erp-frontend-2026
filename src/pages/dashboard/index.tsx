@@ -15,7 +15,6 @@ export const DashboardPage = () => {
 
   return (
     <PageLayout
-      isLoading={isLoadingInitialData}
       breadcrumbs={{ label: "Dashboard", path: ROUTE_PATHS.DASHBOARD }}
     >
       <Stack gap="lg">
