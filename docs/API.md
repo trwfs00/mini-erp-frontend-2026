@@ -71,8 +71,38 @@ Response:
   "username": "admin",
   "role": {
     "role_id": "8ab80f1c-054c-4184-a5d2-c50857dceab0",
-    "name": "Viewer"
+    "name": "Admin"
   },
+  "menu_permissions": [
+    {
+      "menu_id": 1,
+      "code": "dashboard",
+      "name": "Dashboard",
+      "seq": 1,
+      "permissions": [
+        { "permission_id": 1, "code": "view",   "is_allowed": true,  "seq": 1 },
+        { "permission_id": 2, "code": "create", "is_allowed": false, "seq": 2 },
+        { "permission_id": 3, "code": "update", "is_allowed": false, "seq": 3 },
+        { "permission_id": 4, "code": "delete", "is_allowed": false, "seq": 4 },
+        { "permission_id": 5, "code": "import", "is_allowed": false, "seq": 5 },
+        { "permission_id": 6, "code": "export", "is_allowed": false, "seq": 6 }
+      ]
+    },
+    {
+      "menu_id": 6,
+      "code": "purchase_order",
+      "name": "Purchase Order",
+      "seq": 6,
+      "permissions": [
+        { "permission_id": 1, "code": "view",   "is_allowed": true, "seq": 1 },
+        { "permission_id": 2, "code": "create", "is_allowed": true, "seq": 2 },
+        { "permission_id": 3, "code": "update", "is_allowed": true, "seq": 3 },
+        { "permission_id": 4, "code": "delete", "is_allowed": true, "seq": 4 },
+        { "permission_id": 5, "code": "import", "is_allowed": false, "seq": 5 },
+        { "permission_id": 6, "code": "export", "is_allowed": true, "seq": 6 }
+      ]
+    }
+  ],
   "access_token": "eyJhbGciOi...",
   "access_token_exp": 1745900000,
   "refresh_token": "eyJhbGciOi...",
@@ -80,6 +110,12 @@ Response:
   "remember_me": true
 }
 ```
+
+Notes:
+- `menu_permissions` ส่งทุก menu ที่ user ของ role นี้รู้จัก พร้อมทุก action (view/create/update/delete/import/export) — ค่าที่ไม่ได้รับสิทธิ์ใส่ `is_allowed: false`
+- `code` ใน `menu_permissions[].code` ใช้ค่าจาก `PermissionCode` enum (ดูท้ายไฟล์)
+- `code` ใน `permissions[].code` ใช้ค่าจาก `ActionCode` enum (ดูท้ายไฟล์)
+- frontend ใช้ field นี้กับ `<RoleGuard>` ที่ระดับ route และ `usePermission()` ที่ระดับปุ่ม
 
 ### `POST /auth/refresh-token` _(public)_
 
@@ -100,9 +136,95 @@ Response:
   "access_token_exp": 1745900000,
   "refresh_token": "eyJhbGciOi...",
   "refresh_token_exp": 1746500000,
-  "user_id": "1"
+  "user_id": "1",
+  "menu_permissions": [
+    /* same shape as /auth/login — optional */
+  ]
 }
 ```
+
+Notes:
+- `menu_permissions` เป็น **optional** — ถ้า backend ส่งกลับมา frontend จะ sync ทันที (รองรับ admin แก้สิทธิ์ระหว่าง session); ถ้าไม่ส่ง frontend จะคง permissions เดิมไว้
+
+---
+
+### `menu_permissions` — โครงสร้างและการใช้งาน
+
+Field `menu_permissions` ที่ส่งกลับใน `/auth/login` (และ optionally `/auth/refresh-token`) คือ **matrix ของสิทธิ์** ที่บอกว่า user ทำอะไรได้บ้างใน app — Frontend ใช้ field นี้เป็น single source of truth สำหรับการเช็คสิทธิ์ทุกที่
+
+#### โครงสร้าง 2 ชั้น
+
+```
+menu_permissions[]              ← outer: menu (หน้า / domain)
+  └─ permissions[]              ← inner: action (สิ่งที่ทำได้ในหน้านั้น)
+```
+
+| ชั้น | หมายถึง | ตัวอย่าง `code` |
+|---|---|---|
+| outer (menu) | "หน้า" / "domain" / "module" | `"product"`, `"stock"`, `"report"` |
+| inner (permission) | "การกระทำ" ในหน้านั้น | `"view"`, `"create"`, `"delete"` |
+
+#### Field ในแต่ละ menu
+
+| field | type | หน้าที่ |
+|---|---|---|
+| `menu_id` | number | PK ของ menu ใน DB (อ้างอิงเฉยๆ, FE ไม่ได้ใช้เช็ค) |
+| `code` | `PermissionCode` | identifier ที่ FE ใช้เช็คสิทธิ์ — ตรงกับค่าใน `permissionCodes` |
+| `name` | string | ชื่อแสดง UI (sidebar, breadcrumb) |
+| `seq` | number | ลำดับการแสดง (ใช้ sort sidebar) |
+| `permissions` | `Permission[]` | list ของ action ในเมนูนี้ |
+
+#### Field ในแต่ละ permission (action)
+
+| field | type | หน้าที่ |
+|---|---|---|
+| `permission_id` | number | PK ของ row ใน DB |
+| `code` | `ActionCode` | identifier ที่ FE ใช้เช็ค (`view`/`create`/...) |
+| `is_allowed` | boolean | **flag หลัก** — true = user role นี้ทำ action นี้ได้ |
+| `seq` | number | ลำดับการแสดงในหน้า admin role-permission |
+
+#### กฎสำคัญ
+
+1. **ส่งครบทุก action ในทุก menu** — ทั้งที่ allowed และไม่ allowed
+   - ทำให้หน้า admin จัดการ role render checkbox ได้ครบ
+   - FE เช็ค `is_allowed` ตรงๆ ไม่ต้อง assume "ไม่มี = ห้าม"
+2. **ส่งครบทุก menu ที่ระบบรู้จัก** — แม้ user role นี้ไม่มีสิทธิ์ใดเลยก็ส่ง (ทุก action `is_allowed: false`)
+3. **`code` ต้องตรงกับ enum FE** — `PermissionCode` และ `ActionCode` ใน frontend คือ contract; ถ้า backend ส่ง code ที่ไม่ match → FE จะมองว่าไม่มีสิทธิ์
+
+#### ตัวอย่าง: Staff role ใน menu `product`
+
+```json
+{
+  "menu_id": 3,
+  "code": "product",
+  "name": "Product",
+  "seq": 3,
+  "permissions": [
+    { "permission_id": 1, "code": "view",   "is_allowed": true,  "seq": 1 },
+    { "permission_id": 2, "code": "create", "is_allowed": false, "seq": 2 },
+    { "permission_id": 3, "code": "update", "is_allowed": true,  "seq": 3 },
+    { "permission_id": 4, "code": "delete", "is_allowed": false, "seq": 4 },
+    { "permission_id": 5, "code": "import", "is_allowed": false, "seq": 5 },
+    { "permission_id": 6, "code": "export", "is_allowed": false, "seq": 6 }
+  ]
+}
+```
+
+→ Staff ดู product ได้ + แก้ได้ แต่สร้าง/ลบ/import/export ไม่ได้
+
+#### Frontend ใช้ field นี้ที่ไหน
+
+| ที่ | หน้าที่ | ตัวอย่าง |
+|---|---|---|
+| `<RoleGuard>` (route-level) | block ไม่ให้เข้าหน้าถ้าไม่มีสิทธิ์ → redirect | `<RoleGuard mode="single" permissionCode="product">` |
+| `usePermission()` (UI-level) | ซ่อน/disable ปุ่ม Create/Update/Delete | `const { canCreate } = usePermission("product")` |
+| Sidebar filter (ยังไม่ implement) | โชว์เฉพาะ menu ที่มีสิทธิ์ | `menu_permissions.filter(m => m.permissions.some(p => p.is_allowed))` |
+
+#### เมื่อไหร่ data จะ update
+
+- **Login** → โหลดใหม่ทั้งก้อน
+- **Refresh-token** → optional; ถ้า backend ส่ง `menu_permissions` กลับมา FE จะ sync (รองรับ admin แก้สิทธิ์ระหว่าง user online); ถ้าไม่ส่ง → ใช้ของเดิม
+- **Admin แก้สิทธิ์** → user ต้อง refresh token หรือ re-login ถึงจะเห็นการเปลี่ยน
 
 ---
 
@@ -667,4 +789,39 @@ Headers:
 type PurchaseOrderStatus = "DRAFT" | "CONFIRMED" | "RECEIVED" | "CANCELLED";
 type TransactionType = "IN" | "OUT" | "ADJUST";
 type OrderBy = "asc" | "desc" | null;
+
+type PermissionCode =
+  | "dashboard"
+  | "category"
+  | "product"
+  | "stock"
+  | "supplier"
+  | "purchase_order"
+  | "report";
+
+type ActionCode =
+  | "view"
+  | "create"
+  | "update"
+  | "delete"
+  | "import"
+  | "export";
 ```
+
+---
+
+## Roles & Permission Matrix (default seed)
+
+| menu | Admin | Staff | Viewer |
+|---|---|---|---|
+| `dashboard` | view | view | view |
+| `category` | view, create, update, delete | view | view |
+| `product` | view, create, update, delete | view, update | view |
+| `stock` | view, create, update, delete, import, export | view, create | view |
+| `supplier` | view, create, update, delete | view | view |
+| `purchase_order` | view, create, update, delete, export | view, create, update | view |
+| `report` | view, export | view, export | view |
+
+Notes:
+- Matrix นี้เป็นค่าเริ่มต้น — admin สามารถปรับสิทธิ์ต่อ role ผ่าน UI ได้ภายหลัง
+- Action ที่ไม่อยู่ในตาราง = `is_allowed: false`

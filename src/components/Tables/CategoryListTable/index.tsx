@@ -12,8 +12,8 @@ type Props = {
   records: CategoryList[];
   pagination: UsePaginationStateReturnType;
   sortHandler: UseTableSortReturn;
-  onEdit: (category: CategoryList) => void;
-  onDelete: (category: CategoryList) => void;
+  onEdit?: (category: CategoryList) => void;
+  onDelete?: (category: CategoryList) => void;
   isLoading?: boolean;
 };
 
@@ -48,37 +48,44 @@ export const CategoryListTable: FC<Props> = ({
       width: 140,
       render: (c) => formatDate(c.updated_at),
     },
-    {
+  ];
+
+  if (onEdit || onDelete) {
+    columns.push({
       accessor: "actions",
       title: "Actions",
       width: 100,
       textAlign: "center",
       render: (c) => (
         <Group gap={8} justify="center">
-          <ActionIcon
-            variant="subtle"
-            color="blue"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(c);
-            }}
-          >
-            <Edit size={16} />
-          </ActionIcon>
-          <ActionIcon
-            variant="subtle"
-            color="red"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(c);
-            }}
-          >
-            <Trash2 size={16} />
-          </ActionIcon>
+          {onEdit && (
+            <ActionIcon
+              variant="subtle"
+              color="blue"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(c);
+              }}
+            >
+              <Edit size={16} />
+            </ActionIcon>
+          )}
+          {onDelete && (
+            <ActionIcon
+              variant="subtle"
+              color="red"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(c);
+              }}
+            >
+              <Trash2 size={16} />
+            </ActionIcon>
+          )}
         </Group>
       ),
-    },
-  ];
+    });
+  }
 
   return (
     <InstantTable<CategoryList>

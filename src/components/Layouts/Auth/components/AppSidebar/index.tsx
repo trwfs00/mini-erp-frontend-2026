@@ -2,8 +2,11 @@ import type { FC } from "react";
 import { LogOut, LayoutGrid, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { ActionIcon, Tooltip } from "@mantine/core";
+import { useStore } from "@nanostores/react";
 import { NAV_ITEMS } from "@/consts/navConfig";
 import { AuthUtil } from "@/utils/AuthUtil";
+import { PermissionUtil } from "@/utils/PermissionUtil";
+import { $authUser } from "@/stores/authUserStore";
 import classes from "./AppSidebar.module.css";
 
 type AppSidebarProps = {
@@ -18,6 +21,12 @@ export const AppSidebar: FC<AppSidebarProps> = ({
   isMobile,
 }) => {
   const showLabels = !collapsed;
+  const authUser = useStore($authUser);
+  const visibleNavItems = authUser
+    ? NAV_ITEMS.filter((item) =>
+        PermissionUtil.checkAnyPermission(authUser, item.permissionCode),
+      )
+    : [];
 
   const renderToggleIcon = () => {
     if (isMobile) return <X size={18} strokeWidth={2} />;
@@ -52,7 +61,7 @@ export const AppSidebar: FC<AppSidebarProps> = ({
       </div>
 
       <div className={classes.navbarMain}>
-        {NAV_ITEMS.map((item) => {
+        {visibleNavItems.map((item) => {
           const link = (
             <NavLink
               key={item.path}

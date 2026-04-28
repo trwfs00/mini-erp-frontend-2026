@@ -12,8 +12,8 @@ type Props = {
   records: SupplierList[];
   pagination: UsePaginationStateReturnType;
   sortHandler: UseTableSortReturn;
-  onEdit: (supplier: SupplierList) => void;
-  onDelete: (supplier: SupplierList) => void;
+  onEdit?: (supplier: SupplierList) => void;
+  onDelete?: (supplier: SupplierList) => void;
   isLoading?: boolean;
 };
 
@@ -73,37 +73,44 @@ export const SupplierListTable: FC<Props> = ({
       width: 140,
       render: (s) => formatDate(s.updated_at),
     },
-    {
+  ];
+
+  if (onEdit || onDelete) {
+    columns.push({
       accessor: "actions",
       title: "Actions",
       width: 100,
       textAlign: "center",
       render: (s) => (
         <Group gap={8} justify="center">
-          <ActionIcon
-            variant="subtle"
-            color="blue"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(s);
-            }}
-          >
-            <Edit size={16} />
-          </ActionIcon>
-          <ActionIcon
-            variant="subtle"
-            color="red"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(s);
-            }}
-          >
-            <Trash2 size={16} />
-          </ActionIcon>
+          {onEdit && (
+            <ActionIcon
+              variant="subtle"
+              color="blue"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(s);
+              }}
+            >
+              <Edit size={16} />
+            </ActionIcon>
+          )}
+          {onDelete && (
+            <ActionIcon
+              variant="subtle"
+              color="red"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(s);
+              }}
+            >
+              <Trash2 size={16} />
+            </ActionIcon>
+          )}
         </Group>
       ),
-    },
-  ];
+    });
+  }
 
   return (
     <InstantTable<SupplierList>
