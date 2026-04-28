@@ -1,11 +1,5 @@
-import {
-  Alert,
-  Group,
-  LoadingOverlay,
-  SimpleGrid,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { Alert, Group, SimpleGrid, Stack, Text } from "@mantine/core";
+import { AppLoadingOverlay } from "@/components/AppLoadingOverlay";
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { RefreshButton } from "@/components/RefreshButton";
@@ -32,7 +26,7 @@ export const StockSummaryReportPage = () => {
 
   return (
     <Stack gap="md" pos="relative" mih={300}>
-      <LoadingOverlay visible={isLoadingInitialData} />
+      <AppLoadingOverlay visible={isLoadingInitialData} />
       <Group justify="space-between" wrap="wrap" align="flex-end">
         <Text fz="sm" c="gray.6">
           Snapshot of current stock with cost and selling valuation.

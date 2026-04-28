@@ -170,6 +170,17 @@ Response: full `CategoryList` object (same shape as GET above).
 
 Response: `204 No Content` or `{ "ok": true }`.
 
+### `GET /category/dropdown`
+
+Response:
+
+```json
+[
+  { "category_id": "CAT-BEV", "name": "Beverages" },
+  { "category_id": "CAT-SNK", "name": "Snacks" }
+]
+```
+
 ---
 
 ## Product
@@ -236,6 +247,17 @@ Response: full `ProductList` object.
 ### `DELETE /product/:productId`
 
 Response: `204 No Content`.
+
+### `GET /product/dropdown`
+
+Response:
+
+```json
+[
+  { "product_id": "P001", "sku": "SKU-0001", "name": "Coca-Cola 325ml" },
+  { "product_id": "P002", "sku": "SKU-0002", "name": "Lay's Classic 50g" }
+]
+```
 
 ---
 
@@ -397,6 +419,17 @@ Response: full `SupplierList`.
 ### `DELETE /supplier/:supplierId`
 
 Response: `204 No Content`.
+
+### `GET /supplier/dropdown`
+
+Response:
+
+```json
+[
+  { "supplier_id": "SUP-001", "name": "Global Foods Co., Ltd." },
+  { "supplier_id": "SUP-002", "name": "Bangkok Beverage Distributor" }
+]
+```
 
 ---
 

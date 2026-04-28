@@ -59,11 +59,20 @@ export const StockTransactionTable: FC<Props> = ({
       sortable: true,
       textAlign: "right",
       width: 100,
-      render: ({ quantity, type }) => (
-        <Text fw={600} c={type === "OUT" ? "red.7" : "gray.9"}>
-          {type === "OUT" ? `-${quantity}` : `+${quantity}`}
-        </Text>
-      ),
+      render: ({ quantity, type }) => {
+        const signed =
+          type === "OUT"
+            ? `-${Math.abs(quantity)}`
+            : type === "ADJUST"
+              ? `${quantity > 0 ? "+" : ""}${quantity}`
+              : `+${quantity}`;
+        const negative = type === "OUT" || quantity < 0;
+        return (
+          <Text fw={600} c={negative ? "red.7" : "gray.9"}>
+            {signed}
+          </Text>
+        );
+      },
     },
     {
       accessor: "balance_after",
