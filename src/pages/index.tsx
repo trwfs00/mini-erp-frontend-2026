@@ -156,15 +156,15 @@ export const LoginPage: FC = () => {
           {/* TODO: ลบบล็อกนี้เมื่อ integrate API จริง */}
           <Text fz="xs" c="dimmed" ta="center" mt={-8}>
             Mock mode — try{" "}
-            <Text component="span" fw={600} c="gray.7">
+            <Text component="span" fw={600} c="bright">
               admin
             </Text>{" "}
             /{" "}
-            <Text component="span" fw={600} c="gray.7">
+            <Text component="span" fw={600} c="bright">
               staff
             </Text>{" "}
             /{" "}
-            <Text component="span" fw={600} c="gray.7">
+            <Text component="span" fw={600} c="bright">
               viewer
             </Text>{" "}
             (any password)
