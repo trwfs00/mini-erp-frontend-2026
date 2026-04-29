@@ -13,8 +13,8 @@ type Props = {
   records: ProductList[];
   pagination: UsePaginationStateReturnType;
   sortHandler: UseTableSortReturn;
-  onEdit: (product: ProductList) => void;
-  onDelete: (product: ProductList) => void;
+  onEdit?: (product: ProductList) => void;
+  onDelete?: (product: ProductList) => void;
   isLoading?: boolean;
 };
 
@@ -84,37 +84,44 @@ export const ProductListTable: FC<Props> = ({
       width: 140,
       render: (p) => formatDate(p.updated_at),
     },
-    {
+  ];
+
+  if (onEdit || onDelete) {
+    columns.push({
       accessor: "actions",
       title: "Actions",
       width: 100,
       textAlign: "center",
       render: (p) => (
         <Group gap={8} justify="center">
-          <ActionIcon
-            variant="subtle"
-            color="blue"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(p);
-            }}
-          >
-            <Edit size={16} />
-          </ActionIcon>
-          <ActionIcon
-            variant="subtle"
-            color="red"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(p);
-            }}
-          >
-            <Trash2 size={16} />
-          </ActionIcon>
+          {onEdit && (
+            <ActionIcon
+              variant="subtle"
+              color="blue"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(p);
+              }}
+            >
+              <Edit size={16} />
+            </ActionIcon>
+          )}
+          {onDelete && (
+            <ActionIcon
+              variant="subtle"
+              color="red"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(p);
+              }}
+            >
+              <Trash2 size={16} />
+            </ActionIcon>
+          )}
         </Group>
       ),
-    },
-  ];
+    });
+  }
 
   return (
     <InstantTable<ProductList>

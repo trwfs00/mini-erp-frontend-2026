@@ -14,6 +14,7 @@ import { StockMovementReportPage } from "@/pages/report/components/StockMovement
 import { PurchaseSummaryReportPage } from "@/pages/report/components/PurchaseSummaryReport";
 import { PublicLayout } from "@/components/Layouts/Public";
 import { AuthLayout } from "@/components/Layouts/Auth";
+import { RoleGuard } from "@/components/Layouts/RoleGuard";
 import { ROUTE_PATHS } from "./routePaths";
 
 export const router = createBrowserRouter([
@@ -33,35 +34,84 @@ export const router = createBrowserRouter([
     children: [
       {
         path: ROUTE_PATHS.DASHBOARD,
-        element: <DashboardPage />,
+        element: (
+          <RoleGuard mode="single" permissionCode="dashboard">
+            <DashboardPage />
+          </RoleGuard>
+        ),
       },
       {
         path: ROUTE_PATHS.PRODUCT,
-        element: <ProductsPage />,
+        element: (
+          <RoleGuard mode="single" permissionCode="product">
+            <ProductsPage />
+          </RoleGuard>
+        ),
       },
       {
         path: ROUTE_PATHS.CATEGORY,
-        element: <CategoryPage />,
+        element: (
+          <RoleGuard mode="single" permissionCode="category">
+            <CategoryPage />
+          </RoleGuard>
+        ),
       },
       {
         path: ROUTE_PATHS.STOCK,
-        element: <StockPage />,
+        element: (
+          <RoleGuard mode="single" permissionCode="stock">
+            <StockPage />
+          </RoleGuard>
+        ),
       },
       {
         path: ROUTE_PATHS.SUPPLIERS,
-        element: <SupplierPage />,
+        element: (
+          <RoleGuard mode="single" permissionCode="supplier">
+            <SupplierPage />
+          </RoleGuard>
+        ),
       },
       {
         path: ROUTE_PATHS.PURCHASE_ORDERS,
         children: [
-          { index: true, element: <PurchaseOrderPage /> },
-          { path: "create", element: <PurchaseOrderCreatePage /> },
-          { path: ":id", element: <PurchaseOrderDetailPage /> },
+          {
+            index: true,
+            element: (
+              <RoleGuard mode="single" permissionCode="purchase_order">
+                <PurchaseOrderPage />
+              </RoleGuard>
+            ),
+          },
+          {
+            path: "create",
+            element: (
+              <RoleGuard
+                mode="single"
+                permissionCode="purchase_order"
+                actionCode={["create"]}
+              >
+                <PurchaseOrderCreatePage />
+              </RoleGuard>
+            ),
+          },
+          {
+            path: ":id",
+            element: (
+              <RoleGuard mode="single" permissionCode="purchase_order">
+                <PurchaseOrderDetailPage />
+              </RoleGuard>
+            ),
+          },
         ],
       },
       {
         path: ROUTE_PATHS.REPORT,
-        element: <ReportPage />,
+        element: (
+          <RoleGuard mode="single" permissionCode="report">
+            <ReportPage />
+          </RoleGuard>
+        ),
         children: [
           {
             index: true,

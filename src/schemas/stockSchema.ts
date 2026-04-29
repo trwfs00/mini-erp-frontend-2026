@@ -10,11 +10,16 @@ export const stockTransactionSchema = yup.object().shape({
     .number()
     .transform((value) => (Number.isNaN(value) ? undefined : value))
     .required("Quantity is required")
-    .min(1, "Quantity must be at least 1"),
+    .when("type", {
+      is: "ADJUST",
+      then: (schema) => schema.notOneOf([0], "Quantity must not be 0"),
+      otherwise: (schema) => schema.min(1, "Quantity must be at least 1"),
+    }),
   note: yup.string(),
   reason: yup.string().when("type", {
     is: "ADJUST",
-    then: (schema) => schema.required("Reason is required for stock adjustment"),
+    then: (schema) =>
+      schema.required("Reason is required for stock adjustment"),
     otherwise: (schema) => schema.optional(),
   }),
 });

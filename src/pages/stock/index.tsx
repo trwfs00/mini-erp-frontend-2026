@@ -26,8 +26,10 @@ import { useTableSort } from "@/hooks/table/useTableSort";
 import { useStockFilter } from "./hooks/useStockFilter";
 import { NotificationUtil } from "@/utils/NotificationUtil";
 import { ROUTE_PATHS } from "@/router/routePaths";
+import { usePermission } from "@/hooks/auth/usePermission";
 
 export const StockPage = () => {
+  const { canCreate } = usePermission("stock");
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
 
@@ -108,12 +110,14 @@ export const StockPage = () => {
           </Stack>
 
           <Group>
-            <Button
-              leftSection={<Plus size={16} />}
-              onClick={() => setDrawerOpened(true)}
-            >
-              New Transaction
-            </Button>
+            {canCreate && (
+              <Button
+                leftSection={<Plus size={16} />}
+                onClick={() => setDrawerOpened(true)}
+              >
+                New Transaction
+              </Button>
+            )}
             <RefreshButton
               onClick={async () => {
                 await reloadTransactions();

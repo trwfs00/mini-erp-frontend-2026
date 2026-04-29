@@ -1,12 +1,12 @@
 import {
   Alert,
   Group,
-  LoadingOverlay,
   SimpleGrid,
   Stack,
   Text,
   TextInput,
 } from "@mantine/core";
+import { AppLoadingOverlay } from "@/components/AppLoadingOverlay";
 import { BarChart } from "@mantine/charts";
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
@@ -17,6 +17,7 @@ import { StockMovementReportTable } from "@/components/Tables/StockMovementRepor
 import { getLastNDaysRange } from "@/utils/DateUtil";
 import { useLoadInitialData } from "./hooks/useLoadInitialData";
 import { ExportButton } from "../ExportButton";
+import { usePermission } from "@/hooks/auth/usePermission";
 // TODO: เปลี่ยนเป็น ReportService.exportStockMovement เมื่อ integrate API จริง
 import { MockReportExportUtil } from "../../utils/mockReportExport";
 
@@ -36,6 +37,7 @@ export const StockMovementReportPage = () => {
     reloadReport,
   } = useLoadInitialData({ range });
   const [exportError, setExportError] = useState<string | null>(null);
+  const canExport = usePermission("report", ["export"]);
 
   const chartData = (daily ?? []).map((d) => ({
     date: d.date.slice(5),
@@ -46,11 +48,7 @@ export const StockMovementReportPage = () => {
 
   return (
     <Stack gap="md" pos="relative" mih={300}>
-      <LoadingOverlay
-        visible={isLoadingInitialData}
-        overlayProps={{ blur: 1, backgroundOpacity: 0 }}
-        loaderProps={{ type: "oval" }}
-      />
+      <AppLoadingOverlay visible={isLoadingInitialData} />
       <Group justify="space-between" wrap="wrap" gap="md" align="flex-end">
         <Group gap="sm">
           <TextInput
@@ -74,17 +72,19 @@ export const StockMovementReportPage = () => {
         </Group>
         <Group>
           <RefreshButton onClick={async () => await reloadReport()} />
-          <ExportButton
-            label="Export CSV"
-            filename={`stock-movement-${range.from}-to-${range.to}.csv`}
-            disabled={!report}
-            onExport={async () =>
-              report
-                ? { ok: true, data: MockReportExportUtil.exportStockMovement(report) }
-                : { ok: false, message: "Report not loaded" }
-            }
-            onError={setExportError}
-          />
+          {canExport && (
+            <ExportButton
+              label="Export CSV"
+              filename={`stock-movement-${range.from}-to-${range.to}.csv`}
+              disabled={!report}
+              onExport={async () =>
+                report
+                  ? { ok: true, data: MockReportExportUtil.exportStockMovement(report) }
+                  : { ok: false, message: "Report not loaded" }
+              }
+              onError={setExportError}
+            />
+          )}
         </Group>
       </Group>
 

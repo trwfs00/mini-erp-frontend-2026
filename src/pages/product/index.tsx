@@ -16,8 +16,10 @@ import { usePaginationState } from "@/hooks/pagination/usePaginationState";
 import { useTableSort } from "@/hooks/table/useTableSort";
 import { NotificationUtil } from "@/utils/NotificationUtil";
 import { ROUTE_PATHS } from "@/router/routePaths";
+import { usePermission } from "@/hooks/auth/usePermission";
 
 export const ProductsPage = () => {
+  const { canCreate, canUpdate, canDelete } = usePermission("product");
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
   const [drawerOpened, setDrawerOpened] = useState(false);
@@ -111,15 +113,17 @@ export const ProductsPage = () => {
               w={{ base: "100%", sm: 250 }}
             />
             <RefreshButton onClick={async () => await reloadProductList()} />
-            <Button
-              leftSection={<Plus size={16} />}
-              onClick={() => {
-                setSelectedProduct(null);
-                setDrawerOpened(true);
-              }}
-            >
-              Add Product
-            </Button>
+            {canCreate && (
+              <Button
+                leftSection={<Plus size={16} />}
+                onClick={() => {
+                  setSelectedProduct(null);
+                  setDrawerOpened(true);
+                }}
+              >
+                Add Product
+              </Button>
+            )}
           </Group>
         </Group>
 
@@ -127,11 +131,15 @@ export const ProductsPage = () => {
           records={products}
           pagination={pagination}
           sortHandler={sortHandler}
-          onEdit={(product) => {
-            setSelectedProduct(product);
-            setDrawerOpened(true);
-          }}
-          onDelete={handleDelete}
+          onEdit={
+            canUpdate
+              ? (product) => {
+                  setSelectedProduct(product);
+                  setDrawerOpened(true);
+                }
+              : undefined
+          }
+          onDelete={canDelete ? handleDelete : undefined}
           isLoading={isReloading}
         />
 

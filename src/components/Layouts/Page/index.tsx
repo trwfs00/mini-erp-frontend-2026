@@ -1,12 +1,12 @@
 import {
   Container,
-  LoadingOverlay,
   Stack,
   type ContainerProps,
   type StackProps,
 } from "@mantine/core";
 import type { FC, ReactNode } from "react";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { AppLoadingOverlay } from "@/components/AppLoadingOverlay";
 import type { BreadcrumbItem } from "@/types/Global";
 
 type Props = {
@@ -36,12 +36,7 @@ export const PageLayout: FC<Props> = ({
       mih="calc(100vh - 120px)"
       {...containerProps}
     >
-      <LoadingOverlay
-        visible={isLoading}
-        zIndex={50}
-        overlayProps={{ blur: 1, backgroundOpacity: 0 }}
-        loaderProps={{ type: "oval", size: "lg" }}
-      />
+      <AppLoadingOverlay visible={!!isLoading} />
       <Stack gap="lg" {...stackProps}>
         {breadcrumbs && <Breadcrumb current={breadcrumbs} />}
         {variant === "stack" && <Stack gap="lg">{children}</Stack>}

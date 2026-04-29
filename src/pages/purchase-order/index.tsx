@@ -19,8 +19,10 @@ import { ROUTE_PATHS } from "@/router/routePaths";
 import type { PurchaseOrderStatus } from "@/types/purchase-order/PurchaseOrder";
 import { usePaginationState } from "@/hooks/pagination/usePaginationState";
 import { useTableSort } from "@/hooks/table/useTableSort";
+import { usePermission } from "@/hooks/auth/usePermission";
 
 export const PurchaseOrderPage = () => {
+  const { canCreate } = usePermission("purchase_order");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<PurchaseOrderStatus | "ALL">(
     "ALL",
@@ -87,12 +89,14 @@ export const PurchaseOrderPage = () => {
               w={150}
             />
             <RefreshButton onClick={async () => await reloadOrders()} />
-            <Button
-              leftSection={<Plus size={16} />}
-              onClick={() => navigate(ROUTE_PATHS.PO_CREATE)}
-            >
-              Create PO
-            </Button>
+            {canCreate && (
+              <Button
+                leftSection={<Plus size={16} />}
+                onClick={() => navigate(ROUTE_PATHS.PO_CREATE)}
+              >
+                Create PO
+              </Button>
+            )}
           </Group>
         </Group>
 

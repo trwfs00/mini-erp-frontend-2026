@@ -1,11 +1,5 @@
-import {
-  Alert,
-  Group,
-  LoadingOverlay,
-  SimpleGrid,
-  Stack,
-  TextInput,
-} from "@mantine/core";
+import { Alert, Group, SimpleGrid, Stack, TextInput } from "@mantine/core";
+import { AppLoadingOverlay } from "@/components/AppLoadingOverlay";
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { RefreshButton } from "@/components/RefreshButton";
@@ -15,6 +9,7 @@ import { formatCurrency } from "@/utils/CurrencyUtil";
 import { currentYearMonth } from "@/utils/DateUtil";
 import { useLoadInitialData } from "./hooks/useLoadInitialData";
 import { ExportButton } from "../ExportButton";
+import { usePermission } from "@/hooks/auth/usePermission";
 // TODO: เปลี่ยนเป็น ReportService.exportPurchaseSummary เมื่อ integrate API จริง
 import { MockReportExportUtil } from "../../utils/mockReportExport";
 
@@ -31,14 +26,11 @@ export const PurchaseSummaryReportPage = () => {
     reloadReport,
   } = useLoadInitialData({ month });
   const [exportError, setExportError] = useState<string | null>(null);
+  const canExport = usePermission("report", ["export"]);
 
   return (
     <Stack gap="md" pos="relative" mih={300}>
-      <LoadingOverlay
-        visible={isLoadingInitialData}
-        overlayProps={{ blur: 1, backgroundOpacity: 0 }}
-        loaderProps={{ type: "oval" }}
-      />
+      <AppLoadingOverlay visible={isLoadingInitialData} />
       <Group justify="space-between" wrap="wrap" gap="md" align="flex-end">
         <TextInput
           type="month"
@@ -49,17 +41,19 @@ export const PurchaseSummaryReportPage = () => {
         />
         <Group>
           <RefreshButton onClick={async () => await reloadReport()} />
-          <ExportButton
-            label="Export CSV"
-            filename={`purchase-summary-${month}.csv`}
-            disabled={!report}
-            onExport={async () =>
-              report
-                ? { ok: true, data: MockReportExportUtil.exportPurchaseSummary(report) }
-                : { ok: false, message: "Report not loaded" }
-            }
-            onError={setExportError}
-          />
+          {canExport && (
+            <ExportButton
+              label="Export CSV"
+              filename={`purchase-summary-${month}.csv`}
+              disabled={!report}
+              onExport={async () =>
+                report
+                  ? { ok: true, data: MockReportExportUtil.exportPurchaseSummary(report) }
+                  : { ok: false, message: "Report not loaded" }
+              }
+              onError={setExportError}
+            />
+          )}
         </Group>
       </Group>
 

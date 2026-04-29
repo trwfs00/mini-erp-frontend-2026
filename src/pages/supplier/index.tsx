@@ -15,8 +15,10 @@ import { NotificationUtil } from "@/utils/NotificationUtil";
 import { ROUTE_PATHS } from "@/router/routePaths";
 import { usePaginationState } from "@/hooks/pagination/usePaginationState";
 import { useTableSort } from "@/hooks/table/useTableSort";
+import { usePermission } from "@/hooks/auth/usePermission";
 
 export const SupplierPage = () => {
+  const { canCreate, canUpdate, canDelete } = usePermission("supplier");
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
   const [drawerOpened, setDrawerOpened] = useState(false);
@@ -117,15 +119,17 @@ export const SupplierPage = () => {
               w={{ base: "100%", sm: 300 }}
             />
             <RefreshButton onClick={async () => await reloadSupplierList()} />
-            <Button
-              leftSection={<Plus size={16} />}
-              onClick={() => {
-                setSelectedSupplier(null);
-                setDrawerOpened(true);
-              }}
-            >
-              Add Supplier
-            </Button>
+            {canCreate && (
+              <Button
+                leftSection={<Plus size={16} />}
+                onClick={() => {
+                  setSelectedSupplier(null);
+                  setDrawerOpened(true);
+                }}
+              >
+                Add Supplier
+              </Button>
+            )}
           </Group>
         </Group>
 
@@ -133,11 +137,15 @@ export const SupplierPage = () => {
           records={suppliers}
           pagination={pagination}
           sortHandler={sortHandler}
-          onEdit={(supplier: SupplierList) => {
-            setSelectedSupplier(supplier);
-            setDrawerOpened(true);
-          }}
-          onDelete={handleDelete}
+          onEdit={
+            canUpdate
+              ? (supplier: SupplierList) => {
+                  setSelectedSupplier(supplier);
+                  setDrawerOpened(true);
+                }
+              : undefined
+          }
+          onDelete={canDelete ? handleDelete : undefined}
           isLoading={isReloading}
         />
 

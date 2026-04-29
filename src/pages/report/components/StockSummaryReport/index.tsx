@@ -1,11 +1,5 @@
-import {
-  Alert,
-  Group,
-  LoadingOverlay,
-  SimpleGrid,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { Alert, Group, SimpleGrid, Stack, Text } from "@mantine/core";
+import { AppLoadingOverlay } from "@/components/AppLoadingOverlay";
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { RefreshButton } from "@/components/RefreshButton";
@@ -14,6 +8,7 @@ import { StockSummaryReportTable } from "@/components/Tables/StockSummaryReportT
 import { formatCurrency } from "@/utils/CurrencyUtil";
 import { useLoadInitialData } from "./hooks/useLoadInitialData";
 import { ExportButton } from "../ExportButton";
+import { usePermission } from "@/hooks/auth/usePermission";
 // TODO: เปลี่ยนเป็น ReportService.exportStockSummary เมื่อ integrate API จริง
 import { MockReportExportUtil } from "../../utils/mockReportExport";
 
@@ -29,31 +24,30 @@ export const StockSummaryReportPage = () => {
     reloadReport,
   } = useLoadInitialData();
   const [exportError, setExportError] = useState<string | null>(null);
+  const canExport = usePermission("report", ["export"]);
 
   return (
     <Stack gap="md" pos="relative" mih={300}>
-      <LoadingOverlay
-        visible={isLoadingInitialData}
-        overlayProps={{ blur: 1, backgroundOpacity: 0 }}
-        loaderProps={{ type: "oval" }}
-      />
+      <AppLoadingOverlay visible={isLoadingInitialData} />
       <Group justify="space-between" wrap="wrap" align="flex-end">
         <Text fz="sm" c="dimmed">
           Snapshot of current stock with cost and selling valuation.
         </Text>
         <Group>
           <RefreshButton onClick={async () => await reloadReport()} />
-          <ExportButton
-            label="Export CSV"
-            filename={`stock-summary-${new Date().toISOString().slice(0, 10)}.csv`}
-            disabled={!report}
-            onExport={async () =>
-              report
-                ? { ok: true, data: MockReportExportUtil.exportStockSummary(report) }
-                : { ok: false, message: "Report not loaded" }
-            }
-            onError={setExportError}
-          />
+          {canExport && (
+            <ExportButton
+              label="Export CSV"
+              filename={`stock-summary-${new Date().toISOString().slice(0, 10)}.csv`}
+              disabled={!report}
+              onExport={async () =>
+                report
+                  ? { ok: true, data: MockReportExportUtil.exportStockSummary(report) }
+                  : { ok: false, message: "Report not loaded" }
+              }
+              onError={setExportError}
+            />
+          )}
         </Group>
       </Group>
 
