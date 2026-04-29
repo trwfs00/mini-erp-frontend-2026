@@ -9,7 +9,18 @@ import { PurchaseTrendChart } from "./components/PurchaseTrendChart";
 import { LowStockWarningList } from "./components/LowStockWarningList";
 
 export const DashboardPage = () => {
-  const { summary, movement, trend, lowStock, reloadAll } = useLoadInitialData();
+  const {
+    isLoadingInitialData,
+    summary,
+    movement,
+    trend,
+    lowStock,
+    isReloadingSummary,
+    isReloadingMovement,
+    isReloadingTrend,
+    isReloadingLowStock,
+    reloadAll,
+  } = useLoadInitialData();
 
   return (
     <PageLayout
@@ -29,25 +40,28 @@ export const DashboardPage = () => {
           <RefreshButton onClick={reloadAll} />
         </Group>
 
-        <SummaryCards summary={summary.data} isLoading={summary.isLoading} />
+        <SummaryCards
+          summary={summary}
+          isLoading={isLoadingInitialData || isReloadingSummary}
+        />
 
         <Grid align="stretch">
           <Grid.Col span={{ base: 12, lg: 8 }}>
             <StockMovementChart
-              data={movement.data ?? []}
-              isLoading={movement.isLoading}
+              data={movement ?? []}
+              isLoading={isLoadingInitialData || isReloadingMovement}
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, lg: 4 }}>
             <LowStockWarningList
-              products={lowStock.data ?? []}
-              isLoading={lowStock.isLoading}
+              products={lowStock ?? []}
+              isLoading={isLoadingInitialData || isReloadingLowStock}
             />
           </Grid.Col>
           <Grid.Col span={12}>
             <PurchaseTrendChart
-              data={trend.data ?? []}
-              isLoading={trend.isLoading}
+              data={trend ?? []}
+              isLoading={isLoadingInitialData || isReloadingTrend}
             />
           </Grid.Col>
         </Grid>

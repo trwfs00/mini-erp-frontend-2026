@@ -506,39 +506,62 @@ Response: `204 No Content` or updated PO object.
 
 ## Dashboard
 
-### `GET /dashboard/stats`
+The dashboard is split into 4 independent endpoints so each widget can load,
+fail, and refresh in isolation. The frontend calls all 4 in parallel via
+`Promise.allSettled` — partial failures don't block the rest of the page.
+
+### `GET /dashboard/summary`
 
 Response:
 
 ```json
 {
-  "summary": {
-    "total_products": 42,
-    "total_stock_value": 125000,
-    "total_selling_value": 210000,
-    "low_stock_count": 5,
-    "pending_po_count": 3,
-    "received_po_this_month": 8
-  },
-  "stock_movement": [
-    { "date": "2026-04-20", "in": 100, "out": 10, "adjust": 0 },
-    { "date": "2026-04-21", "in": 50, "out": 20, "adjust": 5 }
-  ],
-  "purchase_trend": [
-    { "month": "2025-11", "total_amount": 50000, "order_count": 3 },
-    { "month": "2025-12", "total_amount": 72000, "order_count": 5 }
-  ],
-  "low_stock_products": [
-    {
-      "product_id": "P002",
-      "sku": "SKU-0002",
-      "name": "Lay's Classic 50g",
-      "current_stock": 5,
-      "min_stock": 30,
-      "unit": "pack"
-    }
-  ]
+  "total_products": 42,
+  "total_stock_value": 125000,
+  "total_selling_value": 210000,
+  "low_stock_count": 5,
+  "pending_po_count": 3,
+  "received_po_this_month": 8
 }
+```
+
+### `GET /dashboard/stock-movement`
+
+Response: array of daily points (last 14 days).
+
+```json
+[
+  { "date": "2026-04-20", "in": 100, "out": 10, "adjust": 0 },
+  { "date": "2026-04-21", "in": 50, "out": 20, "adjust": 5 }
+]
+```
+
+### `GET /dashboard/purchase-trend`
+
+Response: array of monthly points (last 6 months).
+
+```json
+[
+  { "month": "2025-11", "total_amount": 50000, "order_count": 3 },
+  { "month": "2025-12", "total_amount": 72000, "order_count": 5 }
+]
+```
+
+### `GET /dashboard/low-stock`
+
+Response: array of products currently below `min_stock`.
+
+```json
+[
+  {
+    "product_id": "P002",
+    "sku": "SKU-0002",
+    "name": "Lay's Classic 50g",
+    "current_stock": 5,
+    "min_stock": 30,
+    "unit": "pack"
+  }
+]
 ```
 
 ---

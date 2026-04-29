@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useMockDashboardData } from "./useMockDashboardData";
 import type {
   DashboardSummary,
@@ -8,13 +8,20 @@ import type { StockMovementDailyPoint } from "@/types/report/StockMovementReport
 import type { PurchaseTrendPoint } from "@/types/report/PurchaseSummary";
 import { NotificationUtil } from "@/utils/NotificationUtil";
 
-export type SectionState<T> = {
-  data: T | null;
-  isLoading: boolean;
-  reload: () => Promise<boolean>;
-};
-
 export const useLoadInitialData = () => {
+  const [summary, setSummary] = useState<DashboardSummary | null>(null);
+  const [movement, setMovement] = useState<StockMovementDailyPoint[] | null>(
+    null,
+  );
+  const [trend, setTrend] = useState<PurchaseTrendPoint[] | null>(null);
+  const [lowStock, setLowStock] = useState<LowStockProduct[] | null>(null);
+
+  const [isLoadingInitialData, setIsLoadingInitialData] = useState(false);
+  const [isReloadingSummary, setIsReloadingSummary] = useState(false);
+  const [isReloadingMovement, setIsReloadingMovement] = useState(false);
+  const [isReloadingTrend, setIsReloadingTrend] = useState(false);
+  const [isReloadingLowStock, setIsReloadingLowStock] = useState(false);
+
   // TODO: เปลี่ยนเป็น DashboardService methods เมื่อ integrate API จริง
   const {
     getMockSummary,
@@ -23,123 +30,115 @@ export const useLoadInitialData = () => {
     getMockLowStock,
   } = useMockDashboardData();
 
-  const [summary, setSummary] = useState<DashboardSummary | null>(null);
-  const [movement, setMovement] = useState<StockMovementDailyPoint[] | null>(
-    null,
-  );
-  const [trend, setTrend] = useState<PurchaseTrendPoint[] | null>(null);
-  const [lowStock, setLowStock] = useState<LowStockProduct[] | null>(null);
+  const callGetSummary = async (): Promise<boolean> => {
+    const res = await getMockSummary();
+    setSummary(res.data);
+    return true;
+  };
 
-  const [isLoadingSummary, setIsLoadingSummary] = useState(true);
-  const [isLoadingMovement, setIsLoadingMovement] = useState(true);
-  const [isLoadingTrend, setIsLoadingTrend] = useState(true);
-  const [isLoadingLowStock, setIsLoadingLowStock] = useState(true);
+  const callGetMovement = async (): Promise<boolean> => {
+    const res = await getMockStockMovement();
+    setMovement(res.data);
+    return true;
+  };
 
-  const loadSummary = useCallback(async (): Promise<boolean> => {
-    setIsLoadingSummary(true);
-    try {
-      const res = await getMockSummary();
-      setSummary(res.data);
-      return true;
-    } catch {
-      return false;
-    } finally {
-      setIsLoadingSummary(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const callGetTrend = async (): Promise<boolean> => {
+    const res = await getMockPurchaseTrend();
+    setTrend(res.data);
+    return true;
+  };
 
-  const loadMovement = useCallback(async (): Promise<boolean> => {
-    setIsLoadingMovement(true);
-    try {
-      const res = await getMockStockMovement();
-      setMovement(res.data);
-      return true;
-    } catch {
-      return false;
-    } finally {
-      setIsLoadingMovement(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const callGetLowStock = async (): Promise<boolean> => {
+    const res = await getMockLowStock();
+    setLowStock(res.data);
+    return true;
+  };
 
-  const loadTrend = useCallback(async (): Promise<boolean> => {
-    setIsLoadingTrend(true);
-    try {
-      const res = await getMockPurchaseTrend();
-      setTrend(res.data);
-      return true;
-    } catch {
-      return false;
-    } finally {
-      setIsLoadingTrend(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const loadInitialData = async (): Promise<void> => {
+    setIsLoadingInitialData(true);
+    const promises = [
+      callGetSummary(),
+      callGetMovement(),
+      callGetTrend(),
+      callGetLowStock(),
+    ];
+    const results = await Promise.all(promises);
+    setIsLoadingInitialData(false);
 
-  const loadLowStock = useCallback(async (): Promise<boolean> => {
-    setIsLoadingLowStock(true);
-    try {
-      const res = await getMockLowStock();
-      setLowStock(res.data);
-      return true;
-    } catch {
-      return false;
-    } finally {
-      setIsLoadingLowStock(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const reloadAll = useCallback(async (): Promise<void> => {
-    const results = await Promise.allSettled([
-      loadSummary(),
-      loadMovement(),
-      loadTrend(),
-      loadLowStock(),
-    ]);
-
-    const anyFailed = results.some(
-      (r) => r.status === "rejected" || r.value === false,
-    );
-    if (anyFailed) {
+    if (results.some((result) => !result)) {
       NotificationUtil.notifyError({
-        title: "Some sections failed to load",
+        title: "An error occurred. Please try again",
       });
     }
-  }, [loadSummary, loadMovement, loadTrend, loadLowStock]);
+  };
+
+  const reloadSummary = async (): Promise<boolean> => {
+    setIsReloadingSummary(true);
+    const success = await callGetSummary();
+    setIsReloadingSummary(false);
+    if (!success) {
+      NotificationUtil.notifyError({ title: "Failed to load summary" });
+    }
+    return success;
+  };
+
+  const reloadMovement = async (): Promise<boolean> => {
+    setIsReloadingMovement(true);
+    const success = await callGetMovement();
+    setIsReloadingMovement(false);
+    if (!success) {
+      NotificationUtil.notifyError({ title: "Failed to load stock movement" });
+    }
+    return success;
+  };
+
+  const reloadTrend = async (): Promise<boolean> => {
+    setIsReloadingTrend(true);
+    const success = await callGetTrend();
+    setIsReloadingTrend(false);
+    if (!success) {
+      NotificationUtil.notifyError({ title: "Failed to load purchase trend" });
+    }
+    return success;
+  };
+
+  const reloadLowStock = async (): Promise<boolean> => {
+    setIsReloadingLowStock(true);
+    const success = await callGetLowStock();
+    setIsReloadingLowStock(false);
+    if (!success) {
+      NotificationUtil.notifyError({ title: "Failed to load low stock list" });
+    }
+    return success;
+  };
+
+  const reloadAll = async (): Promise<void> => {
+    await Promise.all([
+      reloadSummary(),
+      reloadMovement(),
+      reloadTrend(),
+      reloadLowStock(),
+    ]);
+  };
 
   useEffect(() => {
-    reloadAll();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    loadInitialData();
   }, []);
 
   return {
-    summary: {
-      data: summary,
-      isLoading: isLoadingSummary,
-      reload: loadSummary,
-    } as SectionState<DashboardSummary>,
-    movement: {
-      data: movement,
-      isLoading: isLoadingMovement,
-      reload: loadMovement,
-    } as SectionState<StockMovementDailyPoint[]>,
-    trend: {
-      data: trend,
-      isLoading: isLoadingTrend,
-      reload: loadTrend,
-    } as SectionState<PurchaseTrendPoint[]>,
-    lowStock: {
-      data: lowStock,
-      isLoading: isLoadingLowStock,
-      reload: loadLowStock,
-    } as SectionState<LowStockProduct[]>,
+    isLoadingInitialData,
+    summary,
+    movement,
+    trend,
+    lowStock,
+    isReloadingSummary,
+    isReloadingMovement,
+    isReloadingTrend,
+    isReloadingLowStock,
+    reloadSummary,
+    reloadMovement,
+    reloadTrend,
+    reloadLowStock,
     reloadAll,
-    isAnyLoading:
-      isLoadingSummary ||
-      isLoadingMovement ||
-      isLoadingTrend ||
-      isLoadingLowStock,
   };
 };
