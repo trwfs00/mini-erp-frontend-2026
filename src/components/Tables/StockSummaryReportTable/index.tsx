@@ -20,7 +20,7 @@ const columns: DataTableColumn<StockSummaryRow>[] = [
     title: "SKU",
     sortable: true,
     width: 120,
-    render: (r) => <Text fz="sm" c="gray.6">{r.sku}</Text>,
+    render: (r) => <Text fz="sm" c="dimmed">{r.sku}</Text>,
   },
   {
     accessor: "name",

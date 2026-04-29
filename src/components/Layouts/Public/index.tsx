@@ -6,7 +6,7 @@ export const PublicLayout: FC = () => {
   return (
     <AppShell
       style={{
-        backgroundColor: "#f0f2f5",
+        backgroundColor: "light-dark(#f0f2f5, var(--mantine-color-dark-8))",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",

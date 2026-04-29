@@ -34,7 +34,11 @@ export const PurchaseSummaryReportPage = () => {
 
   return (
     <Stack gap="md" pos="relative" mih={300}>
-      <LoadingOverlay visible={isLoadingInitialData} />
+      <LoadingOverlay
+        visible={isLoadingInitialData}
+        overlayProps={{ blur: 1, backgroundOpacity: 0 }}
+        loaderProps={{ type: "oval" }}
+      />
       <Group justify="space-between" wrap="wrap" gap="md" align="flex-end">
         <TextInput
           type="month"

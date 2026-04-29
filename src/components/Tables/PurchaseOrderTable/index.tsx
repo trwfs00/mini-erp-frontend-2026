@@ -76,7 +76,7 @@ export const PurchaseOrderTable: FC<Props> = ({
         <Group gap={8} justify="center">
           <ActionIcon
             variant="subtle"
-            color="blue"
+           
             onClick={(e) => {
               e.stopPropagation();
               onView(p.purchase_order_id);

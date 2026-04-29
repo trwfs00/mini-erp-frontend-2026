@@ -32,9 +32,13 @@ export const StockSummaryReportPage = () => {
 
   return (
     <Stack gap="md" pos="relative" mih={300}>
-      <LoadingOverlay visible={isLoadingInitialData} />
+      <LoadingOverlay
+        visible={isLoadingInitialData}
+        overlayProps={{ blur: 1, backgroundOpacity: 0 }}
+        loaderProps={{ type: "oval" }}
+      />
       <Group justify="space-between" wrap="wrap" align="flex-end">
-        <Text fz="sm" c="gray.6">
+        <Text fz="sm" c="dimmed">
           Snapshot of current stock with cost and selling valuation.
         </Text>
         <Group>

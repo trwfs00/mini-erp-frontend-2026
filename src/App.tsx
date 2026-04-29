@@ -1,13 +1,40 @@
+import { useMemo } from "react";
 import { RouterProvider } from "react-router-dom";
 import { router } from "@/router";
-import { MantineProvider } from "@mantine/core";
+import {
+  MantineProvider,
+  localStorageColorSchemeManager,
+  mergeMantineTheme,
+  DEFAULT_THEME,
+} from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
+import { useStore } from "@nanostores/react";
 import { theme } from "./consts/theme";
+import { $primaryColor } from "@/stores/primaryColorStore";
 import "./styles/global.css";
 
+const colorSchemeManager = localStorageColorSchemeManager({
+  key: "mini-erp-color-scheme",
+});
+
 function App() {
+  const primaryColor = useStore($primaryColor);
+
+  const mergedTheme = useMemo(
+    () =>
+      mergeMantineTheme(DEFAULT_THEME, {
+        ...theme,
+        primaryColor,
+      }),
+    [primaryColor],
+  );
+
   return (
-    <MantineProvider theme={theme}>
+    <MantineProvider
+      theme={mergedTheme}
+      defaultColorScheme="light"
+      colorSchemeManager={colorSchemeManager}
+    >
       <ModalsProvider>
         <RouterProvider router={router} />
       </ModalsProvider>

@@ -73,7 +73,6 @@ export const Breadcrumb: FC<Props> = ({ current, useHome = true }) => {
       onClick={() => navigate(ROUTE_PATHS.DASHBOARD)}
       fz="sm"
       fw={500}
-      c="black"
       style={{ cursor: "pointer" }}
     >
       Home
@@ -91,7 +90,7 @@ export const Breadcrumb: FC<Props> = ({ current, useHome = true }) => {
             onClick={() => item.path && navigate(item.path)}
             {...anchorProps}
             fw={isLast ? 600 : 400}
-            c={isLast ? "gray.9" : "gray.6"}
+            c={isLast ? undefined : "dimmed"}
             style={{ cursor: item.path ? "pointer" : "default" }}
           >
             {item.label}

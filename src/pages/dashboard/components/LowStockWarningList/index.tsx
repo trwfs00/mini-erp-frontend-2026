@@ -25,7 +25,7 @@ const LowStockRow: FC<{ product: LowStockProduct }> = ({ product }) => (
       <Text fz="sm" fw={500} truncate>
         {product.name}
       </Text>
-      <Text fz="xs" c="gray.6" truncate>
+      <Text fz="xs" c="dimmed" truncate>
         {product.sku}
       </Text>
     </Stack>
@@ -33,7 +33,7 @@ const LowStockRow: FC<{ product: LowStockProduct }> = ({ product }) => (
       <Text fz="sm" fw={700} c="red.7">
         {product.current_stock} {product.unit}
       </Text>
-      <Text fz="xs" c="gray.5">
+      <Text fz="xs" c="dimmed">
         min {product.min_stock}
       </Text>
     </Stack>
@@ -60,7 +60,7 @@ export const LowStockWarningList: FC<Props> = ({ products, isLoading }) => {
             color="var(--mantine-color-green-6)"
             strokeWidth={1.5}
           />
-          <Text fz="sm" c="gray.6" ta="center">
+          <Text fz="sm" c="dimmed" ta="center">
             All products above minimum stock.
           </Text>
         </Stack>
@@ -93,7 +93,7 @@ export const LowStockWarningList: FC<Props> = ({ products, isLoading }) => {
         <Group gap="xs" justify="space-between">
           <Group gap="xs">
             <AlertTriangle size={18} color="var(--mantine-color-red-6)" />
-            <Title order={5} fw={600} c="gray.9">
+            <Title order={5} fw={600}>
               Low Stock Warning
             </Title>
           </Group>

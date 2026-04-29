@@ -161,7 +161,7 @@ export const PurchaseOrderCreatePage = () => {
               <Title order={2} fw={700}>
                 Create Purchase Order
               </Title>
-              <Text c="gray.6" fz="sm">
+              <Text c="dimmed" fz="sm">
                 Fill in the details to create a new purchase order.
               </Text>
             </Stack>

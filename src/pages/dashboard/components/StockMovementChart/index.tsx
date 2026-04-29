@@ -21,17 +21,17 @@ export const StockMovementChart: FC<Props> = ({ data, isLoading }) => {
     <SurfaceCard h="100%">
       <Stack gap="sm">
         <Stack gap={2}>
-          <Title order={4} fw={600} c="gray.9">
+          <Title order={4} fw={600}>
             Stock Movement
           </Title>
-          <Text fz="xs" c="gray.6">
+          <Text fz="xs" c="dimmed">
             Last 14 days · IN / OUT / ADJUST
           </Text>
         </Stack>
         {isLoading ? (
           <Skeleton h={260} radius="sm" />
         ) : chartData.length === 0 ? (
-          <Text c="gray.5" fz="sm" ta="center" py="xl">
+          <Text c="dimmed" fz="sm" ta="center" py="xl">
             No movement in this period.
           </Text>
         ) : (

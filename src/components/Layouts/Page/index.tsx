@@ -39,7 +39,7 @@ export const PageLayout: FC<Props> = ({
       <LoadingOverlay
         visible={isLoading}
         zIndex={50}
-        overlayProps={{ blur: 1, backgroundOpacity: 0.35 }}
+        overlayProps={{ blur: 1, backgroundOpacity: 0 }}
         loaderProps={{ type: "oval", size: "lg" }}
       />
       <Stack gap="lg" {...stackProps}>

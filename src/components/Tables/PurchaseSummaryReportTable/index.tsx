@@ -62,7 +62,7 @@ const columns: DataTableColumn<PurchaseSummaryRow>[] = [
     sortable: true,
     width: 140,
     render: (r) => (
-      <Text fz="sm" c="gray.6">
+      <Text fz="sm" c="dimmed">
         {formatDate(r.created_at)}
       </Text>
     ),
@@ -72,7 +72,7 @@ const columns: DataTableColumn<PurchaseSummaryRow>[] = [
     title: "By",
     width: 160,
     render: (r) => (
-      <Text fz="sm" c="gray.6">
+      <Text fz="sm" c="dimmed">
         {r.created_by_name}
       </Text>
     ),

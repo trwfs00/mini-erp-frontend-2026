@@ -22,8 +22,12 @@ export const SurfaceCard: FC<Props> = ({
     withBorder
     radius="md"
     p={padding}
-    bg="white"
-    style={{ borderColor: "var(--mantine-color-gray-2)", ...style }}
+    bg="light-dark(#fff, var(--mantine-color-dark-7))"
+    style={{
+      borderColor:
+        "light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4))",
+      ...style,
+    }}
   >
     {children}
   </Paper>

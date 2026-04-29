@@ -27,11 +27,11 @@ export const RefreshButton: FC<Props> = ({ onClick }) => {
 
   return (
     <Group gap="sm" onClick={handleClick} className={classes.buttonWrapper}>
-      <ActionIcon size="38px" variant="light" color="blue" radius="md">
+      <ActionIcon size="38px" variant="light" radius="md">
         <RefreshCwIcon size={18} className={isRefreshing ? classes.spin : ""} />
       </ActionIcon>
       <Box>
-        <Text variant="body3" fw={600} c="dark.3">
+        <Text variant="body3" fw={600}>
           Refresh Data
         </Text>
         <Text variant="caption1" c="dimmed">

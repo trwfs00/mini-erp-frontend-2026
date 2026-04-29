@@ -25,10 +25,10 @@ const Card: FC<CardProps> = ({ label, value, icon, accent }) => (
       <ThemeIcon variant="light" color={accent} size="lg" radius="md">
         {icon}
       </ThemeIcon>
-      <Text fz="xs" c="gray.6" tt="uppercase" fw={600}>
+      <Text fz="xs" c="dimmed" tt="uppercase" fw={600}>
         {label}
       </Text>
-      <Text fz="xl" fw={700} c="gray.9">
+      <Text fz="xl" fw={700}>
         {value}
       </Text>
     </Stack>

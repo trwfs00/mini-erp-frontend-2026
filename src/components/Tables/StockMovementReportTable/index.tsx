@@ -22,7 +22,7 @@ const columns: DataTableColumn<StockMovementRow>[] = [
     sortable: true,
     width: 130,
     render: (r) => (
-      <Text fz="sm" c="gray.6">
+      <Text fz="sm" c="dimmed">
         {formatDate(r.created_at)}
       </Text>
     ),
@@ -63,7 +63,7 @@ const columns: DataTableColumn<StockMovementRow>[] = [
     title: "By",
     width: 160,
     render: (r) => (
-      <Text fz="sm" c="gray.6">
+      <Text fz="sm" c="dimmed">
         {r.created_by_name}
       </Text>
     ),
@@ -72,7 +72,7 @@ const columns: DataTableColumn<StockMovementRow>[] = [
     accessor: "note",
     title: "Note",
     render: (r) => (
-      <Text fz="sm" c="gray.6">
+      <Text fz="sm" c="dimmed">
         {r.note ?? r.reason ?? "-"}
       </Text>
     ),

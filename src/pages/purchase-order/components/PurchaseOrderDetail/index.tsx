@@ -105,7 +105,7 @@ export const PurchaseOrderDetailPage = () => {
                   </Title>
                   <PurchaseOrderStatusBadge status={order.status} />
                 </Group>
-                <Text c="gray.6" fz="sm">
+                <Text c="dimmed" fz="sm">
                   Created on {formatDate(order.created_at)} by{" "}
                   {order.created_by_name}
                 </Text>
@@ -169,7 +169,7 @@ export const PurchaseOrderDetailPage = () => {
                       <Table.Tr key={item.purchase_order_item_id}>
                         <Table.Td>
                           <Text fw={500}>{item.product_name}</Text>
-                          <Text size="xs" c="gray.6">
+                          <Text size="xs" c="dimmed">
                             {item.product_id}
                           </Text>
                         </Table.Td>
@@ -208,7 +208,7 @@ export const PurchaseOrderDetailPage = () => {
                   </Title>
                   <Stack gap="xs">
                     <Group justify="space-between">
-                      <Text size="sm" c="gray.6">
+                      <Text size="sm" c="dimmed">
                         Name:
                       </Text>
                       <Text size="sm" fw={500}>
@@ -216,7 +216,7 @@ export const PurchaseOrderDetailPage = () => {
                       </Text>
                     </Group>
                     <Group justify="space-between">
-                      <Text size="sm" c="gray.6">
+                      <Text size="sm" c="dimmed">
                         ID:
                       </Text>
                       <Text size="sm" fw={500}>
@@ -239,7 +239,7 @@ export const PurchaseOrderDetailPage = () => {
                     </Group>
                     {order.status === "CONFIRMED" && (
                       <Group gap="xs">
-                        <Badge color="blue" variant="dot" size="sm">
+                        <Badge variant="dot" size="sm">
                           Confirmed
                         </Badge>
                         <Text size="xs">Awaiting delivery</Text>

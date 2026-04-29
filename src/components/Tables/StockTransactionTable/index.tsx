@@ -60,7 +60,7 @@ export const StockTransactionTable: FC<Props> = ({
       textAlign: "right",
       width: 100,
       render: ({ quantity, type }) => (
-        <Text fw={600} c={type === "OUT" ? "red.7" : "gray.9"}>
+        <Text fw={600} c={type === "OUT" ? "red.7" : "teal.7"}>
           {type === "OUT" ? `-${quantity}` : `+${quantity}`}
         </Text>
       ),
@@ -77,7 +77,7 @@ export const StockTransactionTable: FC<Props> = ({
       title: "By",
       width: 160,
       render: ({ created_by_name }) => (
-        <Text fz="sm" c="gray.6">
+        <Text fz="sm" c="dimmed">
           {created_by_name}
         </Text>
       ),
