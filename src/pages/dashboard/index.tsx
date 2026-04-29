@@ -7,11 +7,9 @@ import { SummaryCards } from "./components/SummaryCards";
 import { StockMovementChart } from "./components/StockMovementChart";
 import { PurchaseTrendChart } from "./components/PurchaseTrendChart";
 import { LowStockWarningList } from "./components/LowStockWarningList";
-import { DashboardSkeleton } from "./components/DashboardSkeleton";
 
 export const DashboardPage = () => {
-  const { dashboardData, isLoadingInitialData, reloadDashboard } =
-    useLoadInitialData();
+  const { summary, movement, trend, lowStock, reloadAll } = useLoadInitialData();
 
   return (
     <PageLayout
@@ -28,37 +26,31 @@ export const DashboardPage = () => {
             </Text>
           </Stack>
 
-          <RefreshButton onClick={reloadDashboard} />
+          <RefreshButton onClick={reloadAll} />
         </Group>
 
-        {isLoadingInitialData && <DashboardSkeleton />}
+        <SummaryCards summary={summary.data} isLoading={summary.isLoading} />
 
-        {!isLoadingInitialData && dashboardData && (
-          <>
-            <SummaryCards summary={dashboardData.summary} />
-
-            <Grid align="stretch">
-              <Grid.Col span={{ base: 12, lg: 8 }}>
-                <StockMovementChart
-                  data={dashboardData.stock_movement}
-                  isLoading={isLoadingInitialData}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, lg: 4 }}>
-                <LowStockWarningList
-                  products={dashboardData.low_stock_products}
-                  isLoading={isLoadingInitialData}
-                />
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <PurchaseTrendChart
-                  data={dashboardData.purchase_trend}
-                  isLoading={isLoadingInitialData}
-                />
-              </Grid.Col>
-            </Grid>
-          </>
-        )}
+        <Grid align="stretch">
+          <Grid.Col span={{ base: 12, lg: 8 }}>
+            <StockMovementChart
+              data={movement.data ?? []}
+              isLoading={movement.isLoading}
+            />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, lg: 4 }}>
+            <LowStockWarningList
+              products={lowStock.data ?? []}
+              isLoading={lowStock.isLoading}
+            />
+          </Grid.Col>
+          <Grid.Col span={12}>
+            <PurchaseTrendChart
+              data={trend.data ?? []}
+              isLoading={trend.isLoading}
+            />
+          </Grid.Col>
+        </Grid>
       </Stack>
     </PageLayout>
   );
