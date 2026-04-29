@@ -4,6 +4,7 @@ import { useStore } from "@nanostores/react";
 import { $authUser } from "@/stores/authUserStore";
 import { $mockMode, $authBypass } from "@/stores/debugModeStore";
 import { UserMenu } from "@/components/UserMenu";
+import { BYPASS_ADMIN_USER } from "@/consts/auth/bypassUser";
 
 type AppHeaderProps = {
   mobileOpened: boolean;
@@ -74,7 +75,11 @@ export const AppHeader: FC<AppHeaderProps> = ({
         )}
       </Group>
 
-      {authUser ? <UserMenu authUser={authUser} /> : <span />}
+      {(() => {
+        // TODO: ลบ fallback BYPASS_ADMIN_USER ออกเมื่อ integrate API จริง
+        const displayUser = authUser ?? (authBypass ? BYPASS_ADMIN_USER : null);
+        return displayUser ? <UserMenu authUser={displayUser} /> : <span />;
+      })()}
     </Group>
   );
 };

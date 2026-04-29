@@ -226,7 +226,12 @@ export const PurchaseOrderDetailPage = () => {
                   </Stack>
                 </Paper>
 
-                <Paper withBorder p="md" radius="md" bg="gray.0">
+                <Paper
+                  withBorder
+                  p="md"
+                  radius="md"
+                  bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))"
+                >
                   <Title order={4} mb="sm">
                     Order Timeline
                   </Title>

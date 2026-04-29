@@ -75,7 +75,8 @@ export const LowStockWarningList: FC<Props> = ({ products, isLoading }) => {
               {i > 0 && (
                 <div
                   style={{
-                    borderTop: "1px solid var(--mantine-color-gray-2)",
+                    borderTop:
+                      "1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4))",
                   }}
                 />
               )}

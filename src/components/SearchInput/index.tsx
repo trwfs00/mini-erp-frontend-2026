@@ -27,7 +27,7 @@ export const SearchInput: FC<Props> = ({
 
   return (
     <TextInput
-      leftSection={<SearchIcon size={16} color="black" />}
+      leftSection={<SearchIcon size={16} />}
       value={value}
       onChange={handleChange}
       onKeyPress={handleKeyPress}

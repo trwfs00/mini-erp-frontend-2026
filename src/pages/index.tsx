@@ -62,12 +62,12 @@ export const LoginPage: FC = () => {
       <title>Login | Welcome Back</title>
 
       <Stack gap={4} mb="xl" align="center">
-        <LockIcon size={26} color="black" strokeWidth={2.25} />
+        <LockIcon size={26} strokeWidth={2.25} />
 
-        <Title order={1} fz={26} fw={700} lh={1.2} c="gray.9">
+        <Title order={1} fz={26} fw={700} lh={1.2}>
           Welcome Back
         </Title>
-        <Text c="gray.6" fz="sm">
+        <Text c="dimmed" fz="sm">
           Sign in to continue to Mini ERP
         </Text>
       </Stack>
@@ -109,7 +109,7 @@ export const LoginPage: FC = () => {
 
           <Divider
             label={
-              <Text fz="xs" c="gray.5">
+              <Text fz="xs" c="dimmed">
                 Mini ERP · Secure access
               </Text>
             }
