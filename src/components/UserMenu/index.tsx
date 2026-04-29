@@ -11,7 +11,7 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
-import { Check, LogOut, MoonStar, SunMedium } from "lucide-react";
+import { Check, LogOut, Monitor, MoonStar, SunMedium } from "lucide-react";
 import { useStore } from "@nanostores/react";
 import type { User } from "@/types/auth/User";
 import { AuthUtil } from "@/utils/AuthUtil";
@@ -116,8 +116,8 @@ export const UserMenu = ({ authUser }: Props) => {
             <button
               type="button"
               role="radio"
-              aria-checked={colorScheme !== "dark"}
-              data-active={colorScheme !== "dark" || undefined}
+              aria-checked={colorScheme === "light"}
+              data-active={colorScheme === "light" || undefined}
               className={classes.themeOption}
               onClick={() => setColorScheme("light")}
             >
@@ -134,6 +134,17 @@ export const UserMenu = ({ authUser }: Props) => {
             >
               <MoonStar size={14} strokeWidth={2} />
               Dark
+            </button>
+            <button
+              type="button"
+              role="radio"
+              aria-checked={colorScheme === "auto"}
+              data-active={colorScheme === "auto" || undefined}
+              className={classes.themeOption}
+              onClick={() => setColorScheme("auto")}
+            >
+              <Monitor size={14} strokeWidth={2} />
+              Auto
             </button>
           </div>
         </div>

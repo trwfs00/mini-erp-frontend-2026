@@ -11,10 +11,11 @@ import { ModalsProvider } from "@mantine/modals";
 import { useStore } from "@nanostores/react";
 import { theme } from "./consts/theme";
 import { $primaryColor } from "@/stores/primaryColorStore";
+import { LOCAL_STORAGE_KEYS } from "@/consts/keys/localStorageKeys";
 import "./styles/global.css";
 
 const colorSchemeManager = localStorageColorSchemeManager({
-  key: "mini-erp-color-scheme",
+  key: LOCAL_STORAGE_KEYS.COLOR_SCHEME,
 });
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
   return (
     <MantineProvider
       theme={mergedTheme}
-      defaultColorScheme="light"
+      defaultColorScheme="auto"
       colorSchemeManager={colorSchemeManager}
     >
       <ModalsProvider>

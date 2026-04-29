@@ -6,10 +6,8 @@ export const PublicLayout: FC = () => {
   return (
     <AppShell
       style={{
-        backgroundColor: "light-dark(#f0f2f5, var(--mantine-color-dark-8))",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
+        background:
+          "radial-gradient(60% 50% at 50% 0%, color-mix(in srgb, var(--mantine-primary-color-filled) 12%, transparent) 0%, transparent 70%), light-dark(#f0f2f5, var(--mantine-color-dark-8))",
       }}
     >
       <AppShell.Main>
@@ -20,7 +18,18 @@ export const PublicLayout: FC = () => {
           mih={720}
           style={{ overflowY: "auto" }}
         >
-          <Paper shadow="md" p={40} radius={10}>
+          <Paper
+            p={40}
+            radius="lg"
+            withBorder
+            style={{
+              background: "var(--mantine-color-body)",
+              borderColor:
+                "light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4))",
+              boxShadow:
+                "0 20px 60px -12px rgba(0, 0, 0, 0.12), 0 8px 24px -8px rgba(0, 0, 0, 0.06)",
+            }}
+          >
             <Outlet />
           </Paper>
         </Stack>
