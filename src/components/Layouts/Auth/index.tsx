@@ -13,6 +13,7 @@ import { AppShell } from "@mantine/core";
 import { Outlet } from "react-router-dom";
 import { AppSidebar } from "./components/AppSidebar";
 import { AppHeader } from "./components/AppHeader";
+import { CommandPalette } from "@/components/CommandPalette";
 
 export const AuthLayout: FC = () => {
   const authUser = useStore($authUser);
@@ -118,6 +119,8 @@ export const AuthLayout: FC = () => {
       <AppShell.Main>
         <Outlet />
       </AppShell.Main>
+
+      <CommandPalette />
     </AppShell>
   );
 };
