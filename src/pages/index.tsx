@@ -61,7 +61,10 @@ export const LoginPage: FC = () => {
     // navigate(ROUTE_PATHS.DASHBOARD);
 
     // --- Mock (remove when backend is ready) ---
-    const mockUser = await getMockAuthUser(values.username, values.remember_me);
+    const mockUser = await getMockAuthUser(
+      values.username.trim(),
+      values.remember_me,
+    );
     if (!mockUser) {
       form.setErrors({
         password: "Invalid credentials (try: admin / staff / viewer)",
