@@ -1,4 +1,4 @@
-import type { User } from "@/types/auth/User";
+import type { MenuPermission, User } from "@/types/auth/User";
 
 export type LoginResponse = User;
 
@@ -8,4 +8,5 @@ export type RefreshTokenResponse = {
   refresh_token: string;
   refresh_token_exp: number;
   user_id: string;
+  menu_permissions?: MenuPermission[];
 };

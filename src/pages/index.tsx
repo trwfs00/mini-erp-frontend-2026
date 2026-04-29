@@ -4,7 +4,10 @@ import { useStore } from "@nanostores/react";
 import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from "mantine-form-yup-resolver";
-import { AuthService } from "@/services/AuthService";
+// TODO: เปลี่ยนกลับเป็น AuthService + LoginRequest เมื่อ integrate API จริง
+// import { AuthService } from "@/services/AuthService";
+// import type { LoginRequest } from "@/services/AuthService/types/AuthRequest";
+import { useMockAuthUser } from "@/pages/hooks/useMockAuthUser";
 import { LocalStorageUtil } from "@/utils/LocalStorageUtil";
 import { $authUser } from "@/stores/authUserStore";
 import { ROUTE_PATHS } from "@/router/routePaths";
@@ -22,11 +25,11 @@ import {
   Title,
 } from "@mantine/core";
 import { EyeIcon, EyeOffIcon, LockIcon, UserIcon } from "lucide-react";
-import type { LoginRequest } from "@/services/AuthService/types/AuthRequest";
 
 export const LoginPage: FC = () => {
   const authUser = useStore($authUser);
   const navigate = useNavigate();
+  const { getMockAuthUser } = useMockAuthUser();
   const form = useForm<LoginFormData>({
     validate: yupResolver(loginSchema),
     initialValues: {
@@ -46,14 +49,27 @@ export const LoginPage: FC = () => {
     const validateError = form.validate();
     if (validateError.hasErrors) return;
 
-    const res = await AuthService.login(values as LoginRequest);
-    if (!res.ok || !res.data) {
-      form.setErrors({ password: res.message || "Login failed" });
+    // TODO: เปลี่ยนกลับเป็น AuthService.login เมื่อ integrate API จริง
+    // --- Real API (uncomment when backend is ready) ---
+    // const res = await AuthService.login(values as LoginRequest);
+    // if (!res.ok || !res.data) {
+    //   form.setErrors({ password: res.message || "Login failed" });
+    //   return;
+    // }
+    // LocalStorageUtil.saveAuthUser(res.data);
+    // $authUser.set(res.data);
+    // navigate(ROUTE_PATHS.DASHBOARD);
+
+    // --- Mock (remove when backend is ready) ---
+    const mockUser = await getMockAuthUser(values.username, values.remember_me);
+    if (!mockUser) {
+      form.setErrors({
+        password: "Invalid credentials (try: admin / staff / viewer)",
+      });
       return;
     }
-
-    LocalStorageUtil.saveAuthUser(res.data);
-    $authUser.set(res.data);
+    LocalStorageUtil.saveAuthUser(mockUser);
+    $authUser.set(mockUser);
     navigate(ROUTE_PATHS.DASHBOARD);
   };
 
@@ -116,6 +132,23 @@ export const LoginPage: FC = () => {
             labelPosition="center"
             my="xs"
           />
+
+          {/* TODO: ลบบล็อกนี้เมื่อ integrate API จริง */}
+          <Text fz="xs" c="dimmed" ta="center" mt={-8}>
+            Mock mode — try{" "}
+            <Text component="span" fw={600} c="gray.7">
+              admin
+            </Text>{" "}
+            /{" "}
+            <Text component="span" fw={600} c="gray.7">
+              staff
+            </Text>{" "}
+            /{" "}
+            <Text component="span" fw={600} c="gray.7">
+              viewer
+            </Text>{" "}
+            (any password)
+          </Text>
         </Stack>
       </form>
     </Box>

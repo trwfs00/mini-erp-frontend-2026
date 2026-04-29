@@ -17,8 +17,10 @@ import type { SaveCategoryRequest } from "@/services/CategoryService/types/Categ
 import { CategoryFormDrawer } from "./components/CategoryFormDrawer";
 import { NotificationUtil } from "@/utils/NotificationUtil";
 import { ROUTE_PATHS } from "@/router/routePaths";
+import { usePermission } from "@/hooks/auth/usePermission";
 
 export const CategoryPage = () => {
+  const { canCreate, canUpdate, canDelete } = usePermission("category");
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
   const [drawerOpened, setDrawerOpened] = useState(false);
@@ -109,15 +111,17 @@ export const CategoryPage = () => {
               w={{ base: "100%", sm: 250 }}
             />
             <RefreshButton onClick={async () => await reloadCategoryList()} />
-            <Button
-              leftSection={<Plus size={16} />}
-              onClick={() => {
-                setSelectedCategory(null);
-                setDrawerOpened(true);
-              }}
-            >
-              Add Category
-            </Button>
+            {canCreate && (
+              <Button
+                leftSection={<Plus size={16} />}
+                onClick={() => {
+                  setSelectedCategory(null);
+                  setDrawerOpened(true);
+                }}
+              >
+                Add Category
+              </Button>
+            )}
           </Group>
         </Group>
 
@@ -125,11 +129,15 @@ export const CategoryPage = () => {
           records={categories}
           pagination={pagination}
           sortHandler={sortHandler}
-          onEdit={(category: CategoryList) => {
-            setSelectedCategory(category);
-            setDrawerOpened(true);
-          }}
-          onDelete={handleDelete}
+          onEdit={
+            canUpdate
+              ? (category: CategoryList) => {
+                  setSelectedCategory(category);
+                  setDrawerOpened(true);
+                }
+              : undefined
+          }
+          onDelete={canDelete ? handleDelete : undefined}
           isLoading={isReloading}
         />
 

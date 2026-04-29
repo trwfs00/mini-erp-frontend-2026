@@ -8,6 +8,7 @@ import { StockSummaryReportTable } from "@/components/Tables/StockSummaryReportT
 import { formatCurrency } from "@/utils/CurrencyUtil";
 import { useLoadInitialData } from "./hooks/useLoadInitialData";
 import { ExportButton } from "../ExportButton";
+import { usePermission } from "@/hooks/auth/usePermission";
 // TODO: เปลี่ยนเป็น ReportService.exportStockSummary เมื่อ integrate API จริง
 import { MockReportExportUtil } from "../../utils/mockReportExport";
 
@@ -23,6 +24,7 @@ export const StockSummaryReportPage = () => {
     reloadReport,
   } = useLoadInitialData();
   const [exportError, setExportError] = useState<string | null>(null);
+  const canExport = usePermission("report", ["export"]);
 
   return (
     <Stack gap="md" pos="relative" mih={300}>
@@ -33,17 +35,19 @@ export const StockSummaryReportPage = () => {
         </Text>
         <Group>
           <RefreshButton onClick={async () => await reloadReport()} />
-          <ExportButton
-            label="Export CSV"
-            filename={`stock-summary-${new Date().toISOString().slice(0, 10)}.csv`}
-            disabled={!report}
-            onExport={async () =>
-              report
-                ? { ok: true, data: MockReportExportUtil.exportStockSummary(report) }
-                : { ok: false, message: "Report not loaded" }
-            }
-            onError={setExportError}
-          />
+          {canExport && (
+            <ExportButton
+              label="Export CSV"
+              filename={`stock-summary-${new Date().toISOString().slice(0, 10)}.csv`}
+              disabled={!report}
+              onExport={async () =>
+                report
+                  ? { ok: true, data: MockReportExportUtil.exportStockSummary(report) }
+                  : { ok: false, message: "Report not loaded" }
+              }
+              onError={setExportError}
+            />
+          )}
         </Group>
       </Group>
 

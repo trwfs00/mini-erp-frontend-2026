@@ -75,13 +75,15 @@ const tokenLoginInterceptFn = async (config: InternalAxiosRequestConfig) => {
 
       const response = await refreshTokenPromise;
 
-      //success, update access & refresh token
+      //success, update access & refresh token (and menu_permissions if backend returned it)
       $authUser.set({
         ...authUser,
         access_token: response.access_token,
         refresh_token: response.refresh_token,
         access_token_exp: response.access_token_exp,
         refresh_token_exp: response.refresh_token_exp,
+        menu_permissions:
+          response.menu_permissions ?? authUser.menu_permissions,
       });
       LocalStorageUtil.saveAuthUser($authUser.get() as User);
     } catch {
