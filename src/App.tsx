@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { RouterProvider } from "react-router-dom";
 import { router } from "@/router";
 import {
@@ -21,14 +20,10 @@ const colorSchemeManager = localStorageColorSchemeManager({
 function App() {
   const primaryColor = useStore($primaryColor);
 
-  const mergedTheme = useMemo(
-    () =>
-      mergeMantineTheme(DEFAULT_THEME, {
-        ...theme,
-        primaryColor,
-      }),
-    [primaryColor],
-  );
+  const mergedTheme = mergeMantineTheme(DEFAULT_THEME, {
+    ...theme,
+    primaryColor,
+  });
 
   return (
     <MantineProvider
