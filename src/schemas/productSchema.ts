@@ -21,7 +21,7 @@ export const productSchema = yup.object().shape({
         const { cost_price } = this.parent;
         if (value === undefined || cost_price === undefined) return true;
         return value >= cost_price;
-      }
+      },
     ),
   unit: yup.string().required("Unit is required"),
   min_stock: yup

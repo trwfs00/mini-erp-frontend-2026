@@ -118,8 +118,13 @@ export const StockTransactionFormDrawer: FC<Props> = ({
 
           <NumberInput
             label="Quantity"
-            placeholder="Enter quantity"
-            min={1}
+            placeholder={
+              selectedType === "ADJUST"
+                ? "Use negative for stock decrease"
+                : "Enter quantity"
+            }
+            min={selectedType === "ADJUST" ? undefined : 1}
+            allowNegative={selectedType === "ADJUST"}
             {...form.getInputProps("quantity")}
           />
 

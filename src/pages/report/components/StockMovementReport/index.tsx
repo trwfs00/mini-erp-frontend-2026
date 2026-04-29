@@ -1,12 +1,12 @@
 import {
   Alert,
   Group,
-  LoadingOverlay,
   SimpleGrid,
   Stack,
   Text,
   TextInput,
 } from "@mantine/core";
+import { AppLoadingOverlay } from "@/components/AppLoadingOverlay";
 import { BarChart } from "@mantine/charts";
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
@@ -46,7 +46,7 @@ export const StockMovementReportPage = () => {
 
   return (
     <Stack gap="md" pos="relative" mih={300}>
-      <LoadingOverlay visible={isLoadingInitialData} />
+      <AppLoadingOverlay visible={isLoadingInitialData} />
       <Group justify="space-between" wrap="wrap" gap="md" align="flex-end">
         <Group gap="sm">
           <TextInput
