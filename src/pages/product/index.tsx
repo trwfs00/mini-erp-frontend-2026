@@ -90,7 +90,6 @@ export const ProductsPage = () => {
 
   return (
     <PageLayout
-      isLoading={isLoadingInitialData}
       breadcrumbs={{ label: "Products", path: ROUTE_PATHS.PRODUCT }}
     >
       <Stack gap="lg">
@@ -141,6 +140,7 @@ export const ProductsPage = () => {
           }
           onDelete={canDelete ? handleDelete : undefined}
           isLoading={isReloading}
+          isLoadingInitial={isLoadingInitialData}
         />
 
         <ProductFormDrawer

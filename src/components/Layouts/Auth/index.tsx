@@ -101,7 +101,7 @@ export const AuthLayout: FC = () => {
         breakpoint: "sm",
         collapsed: { mobile: !mobileOpened },
       }}
-      bg="light-dark(#f5f6fa, var(--mantine-color-dark-8))"
+      bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))"
       padding="md"
     >
       <AppShell.Header>

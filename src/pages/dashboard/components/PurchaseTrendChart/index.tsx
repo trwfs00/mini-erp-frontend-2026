@@ -3,6 +3,7 @@ import { LineChart } from "@mantine/charts";
 import type { FC } from "react";
 import { SurfaceCard } from "@/components/SurfaceCard";
 import type { PurchaseTrendPoint } from "@/types/report/PurchaseSummary";
+import { formatMmYy } from "@/utils/DateUtil";
 
 type Props = {
   data: PurchaseTrendPoint[];
@@ -11,7 +12,7 @@ type Props = {
 
 export const PurchaseTrendChart: FC<Props> = ({ data, isLoading }) => {
   const chartData = data.map((d) => ({
-    month: d.month.slice(5),
+    month: formatMmYy(d.month),
     Amount: d.total_amount,
     Orders: d.order_count,
   }));

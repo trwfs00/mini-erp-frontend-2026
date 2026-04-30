@@ -95,7 +95,6 @@ export const StockPage = () => {
 
   return (
     <PageLayout
-      isLoading={isLoadingInitialData}
       breadcrumbs={{ label: "Stock", path: ROUTE_PATHS.STOCK }}
     >
       <Stack gap="lg">
@@ -210,6 +209,7 @@ export const StockPage = () => {
           pagination={pagination}
           sortHandler={sortHandler}
           isLoading={isReloading}
+          isLoadingInitial={isLoadingInitialData}
         />
 
         <StockTransactionFormDrawer

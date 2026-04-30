@@ -16,6 +16,7 @@ type Props = {
   sortHandler: UseTableSortReturn;
   onView: (id: string) => void;
   isLoading?: boolean;
+  isLoadingInitial?: boolean;
 };
 
 export const PurchaseOrderTable: FC<Props> = ({
@@ -24,6 +25,7 @@ export const PurchaseOrderTable: FC<Props> = ({
   sortHandler,
   onView,
   isLoading,
+  isLoadingInitial,
 }) => {
   const columns: DataTableColumn<PurchaseOrderSummary>[] = [
     {
@@ -98,6 +100,7 @@ export const PurchaseOrderTable: FC<Props> = ({
       sortHandler={sortHandler}
       entityName="purchase orders"
       fetching={isLoading}
+      isLoadingInitial={isLoadingInitial}
       onRowClick={({ record }) => onView(record.purchase_order_id)}
     />
   );

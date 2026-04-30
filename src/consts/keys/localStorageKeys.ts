@@ -3,4 +3,5 @@ export const LOCAL_STORAGE_KEYS = {
   COLOR_SCHEME: "minierp-color-scheme",
   PRIMARY_COLOR: "minierp-primary-color",
   SIDEBAR_OPEN: "minierp-sidebar-open",
+  NOTIFICATION_HISTORY: "minierp-notification-history",
 } as const;

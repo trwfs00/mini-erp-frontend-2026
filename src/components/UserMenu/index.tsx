@@ -169,7 +169,13 @@ export const UserMenu = ({ authUser }: Props) => {
                   aria-label={`Set accent to ${c.label}`}
                   title={c.label}
                 >
-                  {selected && <Check size={14} strokeWidth={3} color="#fff" />}
+                  {selected && (
+                    <Check
+                      size={14}
+                      strokeWidth={3}
+                      color="var(--mantine-color-white)"
+                    />
+                  )}
                 </ColorSwatch>
               );
             })}

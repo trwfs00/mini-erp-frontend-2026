@@ -3,6 +3,7 @@ import { BarChart } from "@mantine/charts";
 import type { FC } from "react";
 import { SurfaceCard } from "@/components/SurfaceCard";
 import type { StockMovementDailyPoint } from "@/types/report/StockMovementReport";
+import { formatDate } from "@/utils/DateUtil";
 
 type Props = {
   data: StockMovementDailyPoint[];
@@ -11,7 +12,7 @@ type Props = {
 
 export const StockMovementChart: FC<Props> = ({ data, isLoading }) => {
   const chartData = data.map((d) => ({
-    date: d.date.slice(5),
+    date: formatDate(d.date).slice(0, 6),
     In: d.in,
     Out: d.out,
     Adjust: d.adjust,

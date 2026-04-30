@@ -1,3 +1,9 @@
+html {
+  /* Always reserve space for scrollbar so layout doesn't shift
+     when Mantine modals/menus lock body scroll. */
+  scrollbar-gutter: stable;
+}
+
 body {
   margin: 0;
   padding: 0;

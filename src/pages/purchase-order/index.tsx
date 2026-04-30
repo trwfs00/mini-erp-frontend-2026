@@ -48,7 +48,6 @@ export const PurchaseOrderPage = () => {
 
   return (
     <PageLayout
-      isLoading={isLoadingInitialData}
       breadcrumbs={{
         label: "Purchase Orders",
         path: ROUTE_PATHS.PURCHASE_ORDERS,
@@ -108,6 +107,7 @@ export const PurchaseOrderPage = () => {
             navigate(ROUTE_PATHS.PO_DETAIL.replace(":id", id));
           }}
           isLoading={isReloading}
+          isLoadingInitial={isLoadingInitialData}
         />
       </Stack>
     </PageLayout>

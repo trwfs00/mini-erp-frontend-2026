@@ -7,6 +7,7 @@ import {
   DEFAULT_THEME,
 } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
+import { Notifications } from "@mantine/notifications";
 import { useStore } from "@nanostores/react";
 import { theme } from "./consts/theme";
 import { $primaryColor } from "@/stores/primaryColorStore";
@@ -31,6 +32,7 @@ function App() {
       defaultColorScheme="auto"
       colorSchemeManager={colorSchemeManager}
     >
+      <Notifications position="top-right" zIndex={1000} />
       <ModalsProvider>
         <RouterProvider router={router} />
       </ModalsProvider>

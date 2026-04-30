@@ -13,6 +13,7 @@ type Props = {
   pagination: UsePaginationStateReturnType;
   sortHandler: UseTableSortReturn;
   isLoading?: boolean;
+  isLoadingInitial?: boolean;
 };
 
 const columns: DataTableColumn<StockMovementRow>[] = [
@@ -84,6 +85,7 @@ export const StockMovementReportTable: FC<Props> = ({
   pagination,
   sortHandler,
   isLoading,
+  isLoadingInitial,
 }) => (
   <InstantTable<StockMovementRow>
     idAccessor="transaction_id"
@@ -93,5 +95,6 @@ export const StockMovementReportTable: FC<Props> = ({
     sortHandler={sortHandler}
     entityName="stock movement"
     fetching={isLoading}
+    isLoadingInitial={isLoadingInitial}
   />
 );

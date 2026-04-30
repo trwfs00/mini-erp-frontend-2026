@@ -14,6 +14,7 @@ type Props = {
   pagination: UsePaginationStateReturnType;
   sortHandler: UseTableSortReturn;
   isLoading?: boolean;
+  isLoadingInitial?: boolean;
 };
 
 const columns: DataTableColumn<PurchaseSummaryRow>[] = [
@@ -84,6 +85,7 @@ export const PurchaseSummaryReportTable: FC<Props> = ({
   pagination,
   sortHandler,
   isLoading,
+  isLoadingInitial,
 }) => (
   <InstantTable<PurchaseSummaryRow>
     idAccessor="purchase_order_id"
@@ -93,5 +95,6 @@ export const PurchaseSummaryReportTable: FC<Props> = ({
     sortHandler={sortHandler}
     entityName="purchase orders"
     fetching={isLoading}
+    isLoadingInitial={isLoadingInitial}
   />
 );

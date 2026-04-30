@@ -24,7 +24,13 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { EyeIcon, EyeOffIcon, LayoutGrid, LockIcon, UserIcon } from "lucide-react";
+import {
+  EyeIcon,
+  EyeOffIcon,
+  LayoutGrid,
+  LockIcon,
+  UserIcon,
+} from "lucide-react";
 
 export const LoginPage: FC = () => {
   const authUser = useStore($authUser);

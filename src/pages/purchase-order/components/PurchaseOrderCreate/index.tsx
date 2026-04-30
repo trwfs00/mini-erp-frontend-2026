@@ -29,6 +29,7 @@ import { $authUser } from "@/stores/authUserStore";
 import { useStore } from "@nanostores/react";
 import { NotificationUtil } from "@/utils/NotificationUtil";
 import { useLoadInitialData } from "./hooks/useLoadInitialData";
+import { PurchaseOrderCreateSkeleton } from "./components/PurchaseOrderCreateSkeleton";
 
 export const PurchaseOrderCreatePage = () => {
   const navigate = useNavigate();
@@ -143,10 +144,7 @@ export const PurchaseOrderCreatePage = () => {
   ));
 
   return (
-    <PageLayout
-      isLoading={isLoadingInitialData}
-      breadcrumbs={{ label: "Create" }}
-    >
+    <PageLayout breadcrumbs={{ label: "Create" }}>
       <Stack gap="lg">
         <Group justify="space-between">
           <Group gap="sm">
@@ -175,68 +173,76 @@ export const PurchaseOrderCreatePage = () => {
           </Button>
         </Group>
 
-        <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Stack gap="md">
-            <Paper withBorder p="md" radius="md">
-              <Group grow align="flex-start">
-                <TextInput
-                  label="Order Number"
-                  placeholder="e.g. PO-2026-001"
-                  {...form.getInputProps("order_number")}
-                  required
-                />
-                <Select
-                  label="Supplier"
-                  placeholder="Choose supplier"
-                  data={supplierOptions}
-                  {...form.getInputProps("supplier_id")}
-                  searchable
-                  required
-                />
-              </Group>
-            </Paper>
+        {isLoadingInitialData ? (
+          <PurchaseOrderCreateSkeleton />
+        ) : (
+          <form onSubmit={form.onSubmit(handleSubmit)}>
+            <Stack gap="md">
+              <Paper withBorder p="md" radius="md">
+                <Group grow align="flex-start">
+                  <TextInput
+                    label="Order Number"
+                    placeholder="e.g. PO-2026-001"
+                    {...form.getInputProps("order_number")}
+                    required
+                  />
+                  <Select
+                    label="Supplier"
+                    placeholder="Choose supplier"
+                    data={supplierOptions}
+                    {...form.getInputProps("supplier_id")}
+                    searchable
+                    required
+                  />
+                </Group>
+              </Paper>
 
-            <Paper withBorder radius="md">
-              <Table verticalSpacing="sm">
-                <Table.Thead>
-                  <Table.Tr>
-                    <Table.Th>Product</Table.Th>
-                    <Table.Th w={120}>Quantity</Table.Th>
-                    <Table.Th w={170}>Unit Price</Table.Th>
-                    <Table.Th w={150} ta="right">
-                      Subtotal
-                    </Table.Th>
-                    <Table.Th w={80} ta="center"></Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>{itemRows}</Table.Tbody>
-              </Table>
+              <Paper withBorder radius="md">
+                <Table verticalSpacing="sm">
+                  <Table.Thead>
+                    <Table.Tr>
+                      <Table.Th>Product</Table.Th>
+                      <Table.Th w={120}>Quantity</Table.Th>
+                      <Table.Th w={170}>Unit Price</Table.Th>
+                      <Table.Th w={150} ta="right">
+                        Subtotal
+                      </Table.Th>
+                      <Table.Th w={80} ta="center"></Table.Th>
+                    </Table.Tr>
+                  </Table.Thead>
+                  <Table.Tbody>{itemRows}</Table.Tbody>
+                </Table>
 
-              <Divider />
+                <Divider />
 
-              <Group justify="space-between" p="md">
-                <Button
-                  variant="light"
-                  leftSection={<Plus size={16} />}
-                  onClick={handleAddItem}
-                >
-                  Add Item
-                </Button>
+                <Group justify="space-between" p="md">
+                  <Button
+                    variant="light"
+                    leftSection={<Plus size={16} />}
+                    onClick={handleAddItem}
+                  >
+                    Add Item
+                  </Button>
 
-                <Stack gap={4} align="flex-end">
-                  <Group gap="xl">
-                    <Text fw={600} size="lg">
-                      Total Amount:
-                    </Text>
-                    <Text fw={700} size="xl" c="blue.7">
-                      {formatCurrency(calculateTotal())}
-                    </Text>
-                  </Group>
-                </Stack>
-              </Group>
-            </Paper>
-          </Stack>
-        </form>
+                  <Stack gap={4} align="flex-end">
+                    <Group gap="xl">
+                      <Text fw={600} size="lg">
+                        Total Amount:
+                      </Text>
+                      <Text
+                      fw={700}
+                      size="xl"
+                      c="var(--mantine-primary-color-filled)"
+                    >
+                        {formatCurrency(calculateTotal())}
+                      </Text>
+                    </Group>
+                  </Stack>
+                </Group>
+              </Paper>
+            </Stack>
+          </form>
+        )}
       </Stack>
     </PageLayout>
   );

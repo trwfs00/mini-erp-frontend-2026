@@ -96,7 +96,6 @@ export const SupplierPage = () => {
 
   return (
     <PageLayout
-      isLoading={isLoadingInitialData}
       breadcrumbs={{ label: "Suppliers", path: ROUTE_PATHS.SUPPLIERS }}
     >
       <Stack gap="lg">
@@ -147,6 +146,7 @@ export const SupplierPage = () => {
           }
           onDelete={canDelete ? handleDelete : undefined}
           isLoading={isReloading}
+          isLoadingInitial={isLoadingInitialData}
         />
 
         <SupplierFormDrawer

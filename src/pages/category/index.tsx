@@ -88,7 +88,6 @@ export const CategoryPage = () => {
 
   return (
     <PageLayout
-      isLoading={isLoadingInitialData}
       breadcrumbs={{ label: "Categories", path: ROUTE_PATHS.CATEGORY }}
     >
       <Stack gap="lg">
@@ -139,6 +138,7 @@ export const CategoryPage = () => {
           }
           onDelete={canDelete ? handleDelete : undefined}
           isLoading={isReloading}
+          isLoadingInitial={isLoadingInitialData}
         />
 
         <CategoryFormDrawer

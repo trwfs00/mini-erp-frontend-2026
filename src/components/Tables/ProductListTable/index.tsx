@@ -16,6 +16,7 @@ type Props = {
   onEdit?: (product: ProductList) => void;
   onDelete?: (product: ProductList) => void;
   isLoading?: boolean;
+  isLoadingInitial?: boolean;
 };
 
 export const ProductListTable: FC<Props> = ({
@@ -25,6 +26,7 @@ export const ProductListTable: FC<Props> = ({
   onEdit,
   onDelete,
   isLoading,
+  isLoadingInitial,
 }) => {
   const columns: DataTableColumn<ProductList>[] = [
     { accessor: "sku", title: "SKU", sortable: true, width: 120 },
@@ -97,7 +99,7 @@ export const ProductListTable: FC<Props> = ({
           {onEdit && (
             <ActionIcon
               variant="subtle"
-              color="blue"
+             
               onClick={(e) => {
                 e.stopPropagation();
                 onEdit(p);
@@ -132,6 +134,7 @@ export const ProductListTable: FC<Props> = ({
       sortHandler={sortHandler}
       entityName="products"
       fetching={isLoading}
+      isLoadingInitial={isLoadingInitial}
     />
   );
 };

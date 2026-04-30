@@ -15,6 +15,7 @@ type Props = {
   onEdit?: (category: CategoryList) => void;
   onDelete?: (category: CategoryList) => void;
   isLoading?: boolean;
+  isLoadingInitial?: boolean;
 };
 
 export const CategoryListTable: FC<Props> = ({
@@ -24,22 +25,19 @@ export const CategoryListTable: FC<Props> = ({
   onEdit,
   onDelete,
   isLoading,
+  isLoadingInitial,
 }) => {
   const columns: DataTableColumn<CategoryList>[] = [
-    {
-      accessor: "category_id",
-      title: "ID",
-      sortable: true,
-      width: 130,
-    },
     {
       accessor: "name",
       title: "Category Name",
       sortable: true,
+      width: 280,
     },
     {
       accessor: "description",
       title: "Description",
+      ellipsis: true,
     },
     {
       accessor: "updated_at",
@@ -61,7 +59,7 @@ export const CategoryListTable: FC<Props> = ({
           {onEdit && (
             <ActionIcon
               variant="subtle"
-              color="blue"
+             
               onClick={(e) => {
                 e.stopPropagation();
                 onEdit(c);
@@ -96,6 +94,7 @@ export const CategoryListTable: FC<Props> = ({
       sortHandler={sortHandler}
       entityName="categories"
       fetching={isLoading}
+      isLoadingInitial={isLoadingInitial}
     />
   );
 };

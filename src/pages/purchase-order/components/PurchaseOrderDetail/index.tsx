@@ -25,6 +25,7 @@ import { $authUser } from "@/stores/authUserStore";
 import { useStore } from "@nanostores/react";
 import { NotificationUtil } from "@/utils/NotificationUtil";
 import { useLoadInitialData } from "./hooks/useLoadInitialData";
+import { PurchaseOrderDetailSkeleton } from "./components/PurchaseOrderDetailSkeleton";
 
 export const PurchaseOrderDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -84,9 +85,11 @@ export const PurchaseOrderDetailPage = () => {
 
   return (
     <PageLayout
-      isLoading={isLoadingInitialData}
       breadcrumbs={{ label: order?.purchase_order_id ?? "Detail" }}
     >
+      {isLoadingInitialData && (
+        <PurchaseOrderDetailSkeleton onBack={() => navigate(-1)} />
+      )}
       {order && (
         <Stack gap="lg">
           <Group justify="space-between">
@@ -191,7 +194,11 @@ export const PurchaseOrderDetailPage = () => {
                       <Text fw={600} size="lg">
                         Total Amount:
                       </Text>
-                      <Text fw={700} size="xl" c="blue.7">
+                      <Text
+                        fw={700}
+                        size="xl"
+                        c="var(--mantine-primary-color-filled)"
+                      >
                         {formatCurrency(order.total_amount)}
                       </Text>
                     </Group>

@@ -1,9 +1,11 @@
 import type { FC } from "react";
-import { Badge, Burger, Group, Tooltip } from "@mantine/core";
+import { Badge, Box, Burger, Group, Tooltip } from "@mantine/core";
 import { useStore } from "@nanostores/react";
 import { $authUser } from "@/stores/authUserStore";
 import { $mockMode, $authBypass } from "@/stores/debugModeStore";
 import { UserMenu } from "@/components/UserMenu";
+import { SearchTrigger } from "@/components/SearchTrigger";
+import { NotificationCenter } from "@/components/NotificationCenter";
 import { BYPASS_ADMIN_USER } from "@/consts/auth/bypassUser";
 
 type AppHeaderProps = {
@@ -28,10 +30,11 @@ export const AppHeader: FC<AppHeaderProps> = ({
       style={{
         borderBottom:
           "1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4))",
-        background: "light-dark(#fff, var(--mantine-color-dark-7))",
+        background:
+          "light-dark(var(--mantine-color-white), var(--mantine-color-dark-7))",
       }}
     >
-      <Group gap="sm" wrap="nowrap">
+      <Group gap="sm" wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
         <Burger
           opened={mobileOpened}
           onClick={toggleMobile}
@@ -39,6 +42,11 @@ export const AppHeader: FC<AppHeaderProps> = ({
           size="sm"
           aria-label="Toggle sidebar (mobile)"
         />
+
+        <Box visibleFrom="sm">
+          <SearchTrigger />
+        </Box>
+
         {mockMode && (
           <Tooltip
             label="Using mock data — backend not connected"
@@ -75,11 +83,16 @@ export const AppHeader: FC<AppHeaderProps> = ({
         )}
       </Group>
 
-      {(() => {
-        // TODO: ลบ fallback BYPASS_ADMIN_USER ออกเมื่อ integrate API จริง
-        const displayUser = authUser ?? (authBypass ? BYPASS_ADMIN_USER : null);
-        return displayUser ? <UserMenu authUser={displayUser} /> : <span />;
-      })()}
+      <Group gap="xs" wrap="nowrap">
+        <NotificationCenter />
+
+        {(() => {
+          // TODO: ลบ fallback BYPASS_ADMIN_USER ออกเมื่อ integrate API จริง
+          const displayUser =
+            authUser ?? (authBypass ? BYPASS_ADMIN_USER : null);
+          return displayUser ? <UserMenu authUser={displayUser} /> : <span />;
+        })()}
+      </Group>
     </Group>
   );
 };

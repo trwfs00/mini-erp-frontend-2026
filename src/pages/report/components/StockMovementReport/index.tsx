@@ -2,11 +2,11 @@ import {
   Alert,
   Group,
   SimpleGrid,
+  Skeleton,
   Stack,
   Text,
   TextInput,
 } from "@mantine/core";
-import { AppLoadingOverlay } from "@/components/AppLoadingOverlay";
 import { BarChart } from "@mantine/charts";
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
@@ -48,7 +48,6 @@ export const StockMovementReportPage = () => {
 
   return (
     <Stack gap="md" pos="relative" mih={300}>
-      <AppLoadingOverlay visible={isLoadingInitialData} />
       <Group justify="space-between" wrap="wrap" gap="md" align="flex-end">
         <Group gap="sm">
           <TextInput
@@ -79,7 +78,10 @@ export const StockMovementReportPage = () => {
               disabled={!report}
               onExport={async () =>
                 report
-                  ? { ok: true, data: MockReportExportUtil.exportStockMovement(report) }
+                  ? {
+                      ok: true,
+                      data: MockReportExportUtil.exportStockMovement(report),
+                    }
                   : { ok: false, message: "Report not loaded" }
               }
               onError={setExportError}
@@ -100,31 +102,34 @@ export const StockMovementReportPage = () => {
         </Alert>
       )}
 
-      {totals && (
-        <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="md">
-          <StatTile
-            label="Total IN"
-            value={totals.total_in.toLocaleString()}
-            color="teal.7"
-          />
-          <StatTile
-            label="Total OUT"
-            value={totals.total_out.toLocaleString()}
-            color="red.7"
-          />
-          <StatTile
-            label="Adjustments"
-            value={totals.total_adjust.toLocaleString()}
-          />
-        </SimpleGrid>
-      )}
+      <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="md">
+        <StatTile
+          label="Total IN"
+          value={totals?.total_in.toLocaleString() ?? "-"}
+          color="teal.7"
+          isLoading={isLoadingInitialData}
+        />
+        <StatTile
+          label="Total OUT"
+          value={totals?.total_out.toLocaleString() ?? "-"}
+          color="red.7"
+          isLoading={isLoadingInitialData}
+        />
+        <StatTile
+          label="Adjustments"
+          value={totals?.total_adjust.toLocaleString() ?? "-"}
+          isLoading={isLoadingInitialData}
+        />
+      </SimpleGrid>
 
       <SurfaceCard>
         <Stack gap="sm">
           <Text fz="sm" fw={600}>
             Daily Movement
           </Text>
-          {chartData.length === 0 ? (
+          {isLoadingInitialData ? (
+            <Skeleton height={260} radius="sm" />
+          ) : chartData.length === 0 ? (
             <Text c="dimmed" fz="sm" ta="center" py="xl">
               No transactions in this range.
             </Text>
@@ -150,6 +155,7 @@ export const StockMovementReportPage = () => {
         pagination={pagination}
         sortHandler={sortHandler}
         isLoading={isReloading}
+        isLoadingInitial={isLoadingInitialData}
       />
     </Stack>
   );

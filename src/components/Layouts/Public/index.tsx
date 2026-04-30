@@ -7,7 +7,7 @@ export const PublicLayout: FC = () => {
     <AppShell
       style={{
         background:
-          "radial-gradient(60% 50% at 50% 0%, color-mix(in srgb, var(--mantine-primary-color-filled) 12%, transparent) 0%, transparent 70%), light-dark(#f0f2f5, var(--mantine-color-dark-8))",
+          "radial-gradient(60% 50% at 50% 0%, color-mix(in srgb, var(--mantine-primary-color-filled) 12%, transparent) 0%, transparent 70%), light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))",
       }}
     >
       <AppShell.Main>

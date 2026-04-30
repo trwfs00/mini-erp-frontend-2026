@@ -1,28 +1,54 @@
 .root {
-  background-color: var(--mantine-color-danger-1) !important;
-  padding-left: 16px !important;
-  padding-right: 16px !important;
+  background-color: var(--mantine-color-body) !important;
+  border: 1px solid var(--mantine-color-default-border) !important;
+  border-left: 3px solid var(--mantine-color-red-6) !important;
+  border-radius: var(--mantine-radius-md) !important;
+  padding: 14px 16px !important;
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.12),
+    0 4px 12px -6px rgba(0, 0, 0, 0.06) !important;
 }
 
-.description,
+:global([data-mantine-color-scheme="dark"]) .root {
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.5),
+    0 4px 12px -6px rgba(0, 0, 0, 0.3) !important;
+}
+
 .title {
-  color: var(--mantine-color-danger-6) !important;
-  font-size: 16px !important;
-  margin-bottom: 0 !important;
-  padding-top: 3px !important;
+  color: var(--mantine-color-text) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  margin-bottom: 2px !important;
 }
 
-.closeButton {
-  color: var(--mantine-color-danger-6) !important;
-  @mixin hover {
-    background-color: rgba(0, 0, 0, 0.1) !important;
-  }
+.description {
+  color: var(--mantine-color-dimmed) !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
 }
 
 .icon {
-  background: transparent !important;
-  color: var(--mantine-color-danger-6) !important;
+  background-color: color-mix(
+    in srgb,
+    var(--mantine-color-red-6) 14%,
+    transparent
+  ) !important;
+  color: var(--mantine-color-red-6) !important;
   width: 32px !important;
   height: 32px !important;
-  margin-right: 8px !important;
+  border-radius: 999px !important;
+  margin-right: 12px !important;
+}
+
+.closeButton {
+  color: var(--mantine-color-dimmed) !important;
+}
+
+.closeButton:hover {
+  background-color: var(--mantine-color-gray-1) !important;
+  color: var(--mantine-color-text) !important;
+}
+
+:global([data-mantine-color-scheme="dark"]) .closeButton:hover {
+  background-color: var(--mantine-color-dark-5) !important;
 }
