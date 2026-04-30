@@ -8,6 +8,8 @@ import { formatCurrency } from "@/utils/CurrencyUtil";
 import { ActionIcon, Group, Text } from "@mantine/core";
 import { Edit, Trash2, AlertTriangle } from "lucide-react";
 import type { FC } from "react";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tProductList } from "@/consts/translations/tProductList";
 
 type Props = {
   records: ProductList[];
@@ -26,18 +28,19 @@ export const ProductListTable: FC<Props> = ({
   onDelete,
   isLoading,
 }) => {
+  const t = useTranslation();
   const columns: DataTableColumn<ProductList>[] = [
-    { accessor: "sku", title: "SKU", sortable: true, width: 120 },
-    { accessor: "name", title: "Product Name", sortable: true },
+    { accessor: "sku", title: t(tProductList.thead.sku), sortable: true, width: 120 },
+    { accessor: "name", title: t(tProductList.thead.name), sortable: true },
     {
       accessor: "category_name",
-      title: "Category",
+      title: t(tProductList.thead.category),
       sortable: true,
       width: 130,
     },
     {
       accessor: "cost_price",
-      title: "Cost",
+      title: t(tProductList.thead.cost),
       sortable: true,
       width: 120,
       textAlign: "right",
@@ -45,16 +48,16 @@ export const ProductListTable: FC<Props> = ({
     },
     {
       accessor: "selling_price",
-      title: "Price",
+      title: t(tProductList.thead.price),
       sortable: true,
       width: 120,
       textAlign: "right",
       render: (p) => formatCurrency(p.selling_price),
     },
-    { accessor: "unit", title: "Unit", width: 80 },
+    { accessor: "unit", title: t(tProductList.thead.unit), width: 80 },
     {
       accessor: "current_stock",
-      title: "Stock",
+      title: t(tProductList.thead.stock),
       sortable: true,
       width: 100,
       textAlign: "right",
@@ -72,14 +75,14 @@ export const ProductListTable: FC<Props> = ({
     },
     {
       accessor: "min_stock",
-      title: "Min Stock",
+      title: t(tProductList.thead.minStock),
       sortable: true,
       width: 110,
       textAlign: "right",
     },
     {
       accessor: "updated_at",
-      title: "Updated",
+      title: t(tProductList.thead.updated),
       sortable: true,
       width: 140,
       render: (p) => formatDate(p.updated_at),
@@ -89,7 +92,7 @@ export const ProductListTable: FC<Props> = ({
   if (onEdit || onDelete) {
     columns.push({
       accessor: "actions",
-      title: "Actions",
+      title: t(tProductList.thead.actions),
       width: 100,
       textAlign: "center",
       render: (p) => (
@@ -130,7 +133,7 @@ export const ProductListTable: FC<Props> = ({
       columns={columns}
       pagination={pagination}
       sortHandler={sortHandler}
-      entityName="products"
+      entityName={tProductList.product}
       fetching={isLoading}
     />
   );

@@ -16,10 +16,15 @@ import { ArrowLeft, Check, Package, X } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { PurchaseOrderService } from "@/services/PurchaseOrderService";
+import { tMenu } from "@/consts/translations/tMenu";
+import { tBasic } from "@/consts/translations/tBasic";
+import { tPurchaseOrder } from "@/consts/translations/tPurchaseOrder";
+import { useTranslation } from "@/hooks/translation/useTranslation";
 import type { PurchaseOrderStatus } from "@/types/purchase-order/PurchaseOrder";
 import { formatCurrency } from "@/utils/CurrencyUtil";
 import { formatDate } from "@/utils/DateUtil";
 import { PurchaseOrderStatusBadge } from "@/components/Badges/PurchaseOrderStatusBadge";
+import { PO_STATUS_LABELS } from "@/consts/poStatusLabels";
 import { modals } from "@mantine/modals";
 import { $authUser } from "@/stores/authUserStore";
 import { useStore } from "@nanostores/react";
@@ -27,6 +32,7 @@ import { NotificationUtil } from "@/utils/NotificationUtil";
 import { useLoadInitialData } from "./hooks/useLoadInitialData";
 
 export const PurchaseOrderDetailPage = () => {
+  const t = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isUpdating, setIsUpdating] = useState(false);
@@ -39,43 +45,39 @@ export const PurchaseOrderDetailPage = () => {
   const handleUpdateStatus = async (newStatus: PurchaseOrderStatus) => {
     if (!order) return;
 
-    const confirmAction = () => {
-      modals.openConfirmModal({
-        title: `Confirm Status Change: ${newStatus}`,
-        centered: true,
-        children: (
-          <Text size="sm">
-            Are you sure you want to change status to{" "}
-            <strong>{newStatus}</strong>?
-            {newStatus === "RECEIVED" && (
-              <Text c="red.6" fw={600} mt="sm">
-                This will automatically increase stock levels for all items in
-                this order.
-              </Text>
-            )}
-          </Text>
-        ),
-        labels: { confirm: "Confirm", cancel: "Cancel" },
-        onConfirm: async () => {
-          setIsUpdating(true);
-          const response = await PurchaseOrderService.updateStatus(
-            order.purchase_order_id,
-            { status: newStatus, updated_by: authUser?.user_id || "" },
-          );
-          if (response.ok) {
-            await reloadOrder();
-          } else {
-            NotificationUtil.notifyError({
-              title: "Failed to update status",
-              message: response.message,
-            });
-          }
-          setIsUpdating(false);
-        },
-      });
-    };
+    const statusLabel = t(PO_STATUS_LABELS[newStatus]);
 
-    confirmAction();
+    modals.openConfirmModal({
+      title: t(tPurchaseOrder.detail.confirmStatusTitle(statusLabel)),
+      centered: true,
+      children: (
+        <Text size="sm">
+          {t(tPurchaseOrder.detail.confirmStatusMessage(statusLabel))}
+          {newStatus === "RECEIVED" && (
+            <Text c="red.6" fw={600} mt="sm">
+              {t(tPurchaseOrder.detail.receivedWarning)}
+            </Text>
+          )}
+        </Text>
+      ),
+      labels: { confirm: t(tBasic.textConfirm), cancel: t(tBasic.textCancel) },
+      onConfirm: async () => {
+        setIsUpdating(true);
+        const response = await PurchaseOrderService.updateStatus(
+          order.purchase_order_id,
+          { status: newStatus, updated_by: authUser?.user_id || "" },
+        );
+        if (response.ok) {
+          await reloadOrder();
+        } else {
+          NotificationUtil.notifyError({
+            title: t(tPurchaseOrder.detail.notifyUpdateError),
+            message: response.message,
+          });
+        }
+        setIsUpdating(false);
+      },
+    });
   };
 
   const canConfirm = order?.status === "DRAFT";
@@ -85,7 +87,11 @@ export const PurchaseOrderDetailPage = () => {
   return (
     <PageLayout
       isLoading={isLoadingInitialData}
-      breadcrumbs={{ label: order?.purchase_order_id ?? "Detail" }}
+      breadcrumbs={{
+        label: order?.purchase_order_id
+          ? { th: order.purchase_order_id, en: order.purchase_order_id }
+          : tMenu.detail,
+      }}
     >
       {order && (
         <Stack gap="lg">
@@ -106,8 +112,12 @@ export const PurchaseOrderDetailPage = () => {
                   <PurchaseOrderStatusBadge status={order.status} />
                 </Group>
                 <Text c="gray.6" fz="sm">
-                  Created on {formatDate(order.created_at)} by{" "}
-                  {order.created_by_name}
+                  {t(
+                    tPurchaseOrder.detail.createdOnBy(
+                      formatDate(order.created_at),
+                      order.created_by_name,
+                    ),
+                  )}
                 </Text>
               </Stack>
             </Group>
@@ -121,7 +131,7 @@ export const PurchaseOrderDetailPage = () => {
                   onClick={() => handleUpdateStatus("CANCELLED")}
                   loading={isUpdating}
                 >
-                  Cancel PO
+                  {t(tPurchaseOrder.detail.cancelButton)}
                 </Button>
               )}
               {canConfirm && (
@@ -130,7 +140,7 @@ export const PurchaseOrderDetailPage = () => {
                   onClick={() => handleUpdateStatus("CONFIRMED")}
                   loading={isUpdating}
                 >
-                  Confirm Order
+                  {t(tPurchaseOrder.detail.confirmButton)}
                 </Button>
               )}
               {canReceive && (
@@ -140,7 +150,7 @@ export const PurchaseOrderDetailPage = () => {
                   onClick={() => handleUpdateStatus("RECEIVED")}
                   loading={isUpdating}
                 >
-                  Receive Stock
+                  {t(tPurchaseOrder.detail.receiveButton)}
                 </Button>
               )}
             </Group>
@@ -152,15 +162,15 @@ export const PurchaseOrderDetailPage = () => {
                 <Table verticalSpacing="md">
                   <Table.Thead>
                     <Table.Tr>
-                      <Table.Th>Product</Table.Th>
+                      <Table.Th>{t(tPurchaseOrder.thead.product)}</Table.Th>
                       <Table.Th w={100} ta="center">
-                        Quantity
+                        {t(tPurchaseOrder.thead.quantity)}
                       </Table.Th>
                       <Table.Th w={150} ta="right">
-                        Unit Price
+                        {t(tPurchaseOrder.thead.unitPrice)}
                       </Table.Th>
                       <Table.Th w={150} ta="right">
-                        Subtotal
+                        {t(tPurchaseOrder.thead.subtotal)}
                       </Table.Th>
                     </Table.Tr>
                   </Table.Thead>
@@ -189,7 +199,7 @@ export const PurchaseOrderDetailPage = () => {
                   <Stack gap={4} align="flex-end">
                     <Group gap="xl">
                       <Text fw={600} size="lg">
-                        Total Amount:
+                        {t(tPurchaseOrder.create.totalAmount)}:
                       </Text>
                       <Text fw={700} size="xl" c="blue.7">
                         {formatCurrency(order.total_amount)}
@@ -204,12 +214,12 @@ export const PurchaseOrderDetailPage = () => {
               <Stack gap="md">
                 <Paper withBorder p="md" radius="md">
                   <Title order={4} mb="sm">
-                    Supplier Information
+                    {t(tPurchaseOrder.detail.supplierInfo)}
                   </Title>
                   <Stack gap="xs">
                     <Group justify="space-between">
                       <Text size="sm" c="gray.6">
-                        Name:
+                        {t(tPurchaseOrder.detail.name)}:
                       </Text>
                       <Text size="sm" fw={500}>
                         {order.supplier_name}
@@ -217,7 +227,7 @@ export const PurchaseOrderDetailPage = () => {
                     </Group>
                     <Group justify="space-between">
                       <Text size="sm" c="gray.6">
-                        ID:
+                        {t(tPurchaseOrder.detail.id)}:
                       </Text>
                       <Text size="sm" fw={500}>
                         {order.supplier_id}
@@ -228,29 +238,33 @@ export const PurchaseOrderDetailPage = () => {
 
                 <Paper withBorder p="md" radius="md" bg="gray.0">
                   <Title order={4} mb="sm">
-                    Order Timeline
+                    {t(tPurchaseOrder.detail.timeline)}
                   </Title>
                   <Stack gap="xs">
                     <Group gap="xs">
                       <Badge variant="dot" size="sm">
-                        Created
+                        {t(tPurchaseOrder.detail.timelineCreated)}
                       </Badge>
                       <Text size="xs">{formatDate(order.created_at)}</Text>
                     </Group>
                     {order.status === "CONFIRMED" && (
                       <Group gap="xs">
                         <Badge color="blue" variant="dot" size="sm">
-                          Confirmed
+                          {t(tPurchaseOrder.detail.timelineConfirmed)}
                         </Badge>
-                        <Text size="xs">Awaiting delivery</Text>
+                        <Text size="xs">
+                          {t(tPurchaseOrder.detail.timelineAwaiting)}
+                        </Text>
                       </Group>
                     )}
                     {order.status === "RECEIVED" && (
                       <Group gap="xs">
                         <Badge color="green" variant="dot" size="sm">
-                          Received
+                          {t(tPurchaseOrder.detail.timelineReceived)}
                         </Badge>
-                        <Text size="xs">Stock updated</Text>
+                        <Text size="xs">
+                          {t(tPurchaseOrder.detail.timelineStockUpdated)}
+                        </Text>
                       </Group>
                     )}
                   </Stack>

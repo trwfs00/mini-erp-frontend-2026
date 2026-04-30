@@ -1,11 +1,13 @@
 import dayjs from "dayjs";
 import "dayjs/locale/th";
+import "dayjs/locale/en";
 import buddhistEra from "dayjs/plugin/buddhistEra";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import isBetween from "dayjs/plugin/isBetween";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { $language } from "@/stores/languageStore";
 
 // 1. นำเข้า Plug-in ที่มักใช้ในระบบ ERP
 dayjs.extend(buddhistEra);
@@ -15,31 +17,45 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 dayjs.extend(relativeTime);
 
-dayjs.locale("en");
+// sync dayjs locale กับ $language ตลอดเวลา
+const applyLocale = (lang: string) => dayjs.locale(lang === "th" ? "th" : "en");
+applyLocale($language.get());
+$language.subscribe(applyLocale);
+
+const isThai = () => $language.get() === "th";
+const yearToken = () => (isThai() ? "BBBB" : "YYYY");
 
 type DateInput = string | number | Date | dayjs.Dayjs | null | undefined;
 
 /**
- * แปลงวันที่เป็นรูปแบบภาษาอังกฤษ (ค่าเริ่มต้น: "22 Apr 2026")
+ * แปลงวันที่ตามภาษาปัจจุบัน
+ *  - th: "22 เม.ย. 2569"
+ *  - en: "22 Apr 2026"
  */
-export const formatDate = (
-  date: DateInput,
-  format: string = "DD MMM BBBB",
-): string => {
+export const formatDate = (date: DateInput, format?: string): string => {
   if (!date) return "-";
-  return dayjs(date).format(format);
+  const fmt = format ?? `DD MMM ${yearToken()}`;
+  return dayjs(date).format(fmt);
 };
 
 /**
- * แปลงวันที่และเวลาเป็นรูปแบบอเมริกาตะวันตก (เช่น "22 April 2026 14:30")
+ * แปลงวันที่+เวลาตามภาษาปัจจุบัน (เช่น "22 เมษายน 2569 14:30" / "22 April 2026 14:30")
  */
 export const formatDateTime = (date: DateInput): string => {
   if (!date) return "-";
-  return `${dayjs(date).format("DD MMMM BBBB")} ${dayjs(date).format("HH:mm")}`;
+  return dayjs(date).format(`DD MMMM ${yearToken()} HH:mm`);
 };
 
 /**
- * แสดงความแตกต่างของเวลาแบบ Relative (เช่น "2 hours ago", "5 days ago")
+ * รูปแบบสั้นสำหรับ timestamp (เช่น "22 เม.ย. 2569 14:30" / "22 Apr 2026 14:30")
+ */
+export const formatTimestamp = (date: DateInput): string => {
+  if (!date) return "-";
+  return dayjs(date).format(`DD MMM ${yearToken()} HH:mm`);
+};
+
+/**
+ * แสดงความแตกต่างของเวลาแบบ Relative (locale อัปเดตตามภาษา)
  */
 export const formatRelativeTime = (date: DateInput): string => {
   if (!date) return "-";
@@ -47,7 +63,7 @@ export const formatRelativeTime = (date: DateInput): string => {
 };
 
 /**
- * ฟังก์ชันสำหรับ Database/API (ได้รูปแบบ "2026-04-22")
+ * ฟังก์ชันสำหรับ Database/API (ได้รูปแบบ "2026-04-22") — ไม่ขึ้นกับภาษา
  */
 export const formatApiDate = (date: DateInput): string => {
   if (!date) return "";
@@ -55,7 +71,7 @@ export const formatApiDate = (date: DateInput): string => {
 };
 
 /**
- * ใช้สำหรับตรวจสอสอบว่าวันที่ถูกต้องหรือไม่
+ * ใช้สำหรับตรวจสอบว่าวันที่ถูกต้องหรือไม่
  */
 export const isValidDate = (date: DateInput): boolean => {
   if (!date) return false;
@@ -81,7 +97,7 @@ export const toYearMonth = (input: DateInput): string => {
 };
 
 /**
- * เดือนปัจจุบันในรูปแบบ "YYYY-MM"
+ * เดือนปัจจุบันในรูปแบบ "YYYY-MM" — ไม่ขึ้นกับภาษา
  */
 export const currentYearMonth = (): string => dayjs().format("YYYY-MM");
 

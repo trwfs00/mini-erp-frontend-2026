@@ -1,0 +1,15 @@
+export const tMenu = {
+  home: { th: "หน้าแรก", en: "Home" },
+  create: { th: "สร้าง", en: "Create" },
+  detail: { th: "รายละเอียด", en: "Detail" },
+  dashboard: { th: "แดชบอร์ด", en: "Dashboard" },
+  product: { th: "สินค้า", en: "Products" },
+  category: { th: "หมวดหมู่", en: "Categories" },
+  stock: { th: "คลังสินค้า", en: "Stock" },
+  supplier: { th: "ผู้จัดจำหน่าย", en: "Suppliers" },
+  purchaseOrder: { th: "ใบสั่งซื้อ", en: "Purchase Orders" },
+  report: { th: "รายงาน", en: "Report" },
+  reportStockSummary: { th: "สรุปสต็อก", en: "Stock Summary" },
+  reportStockMovement: { th: "การเคลื่อนไหวสต็อก", en: "Stock Movement" },
+  reportPurchaseSummary: { th: "สรุปการสั่งซื้อ", en: "Purchase Summary" },
+} as const;

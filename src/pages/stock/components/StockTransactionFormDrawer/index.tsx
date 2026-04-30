@@ -18,6 +18,9 @@ import {
 } from "@/schemas/stockSchema";
 import { AlertCircle } from "lucide-react";
 import { useLoadInitialData } from "./hooks/useLoadInitialData";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tBasic } from "@/consts/translations/tBasic";
+import { tStockList } from "@/consts/translations/tStockList";
 
 type Props = {
   opened: boolean;
@@ -32,6 +35,7 @@ export const StockTransactionFormDrawer: FC<Props> = ({
   onSave,
   isLoading,
 }) => {
+  const t = useTranslation();
   const { productOptions, summary, fetchSummary } = useLoadInitialData({
     opened,
   });
@@ -47,14 +51,12 @@ export const StockTransactionFormDrawer: FC<Props> = ({
     validate: yupResolver(stockTransactionSchema),
   });
 
-  // Reset form whenever drawer reopens
   useEffect(() => {
     if (opened) {
       form.reset();
     }
   }, [opened]);
 
-  // Watch product_id to fetch current stock
   useEffect(() => {
     if (form.values.product_id) {
       fetchSummary(form.values.product_id);
@@ -66,7 +68,7 @@ export const StockTransactionFormDrawer: FC<Props> = ({
       if (values.quantity > summary.current_stock) {
         form.setFieldError(
           "quantity",
-          `Insufficient stock. Current balance is ${summary.current_stock}`,
+          t(tStockList.form.insufficientStock(summary.current_stock)),
         );
         return;
       }
@@ -80,15 +82,15 @@ export const StockTransactionFormDrawer: FC<Props> = ({
     <Drawer
       opened={opened}
       onClose={onClose}
-      title="Create Stock Transaction"
+      title={t(tStockList.form.title)}
       position="right"
       size="md"
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="md">
           <Select
-            label="Product"
-            placeholder="Select product"
+            label={t(tStockList.form.productLabel)}
+            placeholder={t(tStockList.form.productPlaceholder)}
             data={productOptions}
             searchable
             {...form.getInputProps("product_id")}
@@ -97,31 +99,32 @@ export const StockTransactionFormDrawer: FC<Props> = ({
           {summary && (
             <Alert
               icon={<AlertCircle size={16} />}
-              title="Inventory Status"
+              title={t(tStockList.form.inventoryStatus)}
               color={summary.is_low_stock ? "orange" : "blue"}
               variant="light"
             >
-              Current Stock: <strong>{summary.current_stock}</strong>
-              {summary.is_low_stock && " (Low Stock Alert!)"}
+              {t(tStockList.form.currentStock)}:{" "}
+              <strong>{summary.current_stock}</strong>
+              {summary.is_low_stock && t(tStockList.form.lowStockAlert)}
             </Alert>
           )}
 
           <Select
-            label="Transaction Type"
+            label={t(tStockList.form.typeLabel)}
             data={[
-              { value: "IN", label: "Stock IN (Receive)" },
-              { value: "OUT", label: "Stock OUT (Release)" },
-              { value: "ADJUST", label: "Stock ADJUST (Correction)" },
+              { value: "IN", label: t(tStockList.form.typeIn) },
+              { value: "OUT", label: t(tStockList.form.typeOut) },
+              { value: "ADJUST", label: t(tStockList.form.typeAdjust) },
             ]}
             {...form.getInputProps("type")}
           />
 
           <NumberInput
-            label="Quantity"
+            label={t(tStockList.form.quantityLabel)}
             placeholder={
               selectedType === "ADJUST"
-                ? "Use negative for stock decrease"
-                : "Enter quantity"
+                ? t(tStockList.form.quantityAdjustPlaceholder)
+                : t(tStockList.form.quantityPlaceholder)
             }
             min={selectedType === "ADJUST" ? undefined : 1}
             allowNegative={selectedType === "ADJUST"}
@@ -130,25 +133,25 @@ export const StockTransactionFormDrawer: FC<Props> = ({
 
           {selectedType === "ADJUST" && (
             <TextInput
-              label="Reason for Adjustment"
-              placeholder="e.g. Damaged goods, Stock count correction"
+              label={t(tStockList.form.reasonLabel)}
+              placeholder={t(tStockList.form.reasonPlaceholder)}
               required
               {...form.getInputProps("reason")}
             />
           )}
 
           <TextInput
-            label="Note (Optional)"
-            placeholder="Add extra details..."
+            label={t(tStockList.form.noteLabel)}
+            placeholder={t(tStockList.form.notePlaceholder)}
             {...form.getInputProps("note")}
           />
 
           <Group justify="flex-end" mt="xl">
             <Button variant="outline" onClick={onClose}>
-              Cancel
+              {t(tBasic.textCancel)}
             </Button>
             <Button type="submit" loading={isLoading}>
-              Submit Transaction
+              {t(tStockList.form.submit)}
             </Button>
           </Group>
         </Stack>

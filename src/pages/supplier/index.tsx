@@ -16,8 +16,13 @@ import { ROUTE_PATHS } from "@/router/routePaths";
 import { usePaginationState } from "@/hooks/pagination/usePaginationState";
 import { useTableSort } from "@/hooks/table/useTableSort";
 import { usePermission } from "@/hooks/auth/usePermission";
+import { tMenu } from "@/consts/translations/tMenu";
+import { tBasic } from "@/consts/translations/tBasic";
+import { tSupplierList } from "@/consts/translations/tSupplierList";
+import { useTranslation } from "@/hooks/translation/useTranslation";
 
 export const SupplierPage = () => {
+  const t = useTranslation();
   const { canCreate, canUpdate, canDelete } = usePermission("supplier");
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
@@ -30,33 +35,29 @@ export const SupplierPage = () => {
   const pagination = usePaginationState();
   const sortHandler = useTableSort("name", "asc");
 
-  const {
-    suppliers,
-    isLoadingInitialData,
-    isReloading,
-    reloadSupplierList,
-  } = useLoadInitialData({
-    search: debouncedSearch,
-    page: pagination.page,
-    limit: pagination.limit,
-    sortBy: sortHandler.sortBy,
-    orderBy: sortHandler.orderBy,
-    setTotalPage: pagination.setTotalPage,
-    setTotalCount: pagination.setTotalCount,
-    setPage: pagination.setPage,
-  });
+  const { suppliers, isLoadingInitialData, isReloading, reloadSupplierList } =
+    useLoadInitialData({
+      search: debouncedSearch,
+      page: pagination.page,
+      limit: pagination.limit,
+      sortBy: sortHandler.sortBy,
+      orderBy: sortHandler.orderBy,
+      setTotalPage: pagination.setTotalPage,
+      setTotalCount: pagination.setTotalCount,
+      setPage: pagination.setPage,
+    });
 
   const handleDelete = (supplier: SupplierList) => {
+    const confirmTexts = tBasic.confirmModalDelete(t(tSupplierList.supplier));
     modals.openConfirmModal({
-      title: "Delete Supplier",
+      title: t(confirmTexts.title),
       centered: true,
       children: (
         <Text size="sm">
-          Are you sure you want to delete <strong>{supplier.name}</strong>? This
-          action cannot be undone.
+          {t(confirmTexts.message)} <strong>{supplier.name}</strong>
         </Text>
       ),
-      labels: { confirm: "Delete", cancel: "Cancel" },
+      labels: { confirm: t(tBasic.textDelete), cancel: t(tBasic.textCancel) },
       confirmProps: { color: "red" },
       onConfirm: async () => {
         const response = await SupplierService.deleteSupplier(
@@ -64,7 +65,7 @@ export const SupplierPage = () => {
         );
         if (!response.ok) {
           NotificationUtil.notifyError({
-            title: "Failed to delete supplier",
+            title: t(tBasic.notifyDeleteError(t(tSupplierList.supplier))),
             message: response.message,
           });
           return;
@@ -82,8 +83,11 @@ export const SupplierPage = () => {
     });
 
     if (!response.ok) {
+      const errFn = selectedSupplier
+        ? tBasic.notifyUpdateError
+        : tBasic.notifyCreateError;
       NotificationUtil.notifyError({
-        title: "Failed to save supplier",
+        title: t(errFn(t(tSupplierList.supplier))),
         message: response.message,
       });
       setIsSaving(false);
@@ -97,22 +101,22 @@ export const SupplierPage = () => {
   return (
     <PageLayout
       isLoading={isLoadingInitialData}
-      breadcrumbs={{ label: "Suppliers", path: ROUTE_PATHS.SUPPLIERS }}
+      breadcrumbs={{ label: tMenu.supplier, path: ROUTE_PATHS.SUPPLIERS }}
     >
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
             <Title order={2} fw={700} c="gray.9">
-              Suppliers
+              {t(tSupplierList.title)}
             </Title>
             <Text c="gray.6" fz="sm">
-              Manage your supplier relationships.
+              {t(tSupplierList.description)}
             </Text>
           </Stack>
 
           <Group>
             <TextInput
-              placeholder="Search by name, email or phone..."
+              placeholder={t(tSupplierList.searchPlaceholder)}
               leftSection={<Search size={16} />}
               value={search}
               onChange={(e) => setSearch(e.currentTarget.value)}
@@ -127,7 +131,7 @@ export const SupplierPage = () => {
                   setDrawerOpened(true);
                 }}
               >
-                Add Supplier
+                {t(tBasic.textAddNew)}
               </Button>
             )}
           </Group>

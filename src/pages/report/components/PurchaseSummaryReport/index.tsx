@@ -12,8 +12,12 @@ import { ExportButton } from "../ExportButton";
 import { usePermission } from "@/hooks/auth/usePermission";
 // TODO: เปลี่ยนเป็น ReportService.exportPurchaseSummary เมื่อ integrate API จริง
 import { MockReportExportUtil } from "../../utils/mockReportExport";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tReport } from "@/consts/translations/tReport";
+import { tPurchaseOrder } from "@/consts/translations/tPurchaseOrder";
 
 export const PurchaseSummaryReportPage = () => {
+  const t = useTranslation();
   const [month, setMonth] = useState(currentYearMonth);
   const {
     report,
@@ -34,7 +38,7 @@ export const PurchaseSummaryReportPage = () => {
       <Group justify="space-between" wrap="wrap" gap="md" align="flex-end">
         <TextInput
           type="month"
-          label="Month"
+          label={t(tReport.purchaseSummary.monthLabel)}
           value={month}
           onChange={(e) => setMonth(e.currentTarget.value)}
           size="sm"
@@ -43,13 +47,13 @@ export const PurchaseSummaryReportPage = () => {
           <RefreshButton onClick={async () => await reloadReport()} />
           {canExport && (
             <ExportButton
-              label="Export CSV"
+              label={t(tReport.exportCsv)}
               filename={`purchase-summary-${month}.csv`}
               disabled={!report}
               onExport={async () =>
                 report
                   ? { ok: true, data: MockReportExportUtil.exportPurchaseSummary(report) }
-                  : { ok: false, message: "Report not loaded" }
+                  : { ok: false, message: t(tReport.reportNotLoaded) }
               }
               onError={setExportError}
             />
@@ -72,24 +76,27 @@ export const PurchaseSummaryReportPage = () => {
       {totals && (
         <SimpleGrid cols={{ base: 2, sm: 3, md: 6 }} spacing="md">
           <StatTile
-            label="Orders"
+            label={t(tReport.purchaseSummary.statOrders)}
             value={totals.total_orders.toLocaleString()}
           />
           <StatTile
-            label="Amount"
+            label={t(tReport.purchaseSummary.statAmount)}
             value={formatCurrency(totals.total_amount)}
           />
-          <StatTile label="Draft" value={totals.by_status.DRAFT.toString()} />
           <StatTile
-            label="Confirmed"
+            label={t(tPurchaseOrder.status.DRAFT)}
+            value={totals.by_status.DRAFT.toString()}
+          />
+          <StatTile
+            label={t(tPurchaseOrder.status.CONFIRMED)}
             value={totals.by_status.CONFIRMED.toString()}
           />
           <StatTile
-            label="Received"
+            label={t(tPurchaseOrder.status.RECEIVED)}
             value={totals.by_status.RECEIVED.toString()}
           />
           <StatTile
-            label="Cancelled"
+            label={t(tPurchaseOrder.status.CANCELLED)}
             value={totals.by_status.CANCELLED.toString()}
           />
         </SimpleGrid>

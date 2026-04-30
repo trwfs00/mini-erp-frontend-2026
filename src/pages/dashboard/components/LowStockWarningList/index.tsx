@@ -11,6 +11,8 @@ import { AlertTriangle, PackageCheck } from "lucide-react";
 import type { FC } from "react";
 import { SurfaceCard } from "@/components/SurfaceCard";
 import type { LowStockProduct } from "@/types/dashboard/DashboardDetail";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tDashboard } from "@/consts/translations/tDashboard";
 
 type Props = {
   products: LowStockProduct[];
@@ -19,28 +21,32 @@ type Props = {
 
 const LIST_MAX_HEIGHT = 260;
 
-const LowStockRow: FC<{ product: LowStockProduct }> = ({ product }) => (
-  <Group justify="space-between" wrap="nowrap" gap="sm" py={6}>
-    <Stack gap={2} style={{ minWidth: 0, flex: 1 }}>
-      <Text fz="sm" fw={500} truncate>
-        {product.name}
-      </Text>
-      <Text fz="xs" c="gray.6" truncate>
-        {product.sku}
-      </Text>
-    </Stack>
-    <Stack gap={0} align="flex-end" style={{ flexShrink: 0 }}>
-      <Text fz="sm" fw={700} c="red.7">
-        {product.current_stock} {product.unit}
-      </Text>
-      <Text fz="xs" c="gray.5">
-        min {product.min_stock}
-      </Text>
-    </Stack>
-  </Group>
-);
+const LowStockRow: FC<{ product: LowStockProduct }> = ({ product }) => {
+  const t = useTranslation();
+  return (
+    <Group justify="space-between" wrap="nowrap" gap="sm" py={6}>
+      <Stack gap={2} style={{ minWidth: 0, flex: 1 }}>
+        <Text fz="sm" fw={500} truncate>
+          {product.name}
+        </Text>
+        <Text fz="xs" c="gray.6" truncate>
+          {product.sku}
+        </Text>
+      </Stack>
+      <Stack gap={0} align="flex-end" style={{ flexShrink: 0 }}>
+        <Text fz="sm" fw={700} c="red.7">
+          {product.current_stock} {product.unit}
+        </Text>
+        <Text fz="xs" c="gray.5">
+          {t(tDashboard.lowStockList.minStock)} {product.min_stock}
+        </Text>
+      </Stack>
+    </Group>
+  );
+};
 
 export const LowStockWarningList: FC<Props> = ({ products, isLoading }) => {
+  const t = useTranslation();
   const renderBody = () => {
     if (isLoading) {
       return (
@@ -61,7 +67,7 @@ export const LowStockWarningList: FC<Props> = ({ products, isLoading }) => {
             strokeWidth={1.5}
           />
           <Text fz="sm" c="gray.6" ta="center">
-            All products above minimum stock.
+            {t(tDashboard.lowStockList.empty)}
           </Text>
         </Stack>
       );
@@ -94,7 +100,7 @@ export const LowStockWarningList: FC<Props> = ({ products, isLoading }) => {
           <Group gap="xs">
             <AlertTriangle size={18} color="var(--mantine-color-red-6)" />
             <Title order={5} fw={600} c="gray.9">
-              Low Stock Warning
+              {t(tDashboard.lowStockList.title)}
             </Title>
           </Group>
           {products.length > 0 && (

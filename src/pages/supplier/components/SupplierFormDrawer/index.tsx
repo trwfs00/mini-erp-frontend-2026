@@ -15,6 +15,9 @@ import {
   type SupplierFormValues,
 } from "@/schemas/supplierSchema";
 import type { SupplierList } from "@/types/supplier/SupplierList";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tBasic } from "@/consts/translations/tBasic";
+import { tSupplierList } from "@/consts/translations/tSupplierList";
 
 type Props = {
   opened: boolean;
@@ -31,6 +34,7 @@ export const SupplierFormDrawer = ({
   onSave,
   isLoading = false,
 }: Props) => {
+  const t = useTranslation();
   const isEditing = !!supplier;
 
   const form = useForm<SupplierFormValues>({
@@ -64,7 +68,11 @@ export const SupplierFormDrawer = ({
       onClose={onClose}
       position="right"
       size="md"
-      title={isEditing ? "Edit Supplier" : "Add New Supplier"}
+      title={
+        isEditing
+          ? t(tSupplierList.form.editTitle)
+          : t(tSupplierList.form.addTitle)
+      }
       styles={{
         title: {
           fontWeight: 600,
@@ -80,30 +88,30 @@ export const SupplierFormDrawer = ({
       >
         <Stack gap="md">
           <TextInput
-            label="Supplier Name"
-            placeholder="e.g. Global Foods Co., Ltd."
+            label={t(tSupplierList.form.nameLabel)}
+            placeholder={t(tSupplierList.form.namePlaceholder)}
             withAsterisk
             {...form.getInputProps("name")}
           />
 
           <SimpleGrid cols={2}>
             <TextInput
-              label="Phone Number"
-              placeholder="e.g. 02-123-4567"
+              label={t(tSupplierList.form.phoneLabel)}
+              placeholder={t(tSupplierList.form.phonePlaceholder)}
               withAsterisk
               {...form.getInputProps("phone")}
             />
             <TextInput
-              label="Email Address"
-              placeholder="e.g. contact@supplier.com"
+              label={t(tSupplierList.form.emailLabel)}
+              placeholder={t(tSupplierList.form.emailPlaceholder)}
               withAsterisk
               {...form.getInputProps("email")}
             />
           </SimpleGrid>
 
           <Textarea
-            label="Address"
-            placeholder="Full business address"
+            label={t(tSupplierList.form.addressLabel)}
+            placeholder={t(tSupplierList.form.addressPlaceholder)}
             withAsterisk
             minRows={4}
             autosize
@@ -112,10 +120,12 @@ export const SupplierFormDrawer = ({
 
           <Group justify="flex-end" mt="xl">
             <Button variant="default" onClick={onClose} disabled={isLoading}>
-              Cancel
+              {t(tBasic.textCancel)}
             </Button>
             <Button type="submit" loading={isLoading}>
-              {isEditing ? "Save Changes" : "Create Supplier"}
+              {isEditing
+                ? t(tSupplierList.form.submitEdit)
+                : t(tSupplierList.form.submitCreate)}
             </Button>
           </Group>
         </Stack>

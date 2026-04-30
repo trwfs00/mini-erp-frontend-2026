@@ -11,8 +11,11 @@ import { ExportButton } from "../ExportButton";
 import { usePermission } from "@/hooks/auth/usePermission";
 // TODO: เปลี่ยนเป็น ReportService.exportStockSummary เมื่อ integrate API จริง
 import { MockReportExportUtil } from "../../utils/mockReportExport";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tReport } from "@/consts/translations/tReport";
 
 export const StockSummaryReportPage = () => {
+  const t = useTranslation();
   const {
     report,
     totals,
@@ -31,19 +34,19 @@ export const StockSummaryReportPage = () => {
       <AppLoadingOverlay visible={isLoadingInitialData} />
       <Group justify="space-between" wrap="wrap" align="flex-end">
         <Text fz="sm" c="gray.6">
-          Snapshot of current stock with cost and selling valuation.
+          {t(tReport.stockSummary.description)}
         </Text>
         <Group>
           <RefreshButton onClick={async () => await reloadReport()} />
           {canExport && (
             <ExportButton
-              label="Export CSV"
+              label={t(tReport.exportCsv)}
               filename={`stock-summary-${new Date().toISOString().slice(0, 10)}.csv`}
               disabled={!report}
               onExport={async () =>
                 report
                   ? { ok: true, data: MockReportExportUtil.exportStockSummary(report) }
-                  : { ok: false, message: "Report not loaded" }
+                  : { ok: false, message: t(tReport.reportNotLoaded) }
               }
               onError={setExportError}
             />
@@ -66,20 +69,20 @@ export const StockSummaryReportPage = () => {
       {totals && (
         <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="md">
           <StatTile
-            label="Total Products"
+            label={t(tReport.stockSummary.statTotalProducts)}
             value={totals.total_products.toLocaleString()}
           />
           <StatTile
-            label="Cost Value"
+            label={t(tReport.stockSummary.statCostValue)}
             value={formatCurrency(totals.total_cost_value)}
           />
           <StatTile
-            label="Selling Value"
+            label={t(tReport.stockSummary.statSellingValue)}
             value={formatCurrency(totals.total_selling_value)}
           />
           <StatTile
-            label="Low Stock"
-            value={`${totals.low_stock_count} items`}
+            label={t(tReport.stockSummary.statLowStock)}
+            value={`${totals.low_stock_count} ${t(tReport.stockSummary.items)}`}
           />
         </SimpleGrid>
       )}

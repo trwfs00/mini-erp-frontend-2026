@@ -1,23 +1,33 @@
 import { PageLayout } from "@/components/Layouts/Page";
 import { Stack, Tabs, Text, Title } from "@mantine/core";
-import { BarChart3, Repeat, Truck } from "lucide-react";
+import { BarChart3, Repeat, Truck, type LucideIcon } from "lucide-react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ROUTE_PATHS } from "@/router/routePaths";
+import { tMenu } from "@/consts/translations/tMenu";
+import { tReport } from "@/consts/translations/tReport";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import type { Language } from "@/types/language/Language";
 
-const TABS = [
+type ReportTab = {
+  value: string;
+  label: Record<Language, string>;
+  icon: LucideIcon;
+};
+
+const TABS: ReportTab[] = [
   {
     value: ROUTE_PATHS.REPORT_STOCK_SUMMARY,
-    label: "Stock Summary",
+    label: tMenu.reportStockSummary,
     icon: BarChart3,
   },
   {
     value: ROUTE_PATHS.REPORT_STOCK_MOVEMENT,
-    label: "Stock Movement",
+    label: tMenu.reportStockMovement,
     icon: Repeat,
   },
   {
     value: ROUTE_PATHS.REPORT_PURCHASE_SUMMARY,
-    label: "Purchase Summary",
+    label: tMenu.reportPurchaseSummary,
     icon: Truck,
   },
 ];
@@ -25,15 +35,16 @@ const TABS = [
 export const ReportPage = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const t = useTranslation();
 
   const active =
-    TABS.find((t) => pathname.startsWith(t.value))?.value ?? TABS[0].value;
-  const activeTab = TABS.find((t) => t.value === active);
+    TABS.find((tab) => pathname.startsWith(tab.value))?.value ?? TABS[0].value;
+  const activeTab = TABS.find((tab) => tab.value === active);
 
   return (
     <PageLayout
       breadcrumbs={[
-        { label: "Report", path: ROUTE_PATHS.REPORT },
+        { label: tMenu.report, path: ROUTE_PATHS.REPORT },
         ...(activeTab
           ? [{ label: activeTab.label, path: activeTab.value }]
           : []),
@@ -42,10 +53,10 @@ export const ReportPage = () => {
       <Stack gap="lg">
         <Stack gap={4}>
           <Title order={2} fw={700} c="gray.9">
-            Report
+            {t(tMenu.report)}
           </Title>
           <Text c="gray.6" fz="sm">
-            Analytics and exportable business reports.
+            {t(tReport.pageDescription)}
           </Text>
         </Stack>
 
@@ -55,13 +66,13 @@ export const ReportPage = () => {
           variant="outline"
         >
           <Tabs.List>
-            {TABS.map((t) => (
+            {TABS.map((tab) => (
               <Tabs.Tab
-                key={t.value}
-                value={t.value}
-                leftSection={<t.icon size={14} />}
+                key={tab.value}
+                value={tab.value}
+                leftSection={<tab.icon size={14} />}
               >
-                {t.label}
+                {t(tab.label)}
               </Tabs.Tab>
             ))}
           </Tabs.List>
@@ -72,4 +83,3 @@ export const ReportPage = () => {
     </PageLayout>
   );
 };
-

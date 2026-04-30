@@ -11,6 +11,9 @@ import {
 import { useStore } from "@nanostores/react";
 import { $authUser } from "@/stores/authUserStore";
 import { $mockMode, $authBypass } from "@/stores/debugModeStore";
+import { LanguageButton } from "./components/LanguageButton";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tLayout } from "@/consts/translations/tLayout";
 
 type AppHeaderProps = {
   mobileOpened: boolean;
@@ -28,6 +31,7 @@ export const AppHeader: FC<AppHeaderProps> = ({
   mobileOpened,
   toggleMobile,
 }) => {
+  const t = useTranslation();
   const authUser = useStore($authUser);
   const mockMode = useStore($mockMode);
   const authBypass = useStore($authBypass);
@@ -49,11 +53,11 @@ export const AppHeader: FC<AppHeaderProps> = ({
           onClick={toggleMobile}
           hiddenFrom="sm"
           size="sm"
-          aria-label="Toggle sidebar (mobile)"
+          aria-label={t(tLayout.header.toggleSidebarMobile)}
         />
         {mockMode && (
           <Tooltip
-            label="Using mock data — backend not connected"
+            label={t(tLayout.header.mockTooltip)}
             position="bottom"
             withArrow
           >
@@ -64,13 +68,13 @@ export const AppHeader: FC<AppHeaderProps> = ({
               radius="sm"
               styles={{ label: { letterSpacing: 0.4 } }}
             >
-              MOCK DATA MODE
+              {t(tLayout.header.mockBadge)}
             </Badge>
           </Tooltip>
         )}
         {authBypass && (
           <Tooltip
-            label="Auth Bypass mode — using stored credentials"
+            label={t(tLayout.header.authBypassTooltip)}
             position="bottom"
             withArrow
           >
@@ -81,7 +85,7 @@ export const AppHeader: FC<AppHeaderProps> = ({
               radius="sm"
               styles={{ label: { letterSpacing: 0.4 } }}
             >
-              AUTH BYPASS MODE
+              {t(tLayout.header.authBypassBadge)}
             </Badge>
           </Tooltip>
         )}
@@ -89,6 +93,7 @@ export const AppHeader: FC<AppHeaderProps> = ({
 
       {authUser ? (
         <Group gap={10} wrap="nowrap">
+          <LanguageButton />
           <Box visibleFrom="sm" style={{ minWidth: 0, textAlign: "right" }}>
             <Text fz="sm" fw={600} c="gray.9" lh={1.2} truncate>
               {authUser.username}

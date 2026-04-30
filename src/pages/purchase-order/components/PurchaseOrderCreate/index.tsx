@@ -29,8 +29,12 @@ import { $authUser } from "@/stores/authUserStore";
 import { useStore } from "@nanostores/react";
 import { NotificationUtil } from "@/utils/NotificationUtil";
 import { useLoadInitialData } from "./hooks/useLoadInitialData";
+import { tMenu } from "@/consts/translations/tMenu";
+import { tPurchaseOrder } from "@/consts/translations/tPurchaseOrder";
+import { useTranslation } from "@/hooks/translation/useTranslation";
 
 export const PurchaseOrderCreatePage = () => {
+  const t = useTranslation();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const authUser = useStore($authUser);
@@ -85,12 +89,12 @@ export const PurchaseOrderCreatePage = () => {
 
     if (response.ok) {
       NotificationUtil.notifySuccess({
-        title: "Purchase Order created successfully",
+        title: t(tPurchaseOrder.create.notifyCreateSuccess),
       });
       navigate(ROUTE_PATHS.PURCHASE_ORDERS);
     } else {
       NotificationUtil.notifyError({
-        title: "Failed to create purchase order",
+        title: t(tPurchaseOrder.create.notifyCreateError),
         message: response.message,
       });
     }
@@ -101,7 +105,7 @@ export const PurchaseOrderCreatePage = () => {
     <Table.Tr key={index}>
       <Table.Td>
         <Select
-          placeholder="Select Product"
+          placeholder={t(tPurchaseOrder.create.productPlaceholder)}
           data={productOptions}
           {...form.getInputProps(`items.${index}.product_id`)}
           onChange={(val) => {
@@ -145,7 +149,7 @@ export const PurchaseOrderCreatePage = () => {
   return (
     <PageLayout
       isLoading={isLoadingInitialData}
-      breadcrumbs={{ label: "Create" }}
+      breadcrumbs={{ label: tMenu.create }}
     >
       <Stack gap="lg">
         <Group justify="space-between">
@@ -159,10 +163,10 @@ export const PurchaseOrderCreatePage = () => {
             </ActionIcon>
             <Stack gap={0}>
               <Title order={2} fw={700}>
-                Create Purchase Order
+                {t(tPurchaseOrder.create.title)}
               </Title>
               <Text c="gray.6" fz="sm">
-                Fill in the details to create a new purchase order.
+                {t(tPurchaseOrder.create.description)}
               </Text>
             </Stack>
           </Group>
@@ -171,7 +175,7 @@ export const PurchaseOrderCreatePage = () => {
             onClick={() => form.onSubmit(handleSubmit)()}
             loading={isSubmitting}
           >
-            Save Purchase Order
+            {t(tPurchaseOrder.create.save)}
           </Button>
         </Group>
 
@@ -180,14 +184,14 @@ export const PurchaseOrderCreatePage = () => {
             <Paper withBorder p="md" radius="md">
               <Group grow align="flex-start">
                 <TextInput
-                  label="Order Number"
-                  placeholder="e.g. PO-2026-001"
+                  label={t(tPurchaseOrder.create.orderNumberLabel)}
+                  placeholder={t(tPurchaseOrder.create.orderNumberPlaceholder)}
                   {...form.getInputProps("order_number")}
                   required
                 />
                 <Select
-                  label="Supplier"
-                  placeholder="Choose supplier"
+                  label={t(tPurchaseOrder.create.supplierLabel)}
+                  placeholder={t(tPurchaseOrder.create.supplierPlaceholder)}
                   data={supplierOptions}
                   {...form.getInputProps("supplier_id")}
                   searchable
@@ -200,11 +204,15 @@ export const PurchaseOrderCreatePage = () => {
               <Table verticalSpacing="sm">
                 <Table.Thead>
                   <Table.Tr>
-                    <Table.Th>Product</Table.Th>
-                    <Table.Th w={120}>Quantity</Table.Th>
-                    <Table.Th w={170}>Unit Price</Table.Th>
+                    <Table.Th>{t(tPurchaseOrder.thead.product)}</Table.Th>
+                    <Table.Th w={120}>
+                      {t(tPurchaseOrder.thead.quantity)}
+                    </Table.Th>
+                    <Table.Th w={170}>
+                      {t(tPurchaseOrder.thead.unitPrice)}
+                    </Table.Th>
                     <Table.Th w={150} ta="right">
-                      Subtotal
+                      {t(tPurchaseOrder.thead.subtotal)}
                     </Table.Th>
                     <Table.Th w={80} ta="center"></Table.Th>
                   </Table.Tr>
@@ -220,13 +228,13 @@ export const PurchaseOrderCreatePage = () => {
                   leftSection={<Plus size={16} />}
                   onClick={handleAddItem}
                 >
-                  Add Item
+                  {t(tPurchaseOrder.create.addItem)}
                 </Button>
 
                 <Stack gap={4} align="flex-end">
                   <Group gap="xl">
                     <Text fw={600} size="lg">
-                      Total Amount:
+                      {t(tPurchaseOrder.create.totalAmount)}:
                     </Text>
                     <Text fw={700} size="xl" c="blue.7">
                       {formatCurrency(calculateTotal())}

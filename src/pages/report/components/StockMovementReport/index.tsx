@@ -20,10 +20,14 @@ import { ExportButton } from "../ExportButton";
 import { usePermission } from "@/hooks/auth/usePermission";
 // TODO: เปลี่ยนเป็น ReportService.exportStockMovement เมื่อ integrate API จริง
 import { MockReportExportUtil } from "../../utils/mockReportExport";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tReport } from "@/consts/translations/tReport";
+import { tDashboard } from "@/consts/translations/tDashboard";
 
 const defaultRange = () => getLastNDaysRange(14);
 
 export const StockMovementReportPage = () => {
+  const t = useTranslation();
   const [range, setRange] = useState(defaultRange);
   const {
     report,
@@ -39,11 +43,14 @@ export const StockMovementReportPage = () => {
   const [exportError, setExportError] = useState<string | null>(null);
   const canExport = usePermission("report", ["export"]);
 
+  const labelIn = t(tDashboard.stockMovementChart.seriesIn);
+  const labelOut = t(tDashboard.stockMovementChart.seriesOut);
+  const labelAdjust = t(tDashboard.stockMovementChart.seriesAdjust);
   const chartData = (daily ?? []).map((d) => ({
     date: d.date.slice(5),
-    In: d.in,
-    Out: d.out,
-    Adjust: d.adjust,
+    [labelIn]: d.in,
+    [labelOut]: d.out,
+    [labelAdjust]: d.adjust,
   }));
 
   return (
@@ -53,7 +60,7 @@ export const StockMovementReportPage = () => {
         <Group gap="sm">
           <TextInput
             type="date"
-            label="From"
+            label={t(tReport.stockMovement.fromLabel)}
             value={range.from}
             onChange={(e) =>
               setRange((r) => ({ ...r, from: e.currentTarget.value }))
@@ -62,7 +69,7 @@ export const StockMovementReportPage = () => {
           />
           <TextInput
             type="date"
-            label="To"
+            label={t(tReport.stockMovement.toLabel)}
             value={range.to}
             onChange={(e) =>
               setRange((r) => ({ ...r, to: e.currentTarget.value }))
@@ -74,13 +81,13 @@ export const StockMovementReportPage = () => {
           <RefreshButton onClick={async () => await reloadReport()} />
           {canExport && (
             <ExportButton
-              label="Export CSV"
+              label={t(tReport.exportCsv)}
               filename={`stock-movement-${range.from}-to-${range.to}.csv`}
               disabled={!report}
               onExport={async () =>
                 report
                   ? { ok: true, data: MockReportExportUtil.exportStockMovement(report) }
-                  : { ok: false, message: "Report not loaded" }
+                  : { ok: false, message: t(tReport.reportNotLoaded) }
               }
               onError={setExportError}
             />
@@ -103,17 +110,17 @@ export const StockMovementReportPage = () => {
       {totals && (
         <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="md">
           <StatTile
-            label="Total IN"
+            label={t(tReport.stockMovement.statTotalIn)}
             value={totals.total_in.toLocaleString()}
             color="teal.7"
           />
           <StatTile
-            label="Total OUT"
+            label={t(tReport.stockMovement.statTotalOut)}
             value={totals.total_out.toLocaleString()}
             color="red.7"
           />
           <StatTile
-            label="Adjustments"
+            label={t(tReport.stockMovement.statAdjustments)}
             value={totals.total_adjust.toLocaleString()}
             color="gray.7"
           />
@@ -123,11 +130,11 @@ export const StockMovementReportPage = () => {
       <SurfaceCard>
         <Stack gap="sm">
           <Text fz="sm" fw={600}>
-            Daily Movement
+            {t(tReport.stockMovement.dailyMovement)}
           </Text>
           {chartData.length === 0 ? (
             <Text c="gray.5" fz="sm" ta="center" py="xl">
-              No transactions in this range.
+              {t(tReport.stockMovement.noTransactions)}
             </Text>
           ) : (
             <BarChart
@@ -135,9 +142,9 @@ export const StockMovementReportPage = () => {
               data={chartData}
               dataKey="date"
               series={[
-                { name: "In", color: "teal.6" },
-                { name: "Out", color: "red.6" },
-                { name: "Adjust", color: "gray.6" },
+                { name: labelIn, color: "teal.6" },
+                { name: labelOut, color: "red.6" },
+                { name: labelAdjust, color: "gray.6" },
               ]}
               withLegend
               tickLine="y"

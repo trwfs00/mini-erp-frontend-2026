@@ -8,23 +8,27 @@ import { StockMovementChart } from "./components/StockMovementChart";
 import { PurchaseTrendChart } from "./components/PurchaseTrendChart";
 import { LowStockWarningList } from "./components/LowStockWarningList";
 import { DashboardSkeleton } from "./components/DashboardSkeleton";
+import { tMenu } from "@/consts/translations/tMenu";
+import { tDashboard } from "@/consts/translations/tDashboard";
+import { useTranslation } from "@/hooks/translation/useTranslation";
 
 export const DashboardPage = () => {
+  const t = useTranslation();
   const { dashboardData, isLoadingInitialData, reloadDashboard } =
     useLoadInitialData();
 
   return (
     <PageLayout
-      breadcrumbs={{ label: "Dashboard", path: ROUTE_PATHS.DASHBOARD }}
+      breadcrumbs={{ label: tMenu.dashboard, path: ROUTE_PATHS.DASHBOARD }}
     >
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
             <Title order={2} fw={700} c="gray.9">
-              Dashboard
+              {t(tDashboard.title)}
             </Title>
             <Text c="gray.6" fz="sm">
-              Overview of your business at a glance.
+              {t(tDashboard.description)}
             </Text>
           </Stack>
 
