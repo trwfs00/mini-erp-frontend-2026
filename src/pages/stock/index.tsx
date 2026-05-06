@@ -106,10 +106,10 @@ export const StockPage = () => {
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
-            <Title order={2} fw={700} c="gray.9">
+            <Title order={2} fw={700}>
               {t(tStockList.title)}
             </Title>
-            <Text c="gray.6" fz="sm">
+            <Text c="dimmed" fz="sm">
               {t(tStockList.description)}
             </Text>
           </Stack>
@@ -215,6 +215,7 @@ export const StockPage = () => {
           pagination={pagination}
           sortHandler={sortHandler}
           isLoading={isReloading}
+          isLoadingInitial={isLoadingInitialData}
         />
 
         <StockTransactionFormDrawer

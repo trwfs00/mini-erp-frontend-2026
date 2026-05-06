@@ -8,6 +8,11 @@
   border-right: 1px solid var(--mantine-color-gray-2);
 }
 
+:global([data-mantine-color-scheme="dark"]) .navbar {
+  background: var(--mantine-color-dark-7);
+  border-right-color: var(--mantine-color-dark-4);
+}
+
 .header {
   display: flex;
   align-items: center;
@@ -18,6 +23,10 @@
   margin: 0 calc(-1 * var(--mantine-spacing-sm)) var(--mantine-spacing-sm);
   height: 56px;
   flex-shrink: 0;
+}
+
+:global([data-mantine-color-scheme="dark"]) .header {
+  border-bottom-color: var(--mantine-color-dark-4);
 }
 
 .navbar[data-collapsed] .header {
@@ -36,7 +45,7 @@
   width: 30px;
   height: 30px;
   border-radius: 8px;
-  background: var(--mantine-color-blue-6);
+  background: var(--mantine-primary-color-filled);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,6 +59,10 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+:global([data-mantine-color-scheme="dark"]) .brandText {
+  color: var(--mantine-color-gray-0);
 }
 
 .toggleBtn {
@@ -71,6 +84,10 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+
+:global([data-mantine-color-scheme="dark"]) .footer {
+  border-top-color: var(--mantine-color-dark-4);
 }
 
 .link {
@@ -96,6 +113,10 @@
   transition: background-color 120ms ease, color 120ms ease;
 }
 
+:global([data-mantine-color-scheme="dark"]) .linkInner {
+  color: var(--mantine-color-dark-1);
+}
+
 .navbar[data-collapsed] .linkInner {
   justify-content: center;
   padding: 10px 0;
@@ -106,19 +127,28 @@
   color: var(--mantine-color-dark-9);
 }
 
+:global([data-mantine-color-scheme="dark"]) .linkInner:hover {
+  background-color: var(--mantine-color-dark-5);
+  color: var(--mantine-color-gray-0);
+}
+
 .linkInner:hover .linkIcon {
   color: var(--mantine-color-dark-9);
 }
 
+:global([data-mantine-color-scheme="dark"]) .linkInner:hover .linkIcon {
+  color: var(--mantine-color-gray-0);
+}
+
 .linkInner[data-active],
 .linkInner[data-active]:hover {
-  background: var(--mantine-color-blue-6);
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(34, 139, 230, 0.25);
+  background: var(--mantine-primary-color-filled);
+  color: var(--mantine-primary-color-contrast);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--mantine-primary-color-filled) 30%, transparent);
 }
 
 .linkInner[data-active] .linkIcon {
-  color: #fff;
+  color: var(--mantine-primary-color-contrast);
 }
 
 .linkIcon {
@@ -126,6 +156,10 @@
   width: 20px;
   height: 20px;
   flex-shrink: 0;
+}
+
+:global([data-mantine-color-scheme="dark"]) .linkIcon {
+  color: var(--mantine-color-dark-2);
 }
 
 .linkLabel {

@@ -3,6 +3,7 @@ import * as yup from "yup";
 export const loginSchema = yup.object({
   username: yup
     .string()
+    .trim()
     .required("Username is required")
     .min(1, "Please fill in all required fields"),
   password: yup

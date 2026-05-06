@@ -1,4 +1,5 @@
 import { $has401Error } from "@/stores/has401ErrorStore";
+import { addNotification } from "@/stores/notificationHistoryStore";
 import { notifications } from "@mantine/notifications";
 import classesError from "./css/CustomNotificationError.module.css";
 import classesInfo from "./css/CustomNotificationInfo.module.css";
@@ -69,6 +70,7 @@ export const NotificationUtil = {
       classNames: classesSuccess,
       autoClose: time,
     });
+    addNotification("success", title ?? "Success", message);
   },
   notifyError({ title, message, time }: NotificationParams) {
     const errorCode = title ? getErrorCodeFromTitle(title) : null;
@@ -128,6 +130,7 @@ export const NotificationUtil = {
         removeErrorNotification(id);
       },
     });
+    addNotification("error", title ?? "Error", message);
   },
   notifyInfo({ title, message, time }: NotificationParams) {
     resetErrorTracking();
@@ -139,6 +142,7 @@ export const NotificationUtil = {
       classNames: classesInfo,
       autoClose: time,
     });
+    addNotification("info", title ?? "Info", message);
   },
   notifyWarning({ title, message, time }: NotificationParams) {
     resetErrorTracking();
@@ -150,5 +154,6 @@ export const NotificationUtil = {
       classNames: classesWarning,
       autoClose: time,
     });
+    addNotification("warning", title ?? "Warning", message);
   },
 };

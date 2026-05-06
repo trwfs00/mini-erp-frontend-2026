@@ -5,6 +5,7 @@ import { SurfaceCard } from "@/components/SurfaceCard";
 import type { StockMovementDailyPoint } from "@/types/report/StockMovementReport";
 import { useTranslation } from "@/hooks/translation/useTranslation";
 import { tDashboard } from "@/consts/translations/tDashboard";
+import { formatDate } from "@/utils/DateUtil";
 
 type Props = {
   data: StockMovementDailyPoint[];
@@ -17,7 +18,7 @@ export const StockMovementChart: FC<Props> = ({ data, isLoading }) => {
   const labelOut = t(tDashboard.stockMovementChart.seriesOut);
   const labelAdjust = t(tDashboard.stockMovementChart.seriesAdjust);
   const chartData = data.map((d) => ({
-    date: d.date.slice(5),
+    date: formatDate(d.date).slice(0, 6),
     [labelIn]: d.in,
     [labelOut]: d.out,
     [labelAdjust]: d.adjust,
@@ -27,17 +28,17 @@ export const StockMovementChart: FC<Props> = ({ data, isLoading }) => {
     <SurfaceCard h="100%">
       <Stack gap="sm">
         <Stack gap={2}>
-          <Title order={4} fw={600} c="gray.9">
+          <Title order={4} fw={600}>
             {t(tDashboard.stockMovementChart.title)}
           </Title>
-          <Text fz="xs" c="gray.6">
+          <Text fz="xs" c="dimmed">
             {t(tDashboard.stockMovementChart.subtitle)}
           </Text>
         </Stack>
         {isLoading ? (
           <Skeleton h={260} radius="sm" />
         ) : chartData.length === 0 ? (
-          <Text c="gray.5" fz="sm" ta="center" py="xl">
+          <Text c="dimmed" fz="sm" ta="center" py="xl">
             {t(tDashboard.stockMovementChart.empty)}
           </Text>
         ) : (

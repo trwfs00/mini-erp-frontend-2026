@@ -52,10 +52,10 @@ export const ReportPage = () => {
     >
       <Stack gap="lg">
         <Stack gap={4}>
-          <Title order={2} fw={700} c="gray.9">
+          <Title order={2} fw={700}>
             {t(tMenu.report)}
           </Title>
-          <Text c="gray.6" fz="sm">
+          <Text c="dimmed" fz="sm">
             {t(tReport.pageDescription)}
           </Text>
         </Stack>

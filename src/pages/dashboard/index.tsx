@@ -7,15 +7,24 @@ import { SummaryCards } from "./components/SummaryCards";
 import { StockMovementChart } from "./components/StockMovementChart";
 import { PurchaseTrendChart } from "./components/PurchaseTrendChart";
 import { LowStockWarningList } from "./components/LowStockWarningList";
-import { DashboardSkeleton } from "./components/DashboardSkeleton";
 import { tMenu } from "@/consts/translations/tMenu";
 import { tDashboard } from "@/consts/translations/tDashboard";
 import { useTranslation } from "@/hooks/translation/useTranslation";
 
 export const DashboardPage = () => {
   const t = useTranslation();
-  const { dashboardData, isLoadingInitialData, reloadDashboard } =
-    useLoadInitialData();
+  const {
+    isLoadingInitialData,
+    summary,
+    movement,
+    trend,
+    lowStock,
+    isReloadingSummary,
+    isReloadingMovement,
+    isReloadingTrend,
+    isReloadingLowStock,
+    reloadAll,
+  } = useLoadInitialData();
 
   return (
     <PageLayout
@@ -24,45 +33,42 @@ export const DashboardPage = () => {
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
-            <Title order={2} fw={700} c="gray.9">
+            <Title order={2} fw={700}>
               {t(tDashboard.title)}
             </Title>
-            <Text c="gray.6" fz="sm">
+            <Text c="dimmed" fz="sm">
               {t(tDashboard.description)}
             </Text>
           </Stack>
 
-          <RefreshButton onClick={reloadDashboard} />
+          <RefreshButton onClick={reloadAll} />
         </Group>
 
-        {isLoadingInitialData && <DashboardSkeleton />}
+        <SummaryCards
+          summary={summary}
+          isLoading={isLoadingInitialData || isReloadingSummary}
+        />
 
-        {!isLoadingInitialData && dashboardData && (
-          <>
-            <SummaryCards summary={dashboardData.summary} />
-
-            <Grid align="stretch">
-              <Grid.Col span={{ base: 12, lg: 8 }}>
-                <StockMovementChart
-                  data={dashboardData.stock_movement}
-                  isLoading={isLoadingInitialData}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, lg: 4 }}>
-                <LowStockWarningList
-                  products={dashboardData.low_stock_products}
-                  isLoading={isLoadingInitialData}
-                />
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <PurchaseTrendChart
-                  data={dashboardData.purchase_trend}
-                  isLoading={isLoadingInitialData}
-                />
-              </Grid.Col>
-            </Grid>
-          </>
-        )}
+        <Grid align="stretch">
+          <Grid.Col span={{ base: 12, lg: 8 }}>
+            <StockMovementChart
+              data={movement ?? []}
+              isLoading={isLoadingInitialData || isReloadingMovement}
+            />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, lg: 4 }}>
+            <LowStockWarningList
+              products={lowStock ?? []}
+              isLoading={isLoadingInitialData || isReloadingLowStock}
+            />
+          </Grid.Col>
+          <Grid.Col span={12}>
+            <PurchaseTrendChart
+              data={trend ?? []}
+              isLoading={isLoadingInitialData || isReloadingTrend}
+            />
+          </Grid.Col>
+        </Grid>
       </Stack>
     </PageLayout>
   );

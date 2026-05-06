@@ -14,6 +14,7 @@ type Props = {
   pagination: UsePaginationStateReturnType;
   sortHandler: UseTableSortReturn;
   isLoading?: boolean;
+  isLoadingInitial?: boolean;
 };
 
 export const StockSummaryReportTable: FC<Props> = ({
@@ -21,6 +22,7 @@ export const StockSummaryReportTable: FC<Props> = ({
   pagination,
   sortHandler,
   isLoading,
+  isLoadingInitial,
 }) => {
   const t = useTranslation();
   const columns: DataTableColumn<StockSummaryRow>[] = [
@@ -30,7 +32,7 @@ export const StockSummaryReportTable: FC<Props> = ({
       sortable: true,
       width: 120,
       render: (r) => (
-        <Text fz="sm" c="gray.6">
+        <Text fz="sm" c="dimmed">
           {r.sku}
         </Text>
       ),
@@ -118,6 +120,7 @@ export const StockSummaryReportTable: FC<Props> = ({
       sortHandler={sortHandler}
       entityName={{ th: "สรุปสต็อก", en: "stock summary" }}
       fetching={isLoading}
+      isLoadingInitial={isLoadingInitial}
     />
   );
 };

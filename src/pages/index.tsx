@@ -23,7 +23,13 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { EyeIcon, EyeOffIcon, LockIcon, UserIcon } from "lucide-react";
+import {
+  EyeIcon,
+  EyeOffIcon,
+  LayoutGrid,
+  LockIcon,
+  UserIcon,
+} from "lucide-react";
 import { useTranslation } from "@/hooks/translation/useTranslation";
 import { tLogin } from "@/consts/translations/tLogin";
 
@@ -51,7 +57,22 @@ export const LoginPage: FC = () => {
     const validateError = form.validate();
     if (validateError.hasErrors) return;
 
-    const mockUser = await getMockAuthUser(values.username, values.remember_me);
+    // TODO: เปลี่ยนกลับเป็น AuthService.login เมื่อ integrate API จริง
+    // --- Real API (uncomment when backend is ready) ---
+    // const res = await AuthService.login(values as LoginRequest);
+    // if (!res.ok || !res.data) {
+    //   form.setErrors({ password: res.message || "Login failed" });
+    //   return;
+    // }
+    // LocalStorageUtil.saveAuthUser(res.data);
+    // $authUser.set(res.data);
+    // navigate(ROUTE_PATHS.DASHBOARD);
+
+    // --- Mock (remove when backend is ready) ---
+    const mockUser = await getMockAuthUser(
+      values.username.trim(),
+      values.remember_me,
+    );
     if (!mockUser) {
       form.setErrors({
         password: t(tLogin.invalidCredentials),
@@ -67,15 +88,35 @@ export const LoginPage: FC = () => {
     <Box w={420} px="xs">
       <title>{t(tLogin.pageTitle)}</title>
 
-      <Stack gap={4} mb="xl" align="center">
-        <LockIcon size={26} color="black" strokeWidth={2.25} />
+      <Stack gap={10} mb="xl" align="center">
+        <Box
+          style={{
+            width: 56,
+            height: 56,
+            borderRadius: 16,
+            background: "var(--mantine-primary-color-filled)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow:
+              "0 8px 24px color-mix(in srgb, var(--mantine-primary-color-filled) 30%, transparent)",
+          }}
+        >
+          <LayoutGrid
+            size={28}
+            strokeWidth={2.25}
+            color="var(--mantine-primary-color-contrast)"
+          />
+        </Box>
 
-        <Title order={1} fz={26} fw={700} lh={1.2} c="gray.9">
-          {t(tLogin.welcome)}
-        </Title>
-        <Text c="gray.6" fz="sm">
-          {t(tLogin.subtitle)}
-        </Text>
+        <Stack gap={2} align="center">
+          <Title order={1} fz={28} fw={700} lh={1.1}>
+            {t(tLogin.welcome)}
+          </Title>
+          <Text c="dimmed" fz="sm">
+            {t(tLogin.subtitle)}
+          </Text>
+        </Stack>
       </Stack>
 
       <form onSubmit={form.onSubmit(handleLogin)}>
@@ -115,7 +156,7 @@ export const LoginPage: FC = () => {
 
           <Divider
             label={
-              <Text fz="xs" c="gray.5">
+              <Text fz="xs" c="dimmed">
                 {t(tLogin.divider)}
               </Text>
             }
@@ -126,15 +167,15 @@ export const LoginPage: FC = () => {
           {/* TODO: ลบบล็อกนี้เมื่อ integrate API จริง */}
           <Text fz="xs" c="dimmed" ta="center" mt={-8}>
             {t(tLogin.mockHint)}{" "}
-            <Text component="span" fw={600} c="gray.7">
+            <Text component="span" fw={600} c="bright">
               admin
             </Text>{" "}
             /{" "}
-            <Text component="span" fw={600} c="gray.7">
+            <Text component="span" fw={600} c="bright">
               staff
             </Text>{" "}
             /{" "}
-            <Text component="span" fw={600} c="gray.7">
+            <Text component="span" fw={600} c="bright">
               viewer
             </Text>
             {t(tLogin.mockSuffix)}

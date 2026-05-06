@@ -17,6 +17,7 @@ type Props = {
   pagination: UsePaginationStateReturnType;
   sortHandler: UseTableSortReturn;
   isLoading?: boolean;
+  isLoadingInitial?: boolean;
 };
 
 export const PurchaseSummaryReportTable: FC<Props> = ({
@@ -24,6 +25,7 @@ export const PurchaseSummaryReportTable: FC<Props> = ({
   pagination,
   sortHandler,
   isLoading,
+  isLoadingInitial,
 }) => {
   const t = useTranslation();
   const columns: DataTableColumn<PurchaseSummaryRow>[] = [
@@ -72,7 +74,7 @@ export const PurchaseSummaryReportTable: FC<Props> = ({
       sortable: true,
       width: 140,
       render: (r) => (
-        <Text fz="sm" c="gray.6">
+        <Text fz="sm" c="dimmed">
           {formatDate(r.created_at)}
         </Text>
       ),
@@ -82,7 +84,7 @@ export const PurchaseSummaryReportTable: FC<Props> = ({
       title: t(tReport.purchaseSummary.thead.by),
       width: 160,
       render: (r) => (
-        <Text fz="sm" c="gray.6">
+        <Text fz="sm" c="dimmed">
           {r.created_by_name}
         </Text>
       ),
@@ -98,6 +100,7 @@ export const PurchaseSummaryReportTable: FC<Props> = ({
       sortHandler={sortHandler}
       entityName={tPurchaseOrder.purchaseOrder}
       fetching={isLoading}
+      isLoadingInitial={isLoadingInitial}
     />
   );
 };

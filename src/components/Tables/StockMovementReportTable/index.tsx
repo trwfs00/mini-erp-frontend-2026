@@ -15,6 +15,7 @@ type Props = {
   pagination: UsePaginationStateReturnType;
   sortHandler: UseTableSortReturn;
   isLoading?: boolean;
+  isLoadingInitial?: boolean;
 };
 
 export const StockMovementReportTable: FC<Props> = ({
@@ -22,6 +23,7 @@ export const StockMovementReportTable: FC<Props> = ({
   pagination,
   sortHandler,
   isLoading,
+  isLoadingInitial,
 }) => {
   const t = useTranslation();
   const columns: DataTableColumn<StockMovementRow>[] = [
@@ -31,7 +33,7 @@ export const StockMovementReportTable: FC<Props> = ({
       sortable: true,
       width: 130,
       render: (r) => (
-        <Text fz="sm" c="gray.6">
+        <Text fz="sm" c="dimmed">
           {formatDate(r.created_at)}
         </Text>
       ),
@@ -72,7 +74,7 @@ export const StockMovementReportTable: FC<Props> = ({
       title: t(tReport.stockMovement.thead.by),
       width: 160,
       render: (r) => (
-        <Text fz="sm" c="gray.6">
+        <Text fz="sm" c="dimmed">
           {r.created_by_name}
         </Text>
       ),
@@ -81,7 +83,7 @@ export const StockMovementReportTable: FC<Props> = ({
       accessor: "note",
       title: t(tReport.stockMovement.thead.note),
       render: (r) => (
-        <Text fz="sm" c="gray.6">
+        <Text fz="sm" c="dimmed">
           {r.note ?? r.reason ?? "-"}
         </Text>
       ),
@@ -97,6 +99,7 @@ export const StockMovementReportTable: FC<Props> = ({
       sortHandler={sortHandler}
       entityName={{ th: "การเคลื่อนไหว", en: "movement" }}
       fetching={isLoading}
+      isLoadingInitial={isLoadingInitial}
     />
   );
 };

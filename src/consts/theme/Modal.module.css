@@ -1,0 +1,44 @@
+.content {
+  border-radius: var(--mantine-radius-lg);
+  overflow: hidden;
+  box-shadow: 0 24px 64px -16px rgba(0, 0, 0, 0.18),
+    0 8px 24px -12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--mantine-color-default-border);
+}
+
+:global([data-mantine-color-scheme="dark"]) .content {
+  box-shadow: 0 24px 64px -16px rgba(0, 0, 0, 0.6),
+    0 8px 24px -12px rgba(0, 0, 0, 0.4);
+}
+
+.header {
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid var(--mantine-color-default-border);
+  background-color: var(--mantine-color-body);
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.body {
+  padding: 20px 24px;
+}
+
+.close {
+  border-radius: 999px;
+}
+
+.close:hover {
+  background-color: var(--mantine-color-gray-1);
+}
+
+:global([data-mantine-color-scheme="dark"]) .close:hover {
+  background-color: var(--mantine-color-dark-5);
+}
+
+.overlay {
+  backdrop-filter: blur(2px);
+}

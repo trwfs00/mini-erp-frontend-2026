@@ -15,6 +15,7 @@ type Props = {
   pagination: UsePaginationStateReturnType;
   sortHandler: UseTableSortReturn;
   isLoading?: boolean;
+  isLoadingInitial?: boolean;
 };
 
 export const StockTransactionTable: FC<Props> = ({
@@ -22,6 +23,7 @@ export const StockTransactionTable: FC<Props> = ({
   pagination,
   sortHandler,
   isLoading,
+  isLoadingInitial,
 }) => {
   const t = useTranslation();
   const columns: DataTableColumn<StockTransaction>[] = [
@@ -71,7 +73,7 @@ export const StockTransactionTable: FC<Props> = ({
               : `+${quantity}`;
         const negative = type === "OUT" || quantity < 0;
         return (
-          <Text fw={600} c={negative ? "red.7" : "gray.9"}>
+          <Text fw={600} c={negative ? "red.7" : "teal.7"}>
             {signed}
           </Text>
         );
@@ -89,7 +91,7 @@ export const StockTransactionTable: FC<Props> = ({
       title: t(tStockList.thead.by),
       width: 160,
       render: ({ created_by_name }) => (
-        <Text fz="sm" c="gray.6">
+        <Text fz="sm" c="dimmed">
           {created_by_name}
         </Text>
       ),
@@ -114,6 +116,7 @@ export const StockTransactionTable: FC<Props> = ({
       sortHandler={sortHandler}
       entityName={tStockList.transaction}
       fetching={isLoading}
+      isLoadingInitial={isLoadingInitial}
     />
   );
 };

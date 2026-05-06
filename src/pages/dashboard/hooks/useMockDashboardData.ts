@@ -1,29 +1,15 @@
-import type { DashboardDetail } from "@/types/dashboard/DashboardDetail";
+// TODO: ลบไฟล์นี้เมื่อ integrate API จริง
+import type {
+  DashboardSummary,
+  LowStockProduct,
+} from "@/types/dashboard/DashboardDetail";
+import type { StockMovementDailyPoint } from "@/types/report/StockMovementReport";
+import type { PurchaseTrendPoint } from "@/types/report/PurchaseSummary";
 import { toIsoDate } from "@/utils/DateUtil";
 import { MOCK_DELAY_MS } from "@/consts/api/mockDelay";
 
-export type GetMockDashboardResponse = {
-  data: DashboardDetail;
-};
-
-export const EMPTY_DATA: GetMockDashboardResponse = {
-  data: {
-    summary: {
-      total_products: 0,
-      total_stock_value: 0,
-      total_selling_value: 0,
-      low_stock_count: 0,
-      pending_po_count: 0,
-      received_po_this_month: 0,
-    },
-    stock_movement: [],
-    purchase_trend: [],
-    low_stock_products: [],
-  },
-};
-
-const generateMovementData = () => {
-  const data = [];
+const generateMovementData = (): StockMovementDailyPoint[] => {
+  const data: StockMovementDailyPoint[] = [];
   const now = new Date();
   for (let i = 13; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
@@ -37,8 +23,8 @@ const generateMovementData = () => {
   return data;
 };
 
-const generateTrendData = () => {
-  const data = [];
+const generateTrendData = (): PurchaseTrendPoint[] => {
+  const data: PurchaseTrendPoint[] = [];
   const now = new Date();
   for (let i = 5; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -52,72 +38,90 @@ const generateTrendData = () => {
   return data;
 };
 
-const MOCK_DASHBOARD_DATA: GetMockDashboardResponse = {
-  data: {
-    summary: {
-      total_products: 124,
-      total_stock_value: 1250000,
-      total_selling_value: 1850000,
-      low_stock_count: 12,
-      pending_po_count: 5,
-      received_po_this_month: 8,
-    },
-    stock_movement: generateMovementData(),
-    purchase_trend: generateTrendData(),
-    low_stock_products: [
-      {
-        product_id: "p1",
-        sku: "SKU001",
-        name: "Premium Coffee Beans",
-        current_stock: 5,
-        min_stock: 20,
-        unit: "kg",
-      },
-      {
-        product_id: "p2",
-        sku: "SKU012",
-        name: "Organic Green Tea",
-        current_stock: 2,
-        min_stock: 15,
-        unit: "box",
-      },
-      {
-        product_id: "p3",
-        sku: "SKU045",
-        name: "Espresso Maker Filter",
-        current_stock: 8,
-        min_stock: 50,
-        unit: "pcs",
-      },
-      {
-        product_id: "p4",
-        sku: "SKU088",
-        name: "Sugar Syrup (Vanilla)",
-        current_stock: 3,
-        min_stock: 10,
-        unit: "bottle",
-      },
-      {
-        product_id: "p5",
-        sku: "SKU102",
-        name: "Paper Cups (12oz)",
-        current_stock: 100,
-        min_stock: 500,
-        unit: "pcs",
-      },
-    ],
-  },
+const MOCK_SUMMARY: DashboardSummary = {
+  total_products: 124,
+  total_stock_value: 1250000,
+  total_selling_value: 1850000,
+  low_stock_count: 12,
+  pending_po_count: 5,
+  received_po_this_month: 8,
 };
 
-export const useMockDashboardData = () => {
-  const getMockDashboardStats = async (): Promise<GetMockDashboardResponse> => {
-    await new Promise((resolve) => setTimeout(resolve, MOCK_DELAY_MS));
+const MOCK_LOW_STOCK: LowStockProduct[] = [
+  {
+    product_id: "p1",
+    sku: "SKU001",
+    name: "Premium Coffee Beans",
+    current_stock: 5,
+    min_stock: 20,
+    unit: "kg",
+  },
+  {
+    product_id: "p2",
+    sku: "SKU012",
+    name: "Organic Green Tea",
+    current_stock: 2,
+    min_stock: 15,
+    unit: "box",
+  },
+  {
+    product_id: "p3",
+    sku: "SKU045",
+    name: "Espresso Maker Filter",
+    current_stock: 8,
+    min_stock: 50,
+    unit: "pcs",
+  },
+  {
+    product_id: "p4",
+    sku: "SKU088",
+    name: "Sugar Syrup (Vanilla)",
+    current_stock: 3,
+    min_stock: 10,
+    unit: "bottle",
+  },
+  {
+    product_id: "p5",
+    sku: "SKU102",
+    name: "Paper Cups (12oz)",
+    current_stock: 100,
+    min_stock: 500,
+    unit: "pcs",
+  },
+];
 
-    if (!MOCK_DASHBOARD_DATA.data) {
-      return EMPTY_DATA;
-    }
-    return MOCK_DASHBOARD_DATA;
+const delay = () =>
+  new Promise<void>((resolve) => setTimeout(resolve, MOCK_DELAY_MS));
+
+export const useMockDashboardData = () => {
+  const getMockSummary = async (): Promise<{ data: DashboardSummary }> => {
+    await delay();
+    return { data: MOCK_SUMMARY };
   };
 
-  return { getMockDashboardStats };
+  const getMockStockMovement = async (): Promise<{
+    data: StockMovementDailyPoint[];
+  }> => {
+    await delay();
+    return { data: generateMovementData() };
+  };
+
+  const getMockPurchaseTrend = async (): Promise<{
+    data: PurchaseTrendPoint[];
+  }> => {
+    await delay();
+    return { data: generateTrendData() };
+  };
+
+  const getMockLowStock = async (): Promise<{ data: LowStockProduct[] }> => {
+    await delay();
+    return { data: MOCK_LOW_STOCK };
+  };
+
+  return {
+    getMockSummary,
+    getMockStockMovement,
+    getMockPurchaseTrend,
+    getMockLowStock,
+  };
 };

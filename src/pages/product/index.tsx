@@ -104,10 +104,10 @@ export const ProductsPage = () => {
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
-            <Title order={2} fw={700} c="gray.9">
+            <Title order={2} fw={700}>
               {t(tProductList.title)}
             </Title>
-            <Text c="gray.6" fz="sm">
+            <Text c="dimmed" fz="sm">
               {t(tProductList.description)}
             </Text>
           </Stack>
@@ -149,6 +149,7 @@ export const ProductsPage = () => {
           }
           onDelete={canDelete ? handleDelete : undefined}
           isLoading={isReloading}
+          isLoadingInitial={isLoadingInitialData}
         />
 
         <ProductFormDrawer

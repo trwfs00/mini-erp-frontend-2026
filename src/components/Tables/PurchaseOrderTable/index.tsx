@@ -18,6 +18,7 @@ type Props = {
   sortHandler: UseTableSortReturn;
   onView: (id: string) => void;
   isLoading?: boolean;
+  isLoadingInitial?: boolean;
 };
 
 export const PurchaseOrderTable: FC<Props> = ({
@@ -26,6 +27,7 @@ export const PurchaseOrderTable: FC<Props> = ({
   sortHandler,
   onView,
   isLoading,
+  isLoadingInitial,
 }) => {
   const t = useTranslation();
   const columns: DataTableColumn<PurchaseOrderSummary>[] = [
@@ -83,7 +85,7 @@ export const PurchaseOrderTable: FC<Props> = ({
         <Group gap={8} justify="center">
           <ActionIcon
             variant="subtle"
-            color="blue"
+           
             onClick={(e) => {
               e.stopPropagation();
               onView(p.purchase_order_id);
@@ -105,6 +107,7 @@ export const PurchaseOrderTable: FC<Props> = ({
       sortHandler={sortHandler}
       entityName={tPurchaseOrder.purchaseOrder}
       fetching={isLoading}
+      isLoadingInitial={isLoadingInitial}
       onRowClick={({ record }) => onView(record.purchase_order_id)}
     />
   );

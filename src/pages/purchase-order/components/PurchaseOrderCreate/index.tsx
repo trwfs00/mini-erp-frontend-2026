@@ -32,6 +32,7 @@ import { useLoadInitialData } from "./hooks/useLoadInitialData";
 import { tMenu } from "@/consts/translations/tMenu";
 import { tPurchaseOrder } from "@/consts/translations/tPurchaseOrder";
 import { useTranslation } from "@/hooks/translation/useTranslation";
+import { PurchaseOrderCreateSkeleton } from "./components/PurchaseOrderCreateSkeleton";
 
 export const PurchaseOrderCreatePage = () => {
   const t = useTranslation();
@@ -147,10 +148,7 @@ export const PurchaseOrderCreatePage = () => {
   ));
 
   return (
-    <PageLayout
-      isLoading={isLoadingInitialData}
-      breadcrumbs={{ label: tMenu.create }}
-    >
+    <PageLayout breadcrumbs={{ label: tMenu.create }}>
       <Stack gap="lg">
         <Group justify="space-between">
           <Group gap="sm">
@@ -165,7 +163,7 @@ export const PurchaseOrderCreatePage = () => {
               <Title order={2} fw={700}>
                 {t(tPurchaseOrder.create.title)}
               </Title>
-              <Text c="gray.6" fz="sm">
+              <Text c="dimmed" fz="sm">
                 {t(tPurchaseOrder.create.description)}
               </Text>
             </Stack>
@@ -179,72 +177,82 @@ export const PurchaseOrderCreatePage = () => {
           </Button>
         </Group>
 
-        <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Stack gap="md">
-            <Paper withBorder p="md" radius="md">
-              <Group grow align="flex-start">
-                <TextInput
-                  label={t(tPurchaseOrder.create.orderNumberLabel)}
-                  placeholder={t(tPurchaseOrder.create.orderNumberPlaceholder)}
-                  {...form.getInputProps("order_number")}
-                  required
-                />
-                <Select
-                  label={t(tPurchaseOrder.create.supplierLabel)}
-                  placeholder={t(tPurchaseOrder.create.supplierPlaceholder)}
-                  data={supplierOptions}
-                  {...form.getInputProps("supplier_id")}
-                  searchable
-                  required
-                />
-              </Group>
-            </Paper>
+        {isLoadingInitialData ? (
+          <PurchaseOrderCreateSkeleton />
+        ) : (
+          <form onSubmit={form.onSubmit(handleSubmit)}>
+            <Stack gap="md">
+              <Paper withBorder p="md" radius="md">
+                <Group grow align="flex-start">
+                  <TextInput
+                    label={t(tPurchaseOrder.create.orderNumberLabel)}
+                    placeholder={t(
+                      tPurchaseOrder.create.orderNumberPlaceholder,
+                    )}
+                    {...form.getInputProps("order_number")}
+                    required
+                  />
+                  <Select
+                    label={t(tPurchaseOrder.create.supplierLabel)}
+                    placeholder={t(tPurchaseOrder.create.supplierPlaceholder)}
+                    data={supplierOptions}
+                    {...form.getInputProps("supplier_id")}
+                    searchable
+                    required
+                  />
+                </Group>
+              </Paper>
 
-            <Paper withBorder radius="md">
-              <Table verticalSpacing="sm">
-                <Table.Thead>
-                  <Table.Tr>
-                    <Table.Th>{t(tPurchaseOrder.thead.product)}</Table.Th>
-                    <Table.Th w={120}>
-                      {t(tPurchaseOrder.thead.quantity)}
-                    </Table.Th>
-                    <Table.Th w={170}>
-                      {t(tPurchaseOrder.thead.unitPrice)}
-                    </Table.Th>
-                    <Table.Th w={150} ta="right">
-                      {t(tPurchaseOrder.thead.subtotal)}
-                    </Table.Th>
-                    <Table.Th w={80} ta="center"></Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>{itemRows}</Table.Tbody>
-              </Table>
+              <Paper withBorder radius="md">
+                <Table verticalSpacing="sm">
+                  <Table.Thead>
+                    <Table.Tr>
+                      <Table.Th>{t(tPurchaseOrder.thead.product)}</Table.Th>
+                      <Table.Th w={120}>
+                        {t(tPurchaseOrder.thead.quantity)}
+                      </Table.Th>
+                      <Table.Th w={170}>
+                        {t(tPurchaseOrder.thead.unitPrice)}
+                      </Table.Th>
+                      <Table.Th w={150} ta="right">
+                        {t(tPurchaseOrder.thead.subtotal)}
+                      </Table.Th>
+                      <Table.Th w={80} ta="center"></Table.Th>
+                    </Table.Tr>
+                  </Table.Thead>
+                  <Table.Tbody>{itemRows}</Table.Tbody>
+                </Table>
 
-              <Divider />
+                <Divider />
 
-              <Group justify="space-between" p="md">
-                <Button
-                  variant="light"
-                  leftSection={<Plus size={16} />}
-                  onClick={handleAddItem}
-                >
-                  {t(tPurchaseOrder.create.addItem)}
-                </Button>
+                <Group justify="space-between" p="md">
+                  <Button
+                    variant="light"
+                    leftSection={<Plus size={16} />}
+                    onClick={handleAddItem}
+                  >
+                    {t(tPurchaseOrder.create.addItem)}
+                  </Button>
 
-                <Stack gap={4} align="flex-end">
-                  <Group gap="xl">
-                    <Text fw={600} size="lg">
-                      {t(tPurchaseOrder.create.totalAmount)}:
-                    </Text>
-                    <Text fw={700} size="xl" c="blue.7">
-                      {formatCurrency(calculateTotal())}
-                    </Text>
-                  </Group>
-                </Stack>
-              </Group>
-            </Paper>
-          </Stack>
-        </form>
+                  <Stack gap={4} align="flex-end">
+                    <Group gap="xl">
+                      <Text fw={600} size="lg">
+                        {t(tPurchaseOrder.create.totalAmount)}:
+                      </Text>
+                      <Text
+                        fw={700}
+                        size="xl"
+                        c="var(--mantine-primary-color-filled)"
+                      >
+                        {formatCurrency(calculateTotal())}
+                      </Text>
+                    </Group>
+                  </Stack>
+                </Group>
+              </Paper>
+            </Stack>
+          </form>
+        )}
       </Stack>
     </PageLayout>
   );

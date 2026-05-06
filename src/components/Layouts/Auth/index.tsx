@@ -1,7 +1,7 @@
 import { useEffect, type FC } from "react";
 import { $authUser } from "@/stores/authUserStore";
 import { useStore } from "@nanostores/react";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { useDisclosure, useLocalStorage, useMediaQuery } from "@mantine/hooks";
 import { useSidebarToggle } from "./hooks/useSidebarToggle";
 import { useWatchLocalStorage } from "@/hooks/localStorage/useWatchLocalStorage";
 import { LOCAL_STORAGE_KEYS } from "@/consts/keys/localStorageKeys";
@@ -13,12 +13,18 @@ import { AppShell } from "@mantine/core";
 import { Outlet } from "react-router-dom";
 import { AppSidebar } from "./components/AppSidebar";
 import { AppHeader } from "./components/AppHeader";
+import { CommandPalette } from "@/components/CommandPalette";
 
 export const AuthLayout: FC = () => {
   const authUser = useStore($authUser);
   const debugMode = useStore($authBypass);
   const [mobileOpened, { toggle: toggleMobile, close: closeMobile }] = useDisclosure(false);
-  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
+  const [desktopOpened, setDesktopOpened] = useLocalStorage<boolean>({
+    key: LOCAL_STORAGE_KEYS.SIDEBAR_OPEN,
+    defaultValue: true,
+    getInitialValueInEffect: false,
+  });
+  const toggleDesktop = () => setDesktopOpened((v) => !v);
   const isMobile = useMediaQuery("(max-width: 48em)");
 
   const checkedAuth = debugMode || !!authUser;
@@ -95,7 +101,7 @@ export const AuthLayout: FC = () => {
         breakpoint: "sm",
         collapsed: { mobile: !mobileOpened },
       }}
-      bg="#f5f6fa"
+      bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))"
       padding="md"
     >
       <AppShell.Header>
@@ -113,6 +119,8 @@ export const AuthLayout: FC = () => {
       <AppShell.Main>
         <Outlet />
       </AppShell.Main>
+
+      <CommandPalette />
     </AppShell>
   );
 };

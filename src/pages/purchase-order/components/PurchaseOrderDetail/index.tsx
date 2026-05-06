@@ -30,6 +30,7 @@ import { $authUser } from "@/stores/authUserStore";
 import { useStore } from "@nanostores/react";
 import { NotificationUtil } from "@/utils/NotificationUtil";
 import { useLoadInitialData } from "./hooks/useLoadInitialData";
+import { PurchaseOrderDetailSkeleton } from "./components/PurchaseOrderDetailSkeleton";
 
 export const PurchaseOrderDetailPage = () => {
   const t = useTranslation();
@@ -86,13 +87,15 @@ export const PurchaseOrderDetailPage = () => {
 
   return (
     <PageLayout
-      isLoading={isLoadingInitialData}
       breadcrumbs={{
         label: order?.purchase_order_id
           ? { th: order.purchase_order_id, en: order.purchase_order_id }
           : tMenu.detail,
       }}
     >
+      {isLoadingInitialData && (
+        <PurchaseOrderDetailSkeleton onBack={() => navigate(-1)} />
+      )}
       {order && (
         <Stack gap="lg">
           <Group justify="space-between">
@@ -111,7 +114,7 @@ export const PurchaseOrderDetailPage = () => {
                   </Title>
                   <PurchaseOrderStatusBadge status={order.status} />
                 </Group>
-                <Text c="gray.6" fz="sm">
+                <Text c="dimmed" fz="sm">
                   {t(
                     tPurchaseOrder.detail.createdOnBy(
                       formatDate(order.created_at),
@@ -179,7 +182,7 @@ export const PurchaseOrderDetailPage = () => {
                       <Table.Tr key={item.purchase_order_item_id}>
                         <Table.Td>
                           <Text fw={500}>{item.product_name}</Text>
-                          <Text size="xs" c="gray.6">
+                          <Text size="xs" c="dimmed">
                             {item.product_id}
                           </Text>
                         </Table.Td>
@@ -201,7 +204,11 @@ export const PurchaseOrderDetailPage = () => {
                       <Text fw={600} size="lg">
                         {t(tPurchaseOrder.create.totalAmount)}:
                       </Text>
-                      <Text fw={700} size="xl" c="blue.7">
+                      <Text
+                        fw={700}
+                        size="xl"
+                        c="var(--mantine-primary-color-filled)"
+                      >
                         {formatCurrency(order.total_amount)}
                       </Text>
                     </Group>
@@ -218,7 +225,7 @@ export const PurchaseOrderDetailPage = () => {
                   </Title>
                   <Stack gap="xs">
                     <Group justify="space-between">
-                      <Text size="sm" c="gray.6">
+                      <Text size="sm" c="dimmed">
                         {t(tPurchaseOrder.detail.name)}:
                       </Text>
                       <Text size="sm" fw={500}>
@@ -226,7 +233,7 @@ export const PurchaseOrderDetailPage = () => {
                       </Text>
                     </Group>
                     <Group justify="space-between">
-                      <Text size="sm" c="gray.6">
+                      <Text size="sm" c="dimmed">
                         {t(tPurchaseOrder.detail.id)}:
                       </Text>
                       <Text size="sm" fw={500}>
@@ -236,7 +243,12 @@ export const PurchaseOrderDetailPage = () => {
                   </Stack>
                 </Paper>
 
-                <Paper withBorder p="md" radius="md" bg="gray.0">
+                <Paper
+                  withBorder
+                  p="md"
+                  radius="md"
+                  bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))"
+                >
                   <Title order={4} mb="sm">
                     {t(tPurchaseOrder.detail.timeline)}
                   </Title>
