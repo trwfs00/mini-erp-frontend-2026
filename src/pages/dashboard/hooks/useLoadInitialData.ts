@@ -32,21 +32,21 @@ export const useLoadInitialData = () => {
   const callGetMovement = async (): Promise<boolean> => {
     const res = await DashboardService.getStockMovement();
     if (!res.ok) return false;
-    setMovement(res.data);
+    setMovement(res.data.stock_movements);
     return true;
   };
 
   const callGetTrend = async (): Promise<boolean> => {
     const res = await DashboardService.getPurchaseTrend();
     if (!res.ok) return false;
-    setTrend(res.data);
+    setTrend(res.data.trends);
     return true;
   };
 
   const callGetLowStock = async (): Promise<boolean> => {
     const res = await DashboardService.getLowStock();
     if (!res.ok) return false;
-    setLowStock(res.data);
+    setLowStock(res.data.items);
     return true;
   };
 

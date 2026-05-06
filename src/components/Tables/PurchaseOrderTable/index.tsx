@@ -32,11 +32,11 @@ export const PurchaseOrderTable: FC<Props> = ({
   const t = useTranslation();
   const columns: DataTableColumn<PurchaseOrderSummary>[] = [
     {
-      accessor: "purchase_order_id",
+      accessor: "order_number",
       title: t(tPurchaseOrder.thead.poNumber),
       sortable: true,
       width: 150,
-      render: (p) => <Text fw={500}>{p.purchase_order_id}</Text>,
+      render: (p) => <Text fw={500}>{p.order_number}</Text>,
     },
     {
       accessor: "supplier_name",
@@ -85,7 +85,6 @@ export const PurchaseOrderTable: FC<Props> = ({
         <Group gap={8} justify="center">
           <ActionIcon
             variant="subtle"
-           
             onClick={(e) => {
               e.stopPropagation();
               onView(p.purchase_order_id);

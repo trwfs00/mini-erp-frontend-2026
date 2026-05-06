@@ -16,9 +16,9 @@ export const PurchaseOrderService = {
     request: GetPurchaseOrderListRequest,
   ): Promise<ApiReturn<GetPurchaseOrderListResponse>> {
     return AxiosUtil.createRequest<GetPurchaseOrderListResponse>({
-      url: "/purchase-orders",
-      method: "GET",
-      params: request,
+      url: "/purchase-orders/list",
+      method: "POST",
+      data: request,
     });
   },
 

@@ -9,11 +9,12 @@ export const useStockSummary = () => {
   const fetchSummary = async (productId: string): Promise<void> => {
     setIsLoading(true);
     const response = await StockService.getStockSummary(productId);
-    if (response.ok) {
-      setSummary(response.data);
-    } else {
+    if (!response.ok) {
       setSummary(null);
+      setIsLoading(false);
+      return;
     }
+    setSummary(response.data);
     setIsLoading(false);
   };
 

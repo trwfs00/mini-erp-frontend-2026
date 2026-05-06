@@ -85,16 +85,16 @@ export const StockPage = () => {
       );
     }
 
-    if (response.ok) {
-      await reloadTransactions();
-      setDrawerOpened(false);
-    } else {
+    if (!response.ok) {
       NotificationUtil.notifyError({
         title: t(tBasic.notifyCreateError(t(tStockList.transaction))),
         message: response.message,
       });
+      setIsSaving(false);
+      return;
     }
-
+    await reloadTransactions();
+    setDrawerOpened(false);
     setIsSaving(false);
   };
 

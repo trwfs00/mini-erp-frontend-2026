@@ -88,17 +88,18 @@ export const PurchaseOrderCreatePage = () => {
       })),
     });
 
-    if (response.ok) {
-      NotificationUtil.notifySuccess({
-        title: t(tPurchaseOrder.create.notifyCreateSuccess),
-      });
-      navigate(ROUTE_PATHS.PURCHASE_ORDERS);
-    } else {
+    if (!response.ok) {
       NotificationUtil.notifyError({
         title: t(tPurchaseOrder.create.notifyCreateError),
         message: response.message,
       });
+      setIsSubmitting(false);
+      return;
     }
+    NotificationUtil.notifySuccess({
+      title: t(tPurchaseOrder.create.notifyCreateSuccess),
+    });
+    navigate(ROUTE_PATHS.PURCHASE_ORDERS);
     setIsSubmitting(false);
   };
 

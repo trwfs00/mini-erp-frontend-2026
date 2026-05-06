@@ -15,8 +15,8 @@ export const StockService = {
   ): Promise<ApiReturn<GetStockListResponse>> {
     return AxiosUtil.createRequest<GetStockListResponse>({
       url: "/stock/list",
-      method: "GET",
-      params: request,
+      method: "POST",
+      data: request,
     });
   },
 
@@ -53,7 +53,7 @@ export const StockService = {
     productId: string,
   ): Promise<ApiReturn<StockSummaryResponse>> {
     return AxiosUtil.createRequest<StockSummaryResponse>({
-      url: `/products/${productId}/stock-summary`,
+      url: `/stock/${productId}/stock-summary`,
       method: "GET",
     });
   },

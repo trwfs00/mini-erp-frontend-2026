@@ -17,8 +17,8 @@ export const CategoryService = {
   ): Promise<ApiReturn<GetCategoryListResponse>> {
     return AxiosUtil.createRequest<GetCategoryListResponse>({
       url: "/category/list",
-      method: "GET",
-      params: request,
+      method: "POST",
+      data: request,
     });
   },
 

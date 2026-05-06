@@ -35,7 +35,7 @@ export const CategoryPage = () => {
   const [isSaving, setIsSaving] = useState(false);
 
   const pagination = usePaginationState();
-  const sortHandler = useTableSort();
+  const sortHandler = useTableSort("name", "asc");
 
   const { categories, isLoadingInitialData, isReloading, reloadCategoryList } =
     useLoadInitialData({
@@ -70,7 +70,9 @@ export const CategoryPage = () => {
             title: t(tBasic.notifyDeleteError(t(tCategoryList.category))),
             message: response.message,
           });
+          return;
         }
+        await reloadCategoryList();
       },
     });
   };
@@ -90,7 +92,11 @@ export const CategoryPage = () => {
         title: t(errFn(t(tCategoryList.category))),
         message: response.message,
       });
+      setIsSaving(false);
+      return;
     }
+    await reloadCategoryList();
+    setDrawerOpened(false);
     setIsSaving(false);
   };
 

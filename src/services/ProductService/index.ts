@@ -16,9 +16,9 @@ export const ProductService = {
     request: GetProductListRequest,
   ): Promise<ApiReturn<GetProductListResponse>> {
     return AxiosUtil.createRequest<GetProductListResponse>({
-      url: "/product",
-      method: "GET",
-      params: request,
+      url: "/product/list",
+      method: "POST",
+      data: request,
     });
   },
 

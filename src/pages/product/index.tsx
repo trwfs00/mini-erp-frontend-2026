@@ -62,14 +62,14 @@ export const ProductsPage = () => {
       confirmProps: { color: "red" },
       onConfirm: async () => {
         const response = await ProductService.deleteProduct(product.product_id);
-        if (response.ok) {
-          await reloadProductList();
-        } else {
+        if (!response.ok) {
           NotificationUtil.notifyError({
             title: t(tBasic.notifyDeleteError(t(tProductList.product))),
             message: response.message,
           });
+          return;
         }
+        await reloadProductList();
       },
     });
   };
@@ -81,10 +81,7 @@ export const ProductsPage = () => {
       product_id: selectedProduct?.product_id,
     } as SaveProductRequest);
 
-    if (response.ok) {
-      await reloadProductList();
-      setDrawerOpened(false);
-    } else {
+    if (!response.ok) {
       const errFn = selectedProduct
         ? tBasic.notifyUpdateError
         : tBasic.notifyCreateError;
@@ -92,7 +89,11 @@ export const ProductsPage = () => {
         title: t(errFn(t(tProductList.product))),
         message: response.message,
       });
+      setIsSaving(false);
+      return;
     }
+    await reloadProductList();
+    setDrawerOpened(false);
     setIsSaving(false);
   };
 
