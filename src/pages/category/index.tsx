@@ -88,16 +88,15 @@ export const CategoryPage = () => {
 
   return (
     <PageLayout
-      isLoading={isLoadingInitialData}
       breadcrumbs={{ label: "Categories", path: ROUTE_PATHS.CATEGORY }}
     >
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
-            <Title order={2} fw={700} c="gray.9">
+            <Title order={2} fw={700}>
               Categories
             </Title>
-            <Text c="gray.6" fz="sm">
+            <Text c="dimmed" fz="sm">
               Organize products into categories.
             </Text>
           </Stack>
@@ -139,6 +138,7 @@ export const CategoryPage = () => {
           }
           onDelete={canDelete ? handleDelete : undefined}
           isLoading={isReloading}
+          isLoadingInitial={isLoadingInitialData}
         />
 
         <CategoryFormDrawer

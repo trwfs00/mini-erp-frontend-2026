@@ -1,5 +1,4 @@
 import { Alert, Group, SimpleGrid, Stack, Text } from "@mantine/core";
-import { AppLoadingOverlay } from "@/components/AppLoadingOverlay";
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { RefreshButton } from "@/components/RefreshButton";
@@ -28,9 +27,8 @@ export const StockSummaryReportPage = () => {
 
   return (
     <Stack gap="md" pos="relative" mih={300}>
-      <AppLoadingOverlay visible={isLoadingInitialData} />
       <Group justify="space-between" wrap="wrap" align="flex-end">
-        <Text fz="sm" c="gray.6">
+        <Text fz="sm" c="dimmed">
           Snapshot of current stock with cost and selling valuation.
         </Text>
         <Group>
@@ -63,32 +61,35 @@ export const StockSummaryReportPage = () => {
         </Alert>
       )}
 
-      {totals && (
-        <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="md">
-          <StatTile
-            label="Total Products"
-            value={totals.total_products.toLocaleString()}
-          />
-          <StatTile
-            label="Cost Value"
-            value={formatCurrency(totals.total_cost_value)}
-          />
-          <StatTile
-            label="Selling Value"
-            value={formatCurrency(totals.total_selling_value)}
-          />
-          <StatTile
-            label="Low Stock"
-            value={`${totals.low_stock_count} items`}
-          />
-        </SimpleGrid>
-      )}
+      <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="md">
+        <StatTile
+          label="Total Products"
+          value={totals?.total_products.toLocaleString() ?? "-"}
+          isLoading={isLoadingInitialData}
+        />
+        <StatTile
+          label="Cost Value"
+          value={totals ? formatCurrency(totals.total_cost_value) : "-"}
+          isLoading={isLoadingInitialData}
+        />
+        <StatTile
+          label="Selling Value"
+          value={totals ? formatCurrency(totals.total_selling_value) : "-"}
+          isLoading={isLoadingInitialData}
+        />
+        <StatTile
+          label="Low Stock"
+          value={totals ? `${totals.low_stock_count} items` : "-"}
+          isLoading={isLoadingInitialData}
+        />
+      </SimpleGrid>
 
       <StockSummaryReportTable
         records={rows}
         pagination={pagination}
         sortHandler={sortHandler}
         isLoading={isReloading}
+        isLoadingInitial={isLoadingInitialData}
       />
     </Stack>
   );

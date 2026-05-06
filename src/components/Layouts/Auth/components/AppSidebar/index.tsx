@@ -43,7 +43,11 @@ export const AppSidebar: FC<AppSidebarProps> = ({
         {showLabels && (
           <div className={classes.brand}>
             <div className={classes.logo}>
-              <LayoutGrid size={16} strokeWidth={2.25} color="#fff" />
+              <LayoutGrid
+                size={16}
+                strokeWidth={2.25}
+                color="var(--mantine-primary-color-contrast)"
+              />
             </div>
             <span className={classes.brandText}>Mini ERP</span>
           </div>

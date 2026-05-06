@@ -90,16 +90,15 @@ export const ProductsPage = () => {
 
   return (
     <PageLayout
-      isLoading={isLoadingInitialData}
       breadcrumbs={{ label: "Products", path: ROUTE_PATHS.PRODUCT }}
     >
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
-            <Title order={2} fw={700} c="gray.9">
+            <Title order={2} fw={700}>
               Products
             </Title>
-            <Text c="gray.6" fz="sm">
+            <Text c="dimmed" fz="sm">
               Manage your product catalog.
             </Text>
           </Stack>
@@ -141,6 +140,7 @@ export const ProductsPage = () => {
           }
           onDelete={canDelete ? handleDelete : undefined}
           isLoading={isReloading}
+          isLoadingInitial={isLoadingInitialData}
         />
 
         <ProductFormDrawer

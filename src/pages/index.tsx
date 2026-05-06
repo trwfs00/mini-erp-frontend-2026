@@ -24,7 +24,13 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { EyeIcon, EyeOffIcon, LockIcon, UserIcon } from "lucide-react";
+import {
+  EyeIcon,
+  EyeOffIcon,
+  LayoutGrid,
+  LockIcon,
+  UserIcon,
+} from "lucide-react";
 
 export const LoginPage: FC = () => {
   const authUser = useStore($authUser);
@@ -61,7 +67,10 @@ export const LoginPage: FC = () => {
     // navigate(ROUTE_PATHS.DASHBOARD);
 
     // --- Mock (remove when backend is ready) ---
-    const mockUser = await getMockAuthUser(values.username, values.remember_me);
+    const mockUser = await getMockAuthUser(
+      values.username.trim(),
+      values.remember_me,
+    );
     if (!mockUser) {
       form.setErrors({
         password: "Invalid credentials (try: admin / staff / viewer)",
@@ -77,15 +86,35 @@ export const LoginPage: FC = () => {
     <Box w={420} px="xs">
       <title>Login | Welcome Back</title>
 
-      <Stack gap={4} mb="xl" align="center">
-        <LockIcon size={26} color="black" strokeWidth={2.25} />
+      <Stack gap={10} mb="xl" align="center">
+        <Box
+          style={{
+            width: 56,
+            height: 56,
+            borderRadius: 16,
+            background: "var(--mantine-primary-color-filled)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow:
+              "0 8px 24px color-mix(in srgb, var(--mantine-primary-color-filled) 30%, transparent)",
+          }}
+        >
+          <LayoutGrid
+            size={28}
+            strokeWidth={2.25}
+            color="var(--mantine-primary-color-contrast)"
+          />
+        </Box>
 
-        <Title order={1} fz={26} fw={700} lh={1.2} c="gray.9">
-          Welcome Back
-        </Title>
-        <Text c="gray.6" fz="sm">
-          Sign in to continue to Mini ERP
-        </Text>
+        <Stack gap={2} align="center">
+          <Title order={1} fz={28} fw={700} lh={1.1}>
+            Welcome back
+          </Title>
+          <Text c="dimmed" fz="sm">
+            Sign in to continue to Mini ERP
+          </Text>
+        </Stack>
       </Stack>
 
       <form onSubmit={form.onSubmit(handleLogin)}>
@@ -125,7 +154,7 @@ export const LoginPage: FC = () => {
 
           <Divider
             label={
-              <Text fz="xs" c="gray.5">
+              <Text fz="xs" c="dimmed">
                 Mini ERP · Secure access
               </Text>
             }
@@ -136,15 +165,15 @@ export const LoginPage: FC = () => {
           {/* TODO: ลบบล็อกนี้เมื่อ integrate API จริง */}
           <Text fz="xs" c="dimmed" ta="center" mt={-8}>
             Mock mode — try{" "}
-            <Text component="span" fw={600} c="gray.7">
+            <Text component="span" fw={600} c="bright">
               admin
             </Text>{" "}
             /{" "}
-            <Text component="span" fw={600} c="gray.7">
+            <Text component="span" fw={600} c="bright">
               staff
             </Text>{" "}
             /{" "}
-            <Text component="span" fw={600} c="gray.7">
+            <Text component="span" fw={600} c="bright">
               viewer
             </Text>{" "}
             (any password)

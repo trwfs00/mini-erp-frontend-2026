@@ -12,6 +12,7 @@ type Props = {
   pagination: UsePaginationStateReturnType;
   sortHandler: UseTableSortReturn;
   isLoading?: boolean;
+  isLoadingInitial?: boolean;
 };
 
 const columns: DataTableColumn<StockSummaryRow>[] = [
@@ -20,7 +21,7 @@ const columns: DataTableColumn<StockSummaryRow>[] = [
     title: "SKU",
     sortable: true,
     width: 120,
-    render: (r) => <Text fz="sm" c="gray.6">{r.sku}</Text>,
+    render: (r) => <Text fz="sm" c="dimmed">{r.sku}</Text>,
   },
   {
     accessor: "name",
@@ -75,9 +76,9 @@ const columns: DataTableColumn<StockSummaryRow>[] = [
     width: 90,
     render: (r) =>
       r.is_low_stock ? (
-        <Badge color="red" variant="light" radius="sm">Low</Badge>
+        <Badge color="red" variant="subtle" radius="sm">Low</Badge>
       ) : (
-        <Badge color="green" variant="light" radius="sm">OK</Badge>
+        <Badge color="green" variant="subtle" radius="sm">OK</Badge>
       ),
   },
 ];
@@ -87,6 +88,7 @@ export const StockSummaryReportTable: FC<Props> = ({
   pagination,
   sortHandler,
   isLoading,
+  isLoadingInitial,
 }) => (
   <InstantTable<StockSummaryRow>
     idAccessor="product_id"
@@ -96,5 +98,6 @@ export const StockSummaryReportTable: FC<Props> = ({
     sortHandler={sortHandler}
     entityName="stock summary"
     fetching={isLoading}
+    isLoadingInitial={isLoadingInitial}
   />
 );

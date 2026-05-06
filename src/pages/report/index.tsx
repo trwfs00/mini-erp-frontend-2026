@@ -41,10 +41,10 @@ export const ReportPage = () => {
     >
       <Stack gap="lg">
         <Stack gap={4}>
-          <Title order={2} fw={700} c="gray.9">
+          <Title order={2} fw={700}>
             Report
           </Title>
-          <Text c="gray.6" fz="sm">
+          <Text c="dimmed" fz="sm">
             Analytics and exportable business reports.
           </Text>
         </Stack>

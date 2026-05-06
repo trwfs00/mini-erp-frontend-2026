@@ -25,6 +25,7 @@ import { $authUser } from "@/stores/authUserStore";
 import { useStore } from "@nanostores/react";
 import { NotificationUtil } from "@/utils/NotificationUtil";
 import { useLoadInitialData } from "./hooks/useLoadInitialData";
+import { PurchaseOrderDetailSkeleton } from "./components/PurchaseOrderDetailSkeleton";
 
 export const PurchaseOrderDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -84,9 +85,11 @@ export const PurchaseOrderDetailPage = () => {
 
   return (
     <PageLayout
-      isLoading={isLoadingInitialData}
       breadcrumbs={{ label: order?.purchase_order_id ?? "Detail" }}
     >
+      {isLoadingInitialData && (
+        <PurchaseOrderDetailSkeleton onBack={() => navigate(-1)} />
+      )}
       {order && (
         <Stack gap="lg">
           <Group justify="space-between">
@@ -105,7 +108,7 @@ export const PurchaseOrderDetailPage = () => {
                   </Title>
                   <PurchaseOrderStatusBadge status={order.status} />
                 </Group>
-                <Text c="gray.6" fz="sm">
+                <Text c="dimmed" fz="sm">
                   Created on {formatDate(order.created_at)} by{" "}
                   {order.created_by_name}
                 </Text>
@@ -169,7 +172,7 @@ export const PurchaseOrderDetailPage = () => {
                       <Table.Tr key={item.purchase_order_item_id}>
                         <Table.Td>
                           <Text fw={500}>{item.product_name}</Text>
-                          <Text size="xs" c="gray.6">
+                          <Text size="xs" c="dimmed">
                             {item.product_id}
                           </Text>
                         </Table.Td>
@@ -191,7 +194,11 @@ export const PurchaseOrderDetailPage = () => {
                       <Text fw={600} size="lg">
                         Total Amount:
                       </Text>
-                      <Text fw={700} size="xl" c="blue.7">
+                      <Text
+                        fw={700}
+                        size="xl"
+                        c="var(--mantine-primary-color-filled)"
+                      >
                         {formatCurrency(order.total_amount)}
                       </Text>
                     </Group>
@@ -208,7 +215,7 @@ export const PurchaseOrderDetailPage = () => {
                   </Title>
                   <Stack gap="xs">
                     <Group justify="space-between">
-                      <Text size="sm" c="gray.6">
+                      <Text size="sm" c="dimmed">
                         Name:
                       </Text>
                       <Text size="sm" fw={500}>
@@ -216,7 +223,7 @@ export const PurchaseOrderDetailPage = () => {
                       </Text>
                     </Group>
                     <Group justify="space-between">
-                      <Text size="sm" c="gray.6">
+                      <Text size="sm" c="dimmed">
                         ID:
                       </Text>
                       <Text size="sm" fw={500}>
@@ -226,7 +233,12 @@ export const PurchaseOrderDetailPage = () => {
                   </Stack>
                 </Paper>
 
-                <Paper withBorder p="md" radius="md" bg="gray.0">
+                <Paper
+                  withBorder
+                  p="md"
+                  radius="md"
+                  bg="light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))"
+                >
                   <Title order={4} mb="sm">
                     Order Timeline
                   </Title>
@@ -239,7 +251,7 @@ export const PurchaseOrderDetailPage = () => {
                     </Group>
                     {order.status === "CONFIRMED" && (
                       <Group gap="xs">
-                        <Badge color="blue" variant="dot" size="sm">
+                        <Badge variant="dot" size="sm">
                           Confirmed
                         </Badge>
                         <Text size="xs">Awaiting delivery</Text>

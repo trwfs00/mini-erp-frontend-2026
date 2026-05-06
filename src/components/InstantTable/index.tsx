@@ -1,5 +1,6 @@
 import type { UsePaginationStateReturnType } from "@/hooks/pagination/usePaginationState";
 import type { UseTableSortReturn } from "@/hooks/table/useTableSort";
+import { Skeleton } from "@mantine/core";
 import { ChevronsUpDownIcon, ChevronsUpIcon } from "lucide-react";
 import {
   DataTable,
@@ -9,6 +10,8 @@ import {
 import { CustomPagination } from "./components/CustomPagination";
 import { EmptyState } from "./components/EmptyState";
 import classes from "./InstantTable.module.css";
+
+const SKELETON_ROW_COUNT = 8;
 
 type Props<T> = Omit<
   DataTableProps<T>,
@@ -43,6 +46,7 @@ type Props<T> = Omit<
   entityName?: string;
   height?: number;
   minHeight?: number;
+  isLoadingInitial?: boolean;
 };
 
 export const InstantTable = <T,>({
@@ -51,18 +55,45 @@ export const InstantTable = <T,>({
   entityName,
   height = 526,
   minHeight = 526,
+  isLoadingInitial,
   ...restProps
 }: Props<T>) => {
   const sortProps = sortHandler ? sortHandler.getSortProps() : {};
 
+  const skeletonRecords = Array.from(
+    { length: SKELETON_ROW_COUNT },
+    (_, i) => ({ __skeleton_id: i }) as unknown as T,
+  );
+
+  const skeletonColumns: DataTableColumn<T>[] = restProps.columns.map((col) => ({
+    ...col,
+    sortable: false,
+    render: () => (
+      <Skeleton
+        height={14}
+        width={`${50 + Math.floor(Math.random() * 35)}%`}
+        radius="sm"
+      />
+    ),
+  }));
+
+  const records = isLoadingInitial ? skeletonRecords : restProps.records;
+  const columns = isLoadingInitial ? skeletonColumns : restProps.columns;
+  const idAccessor = isLoadingInitial
+    ? ("__skeleton_id" as keyof T)
+    : restProps.idAccessor;
+
   const baseProps = {
     ...restProps,
     ...sortProps,
+    records,
+    columns,
+    idAccessor,
     withTableBorder: false,
     borderRadius: 0,
     height,
     minHeight,
-    highlightOnHover: true,
+    highlightOnHover: !isLoadingInitial,
     emptyState: <EmptyState entityName={entityName} />,
     sortIcons: {
       sorted: <ChevronsUpIcon size={14} strokeWidth={2.25} />,

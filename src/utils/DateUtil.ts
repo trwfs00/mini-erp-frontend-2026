@@ -19,12 +19,17 @@ dayjs.locale("en");
 
 type DateInput = string | number | Date | dayjs.Dayjs | null | undefined;
 
+export const formatMmYy = (date: DateInput): string => {
+  if (!date) return "";
+  return dayjs(date).format("MMM YYYY");
+};
+
 /**
  * แปลงวันที่เป็นรูปแบบภาษาอังกฤษ (ค่าเริ่มต้น: "22 Apr 2026")
  */
 export const formatDate = (
   date: DateInput,
-  format: string = "DD MMM BBBB",
+  format: string = "DD MMM YYYY",
 ): string => {
   if (!date) return "-";
   return dayjs(date).format(format);
@@ -35,7 +40,7 @@ export const formatDate = (
  */
 export const formatDateTime = (date: DateInput): string => {
   if (!date) return "-";
-  return `${dayjs(date).format("DD MMMM BBBB")} ${dayjs(date).format("HH:mm")}`;
+  return `${dayjs(date).format("DD MMMM YYYY")} ${dayjs(date).format("HH:mm")}`;
 };
 
 /**
@@ -88,7 +93,9 @@ export const currentYearMonth = (): string => dayjs().format("YYYY-MM");
 /**
  * ช่วงวัน N วันย้อนหลังถึงวันนี้ (รวมวันนี้) → { from: "YYYY-MM-DD", to: "YYYY-MM-DD" }
  */
-export const getLastNDaysRange = (days: number): { from: string; to: string } => {
+export const getLastNDaysRange = (
+  days: number,
+): { from: string; to: string } => {
   const to = dayjs();
   const from = to.subtract(days - 1, "day");
   return { from: from.format("YYYY-MM-DD"), to: to.format("YYYY-MM-DD") };

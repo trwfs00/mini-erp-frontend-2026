@@ -1,4 +1,4 @@
-import { SimpleGrid, Stack, Text, ThemeIcon } from "@mantine/core";
+import { SimpleGrid, Skeleton, Stack, Text, ThemeIcon } from "@mantine/core";
 import { SurfaceCard } from "@/components/SurfaceCard";
 import { formatCurrency } from "@/utils/CurrencyUtil";
 import type { DashboardSummary } from "@/types/dashboard/DashboardDetail";
@@ -25,10 +25,10 @@ const Card: FC<CardProps> = ({ label, value, icon, accent }) => (
       <ThemeIcon variant="light" color={accent} size="lg" radius="md">
         {icon}
       </ThemeIcon>
-      <Text fz="xs" c="gray.6" tt="uppercase" fw={600}>
+      <Text fz="xs" c="dimmed" tt="uppercase" fw={600}>
         {label}
       </Text>
-      <Text fz="xl" fw={700} c="gray.9">
+      <Text fz="xl" fw={700}>
         {value}
       </Text>
     </Stack>
@@ -36,10 +36,31 @@ const Card: FC<CardProps> = ({ label, value, icon, accent }) => (
 );
 
 type Props = {
-  summary: DashboardSummary;
+  summary: DashboardSummary | null;
+  isLoading?: boolean;
 };
 
-export const SummaryCards: FC<Props> = ({ summary }) => {
+const TileSkeleton: FC = () => (
+  <SurfaceCard>
+    <Stack gap="xs">
+      <Skeleton height={28} width={28} radius="md" />
+      <Skeleton height={10} width="60%" radius="sm" mt={4} />
+      <Skeleton height={22} width="80%" radius="sm" />
+    </Stack>
+  </SurfaceCard>
+);
+
+export const SummaryCards: FC<Props> = ({ summary, isLoading }) => {
+  if (isLoading || !summary) {
+    return (
+      <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <TileSkeleton key={i} />
+        ))}
+      </SimpleGrid>
+    );
+  }
+
   return (
     <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
       <Card

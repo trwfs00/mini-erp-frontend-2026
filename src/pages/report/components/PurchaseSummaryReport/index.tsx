@@ -1,5 +1,4 @@
 import { Alert, Group, SimpleGrid, Stack, TextInput } from "@mantine/core";
-import { AppLoadingOverlay } from "@/components/AppLoadingOverlay";
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { RefreshButton } from "@/components/RefreshButton";
@@ -30,7 +29,6 @@ export const PurchaseSummaryReportPage = () => {
 
   return (
     <Stack gap="md" pos="relative" mih={300}>
-      <AppLoadingOverlay visible={isLoadingInitialData} />
       <Group justify="space-between" wrap="wrap" gap="md" align="flex-end">
         <TextInput
           type="month"
@@ -69,37 +67,45 @@ export const PurchaseSummaryReportPage = () => {
         </Alert>
       )}
 
-      {totals && (
-        <SimpleGrid cols={{ base: 2, sm: 3, md: 6 }} spacing="md">
-          <StatTile
-            label="Orders"
-            value={totals.total_orders.toLocaleString()}
-          />
-          <StatTile
-            label="Amount"
-            value={formatCurrency(totals.total_amount)}
-          />
-          <StatTile label="Draft" value={totals.by_status.DRAFT.toString()} />
-          <StatTile
-            label="Confirmed"
-            value={totals.by_status.CONFIRMED.toString()}
-          />
-          <StatTile
-            label="Received"
-            value={totals.by_status.RECEIVED.toString()}
-          />
-          <StatTile
-            label="Cancelled"
-            value={totals.by_status.CANCELLED.toString()}
-          />
-        </SimpleGrid>
-      )}
+      <SimpleGrid cols={{ base: 2, sm: 3, md: 6 }} spacing="md">
+        <StatTile
+          label="Orders"
+          value={totals?.total_orders.toLocaleString() ?? "-"}
+          isLoading={isLoadingInitialData}
+        />
+        <StatTile
+          label="Amount"
+          value={totals ? formatCurrency(totals.total_amount) : "-"}
+          isLoading={isLoadingInitialData}
+        />
+        <StatTile
+          label="Draft"
+          value={totals?.by_status.DRAFT.toString() ?? "-"}
+          isLoading={isLoadingInitialData}
+        />
+        <StatTile
+          label="Confirmed"
+          value={totals?.by_status.CONFIRMED.toString() ?? "-"}
+          isLoading={isLoadingInitialData}
+        />
+        <StatTile
+          label="Received"
+          value={totals?.by_status.RECEIVED.toString() ?? "-"}
+          isLoading={isLoadingInitialData}
+        />
+        <StatTile
+          label="Cancelled"
+          value={totals?.by_status.CANCELLED.toString() ?? "-"}
+          isLoading={isLoadingInitialData}
+        />
+      </SimpleGrid>
 
       <PurchaseSummaryReportTable
         records={rows}
         pagination={pagination}
         sortHandler={sortHandler}
         isLoading={isReloading}
+        isLoadingInitial={isLoadingInitialData}
       />
     </Stack>
   );

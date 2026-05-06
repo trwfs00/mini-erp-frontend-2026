@@ -15,6 +15,7 @@ type Props = {
   onEdit?: (supplier: SupplierList) => void;
   onDelete?: (supplier: SupplierList) => void;
   isLoading?: boolean;
+  isLoadingInitial?: boolean;
 };
 
 export const SupplierListTable: FC<Props> = ({
@@ -24,6 +25,7 @@ export const SupplierListTable: FC<Props> = ({
   onEdit,
   onDelete,
   isLoading,
+  isLoadingInitial,
 }) => {
   const columns: DataTableColumn<SupplierList>[] = [
     {
@@ -86,7 +88,7 @@ export const SupplierListTable: FC<Props> = ({
           {onEdit && (
             <ActionIcon
               variant="subtle"
-              color="blue"
+             
               onClick={(e) => {
                 e.stopPropagation();
                 onEdit(s);
@@ -121,6 +123,7 @@ export const SupplierListTable: FC<Props> = ({
       sortHandler={sortHandler}
       entityName="suppliers"
       fetching={isLoading}
+      isLoadingInitial={isLoadingInitial}
     />
   );
 };

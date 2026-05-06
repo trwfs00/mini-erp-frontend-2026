@@ -96,16 +96,15 @@ export const SupplierPage = () => {
 
   return (
     <PageLayout
-      isLoading={isLoadingInitialData}
       breadcrumbs={{ label: "Suppliers", path: ROUTE_PATHS.SUPPLIERS }}
     >
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
-            <Title order={2} fw={700} c="gray.9">
+            <Title order={2} fw={700}>
               Suppliers
             </Title>
-            <Text c="gray.6" fz="sm">
+            <Text c="dimmed" fz="sm">
               Manage your supplier relationships.
             </Text>
           </Stack>
@@ -147,6 +146,7 @@ export const SupplierPage = () => {
           }
           onDelete={canDelete ? handleDelete : undefined}
           isLoading={isReloading}
+          isLoadingInitial={isLoadingInitialData}
         />
 
         <SupplierFormDrawer

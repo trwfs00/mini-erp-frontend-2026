@@ -17,8 +17,8 @@ export const SupplierService = {
   ): Promise<ApiReturn<GetSupplierListResponse>> {
     return AxiosUtil.createRequest<GetSupplierListResponse>({
       url: "/supplier/list",
-      method: "GET",
-      params: request,
+      method: "POST",
+      data: request,
     });
   },
 
