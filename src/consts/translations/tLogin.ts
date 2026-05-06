@@ -13,9 +13,7 @@ export const tLogin = {
   signIn: { th: "เข้าสู่ระบบ", en: "Sign in" },
   divider: { th: "Mini ERP · เข้าใช้งานอย่างปลอดภัย", en: "Mini ERP · Secure access" },
   invalidCredentials: {
-    th: "ข้อมูลไม่ถูกต้อง (ลอง: admin / staff / viewer)",
-    en: "Invalid credentials (try: admin / staff / viewer)",
+    th: "ข้อมูลไม่ถูกต้อง",
+    en: "Invalid credentials",
   },
-  mockHint: { th: "โหมดจำลอง — ลอง", en: "Mock mode — try" },
-  mockSuffix: { th: " (รหัสผ่านอะไรก็ได้)", en: " (any password)" },
 } as const;

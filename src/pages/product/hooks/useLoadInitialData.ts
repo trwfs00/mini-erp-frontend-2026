@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDidUpdate } from "@mantine/hooks";
 import { useDeepEqualDidUpdate } from "@/hooks/basic/useDeepEqualDidUpdate";
+import { ProductService } from "@/services/ProductService";
 import type { ProductList } from "@/types/product/ProductList";
 import type { OrderBy } from "@/types/SortOrder";
 import { NotificationUtil } from "@/utils/NotificationUtil";
-// TODO: ลบ useMockProductData เมื่อ integrate API จริง
-import { useMockProductData } from "./useMockProductData";
 
 type Params = {
   page: number;
@@ -32,19 +31,17 @@ export const useLoadInitialData = ({
   const [isReloading, setIsReloading] = useState(false);
   const [products, setProducts] = useState<ProductList[]>([]);
 
-  // TODO: ลบ useMockProductData เมื่อ integrate API จริง
-  const { getMockProductList } = useMockProductData();
-
   const callGetProductList = async (): Promise<boolean> => {
     setProducts([]);
-    // TODO: เปลี่ยนเป็น ProductService.getProductList เมื่อ integrate API จริง
-    const response = await getMockProductList({
+    const response = await ProductService.getProductList({
       criteria: { search: search || undefined },
       page,
       limit,
       sort_bys:
         sortBy && orderBy ? [{ field: sortBy, direction: orderBy }] : [],
     });
+
+    if (!response.ok) return false;
 
     setProducts(response.data.data);
     setTotalPage(response.data.pagination.total_page);
@@ -78,17 +75,14 @@ export const useLoadInitialData = ({
     return success;
   };
 
-  // CRITICAL: Run once on mount only
   useEffect(() => {
     loadInitialData();
   }, []);
 
-  // CRITICAL: Run when page, limit, sortBy, or orderBy changes
   useDidUpdate(() => {
     reloadProductList();
   }, [page, limit, sortBy, orderBy]);
 
-  // เฝ้า search แยก เพราะต้องการ handle กรณีย้อนกลับมาหน้า 1
   useDeepEqualDidUpdate(() => {
     if (page > 1) {
       setPage(1);

@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDidUpdate } from "@mantine/hooks";
 import { useDeepEqualDidUpdate } from "@/hooks/basic/useDeepEqualDidUpdate";
+import { SupplierService } from "@/services/SupplierService";
 import type { SupplierList } from "@/types/supplier/SupplierList";
 import type { OrderBy } from "@/types/SortOrder";
 import { NotificationUtil } from "@/utils/NotificationUtil";
-// TODO: ลบ useMockSupplierData เมื่อ integrate API จริง
-import { useMockSupplierData } from "./useMockSupplierData";
 
 type Params = {
   page: number;
@@ -32,19 +31,17 @@ export const useLoadInitialData = ({
   const [isReloading, setIsReloading] = useState(false);
   const [suppliers, setSuppliers] = useState<SupplierList[]>([]);
 
-  // TODO: ลบ useMockSupplierData เมื่อ integrate API จริง
-  const { getMockSupplierList } = useMockSupplierData();
-
   const callGetSupplierList = async (): Promise<boolean> => {
     setSuppliers([]);
-    // TODO: เปลี่ยนเป็น SupplierService.getSupplierList เมื่อ integrate API จริง
-    const response = await getMockSupplierList({
+    const response = await SupplierService.getSupplierList({
       criteria: { search: search || undefined },
       page,
       limit,
       sort_bys:
         sortBy && orderBy ? [{ field: sortBy, direction: orderBy }] : [],
     });
+
+    if (!response.ok) return false;
 
     setSuppliers(response.data.data);
     setTotalPage(response.data.pagination.total_page);
@@ -78,17 +75,14 @@ export const useLoadInitialData = ({
     return success;
   };
 
-  // CRITICAL: Run once on mount only
   useEffect(() => {
     loadInitialData();
   }, []);
 
-  // CRITICAL: Run when page, limit, sortBy, or orderBy changes
   useDidUpdate(() => {
     reloadSupplierList();
   }, [page, limit, sortBy, orderBy]);
 
-  // เฝ้า search แยก เพราะต้องการ handle กรณีย้อนกลับมาหน้า 1
   useDeepEqualDidUpdate(() => {
     if (page > 1) {
       setPage(1);

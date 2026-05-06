@@ -9,8 +9,7 @@ import { currentYearMonth } from "@/utils/DateUtil";
 import { useLoadInitialData } from "./hooks/useLoadInitialData";
 import { ExportButton } from "../ExportButton";
 import { usePermission } from "@/hooks/auth/usePermission";
-// TODO: เปลี่ยนเป็น ReportService.exportPurchaseSummary เมื่อ integrate API จริง
-import { MockReportExportUtil } from "../../utils/mockReportExport";
+import { ReportService } from "@/services/ReportService";
 import { useTranslation } from "@/hooks/translation/useTranslation";
 import { tReport } from "@/consts/translations/tReport";
 import { tPurchaseOrder } from "@/consts/translations/tPurchaseOrder";
@@ -48,10 +47,11 @@ export const PurchaseSummaryReportPage = () => {
               label={t(tReport.exportCsv)}
               filename={`purchase-summary-${month}.csv`}
               disabled={!report}
-              onExport={async () =>
-                report
-                  ? { ok: true, data: MockReportExportUtil.exportPurchaseSummary(report) }
-                  : { ok: false, message: t(tReport.reportNotLoaded) }
+              onExport={() =>
+                ReportService.exportPurchaseSummary({
+                  month,
+                  format: "csv",
+                })
               }
               onError={setExportError}
             />

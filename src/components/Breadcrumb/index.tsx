@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import { Anchor, Breadcrumbs, type AnchorProps } from "@mantine/core";
 import { ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type { BreadcrumbItem } from "@/types/Global";
 import { SessionStorageUtil } from "@/utils/SessionStorageUtil";
 import { NAV_ITEMS } from "@/consts/navConfig";
 import { ROUTE_PATHS } from "@/router/routePaths";
 import { useTranslation } from "@/hooks/translation/useTranslation";
 import { tMenu } from "@/consts/translations/tMenu";
+import type { BreadcrumbItem } from "@/types/Global";
 
 type Props = {
   current?: BreadcrumbItem | BreadcrumbItem[];

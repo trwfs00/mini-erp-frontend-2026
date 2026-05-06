@@ -1,30 +1,24 @@
 import { useEffect, useState } from "react";
 import { NotificationUtil } from "@/utils/NotificationUtil";
+import { ProductService } from "@/services/ProductService";
 import type { ProductList } from "@/types/product/ProductList";
 import { FETCH_ALL_ARGS } from "@/consts/api/fetchAllArgs";
 import type { ComboboxData } from "@mantine/core";
-// TODO: ลบ useMockProductData เมื่อ integrate API จริง (เปลี่ยนเป็น ProductService.getProductList)
-import { useMockProductData } from "@/pages/product/hooks/useMockProductData";
-// TODO: เปลี่ยนเป็น useSuppliers เมื่อ integrate API จริง
-import { useMockSupplierDropdown } from "@/hooks/dropdown/useMockSupplierDropdown";
+import { useSuppliers } from "@/hooks/dropdown/useSupplier";
 
 export const useLoadInitialData = () => {
   const [isLoadingInitialData, setIsLoadingInitialData] = useState(false);
   const [products, setProducts] = useState<ProductList[]>([]);
 
-  // TODO: เปลี่ยนเป็น ProductService.getProductList เมื่อ integrate API จริง
-  const { getMockProductList } = useMockProductData();
-
-  // TODO: เปลี่ยนเป็น useSuppliers เมื่อ integrate API จริง
-  const { supplierOptions, callGetSupplierDropdown } =
-    useMockSupplierDropdown();
+  const { supplierOptions, callGetSupplierDropdown } = useSuppliers();
 
   const callGetProducts = async (): Promise<boolean> => {
-    const response = await getMockProductList({
+    const response = await ProductService.getProductList({
       ...FETCH_ALL_ARGS,
       criteria: {},
       sort_bys: [{ field: "name", direction: "asc" }],
     });
+    if (!response.ok) return false;
     setProducts(response.data.data);
     return true;
   };

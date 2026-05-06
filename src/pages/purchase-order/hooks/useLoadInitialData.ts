@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDidUpdate } from "@mantine/hooks";
 import { useDeepEqualDidUpdate } from "@/hooks/basic/useDeepEqualDidUpdate";
+import { PurchaseOrderService } from "@/services/PurchaseOrderService";
 import type {
   PurchaseOrderStatus,
   PurchaseOrderSummary,
 } from "@/types/purchase-order/PurchaseOrder";
 import type { OrderBy } from "@/types/SortOrder";
 import { NotificationUtil } from "@/utils/NotificationUtil";
-// TODO: ลบ useMockPurchaseOrderData เมื่อ integrate API จริง
-import { useMockPurchaseOrderData } from "./useMockPurchaseOrderData";
 
 type Params = {
   page: number;
@@ -37,13 +36,9 @@ export const useLoadInitialData = ({
   const [isReloading, setIsReloading] = useState(false);
   const [orders, setOrders] = useState<PurchaseOrderSummary[]>([]);
 
-  // TODO: ลบ useMockPurchaseOrderData เมื่อ integrate API จริง
-  const { getMockPurchaseOrderList } = useMockPurchaseOrderData();
-
   const callGetPurchaseOrderList = async (): Promise<boolean> => {
     setOrders([]);
-    // TODO: เปลี่ยนเป็น PurchaseOrderService.getPurchaseOrderList เมื่อ integrate API จริง
-    const response = await getMockPurchaseOrderList({
+    const response = await PurchaseOrderService.getPurchaseOrderList({
       criteria: {
         search: search || undefined,
         status: statusFilter === "ALL" ? undefined : statusFilter,
@@ -53,6 +48,8 @@ export const useLoadInitialData = ({
       sort_bys:
         sortBy && orderBy ? [{ field: sortBy, direction: orderBy }] : [],
     });
+
+    if (!response.ok) return false;
 
     setOrders(response.data.data);
     setTotalPage(response.data.pagination.total_page);

@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import { useDidUpdate } from "@mantine/hooks";
 import { useDeepEqualDidUpdate } from "@/hooks/basic/useDeepEqualDidUpdate";
+import { StockService } from "@/services/StockService";
+import { useProducts } from "@/hooks/dropdown/useProduct";
 import type {
   StockTransaction,
   TransactionType,
 } from "@/types/stock/StockTransaction";
 import type { OrderBy } from "@/types/SortOrder";
 import { NotificationUtil } from "@/utils/NotificationUtil";
-// TODO: เปลี่ยนเป็น dropdown hook จริงเมื่อ integrate API
-import { useMockProductDropdown } from "@/hooks/dropdown/useMockProductDropdown";
-// TODO: ลบ useMockStockData เมื่อ integrate API จริง
-import { useMockStockData } from "./useMockStockData";
 import { useStockSummary } from "./useStockSummary";
 
 type Params = {
@@ -42,20 +40,12 @@ export const useLoadInitialData = ({
   const [isReloading, setIsReloading] = useState(false);
   const [transactions, setTransactions] = useState<StockTransaction[]>([]);
 
-  // TODO: ลบ useMockStockData เมื่อ integrate API จริง
-  const { getMockTransactionList } = useMockStockData();
-
-  // Dropdown hooks
-  // TODO: เปลี่ยนเป็น dropdown hook จริงเมื่อ integrate API
-  const { productOptions, callGetProductDropdown } = useMockProductDropdown();
-
-  // Stock summary (reactive ตาม productFilter)
+  const { productOptions, callGetProductDropdown } = useProducts();
   const { summary, fetchSummary, clearSummary } = useStockSummary();
 
   const callGetTransactionList = async (): Promise<boolean> => {
     setTransactions([]);
-    // TODO: เปลี่ยนเป็น StockService.getTransactionList เมื่อ integrate API จริง
-    const response = await getMockTransactionList({
+    const response = await StockService.getTransactionList({
       criteria: {
         search: search || undefined,
         type: typeFilter === "" ? undefined : typeFilter,
@@ -66,6 +56,8 @@ export const useLoadInitialData = ({
       sort_bys:
         sortBy && orderBy ? [{ field: sortBy, direction: orderBy }] : [],
     });
+
+    if (!response.ok) return false;
 
     setTransactions(response.data.data);
     setTotalPage(response.data.pagination.total_page);
@@ -101,17 +93,14 @@ export const useLoadInitialData = ({
     return success;
   };
 
-  // CRITICAL: Run once on mount only
   useEffect(() => {
     loadInitialData();
   }, []);
 
-  // CRITICAL: Run when page, limit, sortBy, or orderBy changes
   useDidUpdate(() => {
     reloadTransactions();
   }, [page, limit, sortBy, orderBy]);
 
-  // เฝ้า search + filter แยก เพราะต้องการ handle กรณีย้อนกลับมาหน้า 1
   useDeepEqualDidUpdate(() => {
     if (page > 1) {
       setPage(1);
@@ -120,7 +109,6 @@ export const useLoadInitialData = ({
     }
   }, [search, typeFilter, productFilter]);
 
-  // โหลด stock summary เมื่อมี productFilter
   useDeepEqualDidUpdate(() => {
     if (productFilter) {
       fetchSummary(productFilter);

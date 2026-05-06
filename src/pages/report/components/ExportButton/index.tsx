@@ -23,7 +23,7 @@ export const ExportButton: FC<Props> = ({ label, filename, disabled, onExport, o
     const res = await onExport();
     setLoading(false);
 
-    if (!res.ok || !res.data) {
+    if (!res.ok) {
       onError?.(res.message ?? LanguageUtil.getText(tReport.unableGenerateFile));
       return;
     }

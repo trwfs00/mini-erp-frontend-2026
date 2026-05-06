@@ -8,8 +8,7 @@ import { formatCurrency } from "@/utils/CurrencyUtil";
 import { useLoadInitialData } from "./hooks/useLoadInitialData";
 import { ExportButton } from "../ExportButton";
 import { usePermission } from "@/hooks/auth/usePermission";
-// TODO: เปลี่ยนเป็น ReportService.exportStockSummary เมื่อ integrate API จริง
-import { MockReportExportUtil } from "../../utils/mockReportExport";
+import { ReportService } from "@/services/ReportService";
 import { useTranslation } from "@/hooks/translation/useTranslation";
 import { tReport } from "@/consts/translations/tReport";
 
@@ -41,11 +40,7 @@ export const StockSummaryReportPage = () => {
               label={t(tReport.exportCsv)}
               filename={`stock-summary-${new Date().toISOString().slice(0, 10)}.csv`}
               disabled={!report}
-              onExport={async () =>
-                report
-                  ? { ok: true, data: MockReportExportUtil.exportStockSummary(report) }
-                  : { ok: false, message: t(tReport.reportNotLoaded) }
-              }
+              onExport={() => ReportService.exportStockSummary()}
               onError={setExportError}
             />
           )}

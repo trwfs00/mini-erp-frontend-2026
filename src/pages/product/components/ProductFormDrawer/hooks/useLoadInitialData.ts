@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { NotificationUtil } from "@/utils/NotificationUtil";
-// TODO: เปลี่ยนเป็น useCategories เมื่อ integrate API จริง
-import { useMockCategoryDropdown } from "@/hooks/dropdown/useMockCategoryDropdown";
+import { useCategories } from "@/hooks/dropdown/useCategory";
 
 type Params = {
   opened: boolean;
@@ -10,9 +9,7 @@ type Params = {
 export const useLoadInitialData = ({ opened }: Params) => {
   const [isLoadingInitialData, setIsLoadingInitialData] = useState(false);
 
-  // Dropdown hooks
-  // TODO: เปลี่ยนเป็น useCategories เมื่อ integrate API จริง
-  const { categoryOptions, callGetCategoryDropdown } = useMockCategoryDropdown();
+  const { categoryOptions, callGetCategoryDropdown } = useCategories();
 
   const loadInitialData = async (): Promise<void> => {
     setIsLoadingInitialData(true);
@@ -29,7 +26,6 @@ export const useLoadInitialData = ({ opened }: Params) => {
     }
   };
 
-  // โหลดเฉพาะตอน drawer เปิดครั้งแรก
   useEffect(() => {
     if (opened) {
       loadInitialData();

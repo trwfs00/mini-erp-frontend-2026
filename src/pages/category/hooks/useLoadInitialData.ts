@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import { useDidUpdate } from "@mantine/hooks";
 import { useDeepEqualDidUpdate } from "@/hooks/basic/useDeepEqualDidUpdate";
 import { NotificationUtil } from "@/utils/NotificationUtil";
+import { CategoryService } from "@/services/CategoryService";
 import type { CategoryList } from "@/types/category/CategoryList";
 import type { OrderBy } from "@/types/SortOrder";
-// TODO: ลบ useMockCategoryData เมื่อ integrate API จริง
-import { useMockCategoryData } from "./useMockCategoryData";
 
 type Params = {
   page: number;
@@ -32,13 +31,9 @@ export const useLoadInitialData = ({
   const [isReloading, setIsReloading] = useState(false);
   const [categories, setCategories] = useState<CategoryList[]>([]);
 
-  // TODO: ลบ useMockCategoryData เมื่อ integrate API จริง
-  const { getMockCategoryList } = useMockCategoryData();
-
   const callGetCategoryList = async (): Promise<boolean> => {
     setCategories([]);
-    // TODO: เปลี่ยนเป็น CategoryService.getCategoryList เมื่อ integrate API จริง
-    const response = await getMockCategoryList({
+    const response = await CategoryService.getCategoryList({
       page,
       limit,
       criteria: {
@@ -47,6 +42,8 @@ export const useLoadInitialData = ({
       sort_bys:
         sortBy && orderBy ? [{ field: sortBy, direction: orderBy }] : [],
     });
+
+    if (!response.ok) return false;
 
     setCategories(response.data.data);
     setTotalPage(response.data.pagination.total_page);
@@ -80,17 +77,14 @@ export const useLoadInitialData = ({
     return success;
   };
 
-  // CRITICAL: Run once on mount only
   useEffect(() => {
     loadInitialData();
   }, []);
 
-  // CRITICAL: Run when page, limit, sortBy, or orderBy changes
   useDidUpdate(() => {
     reloadCategoryList();
   }, [page, limit, sortBy, orderBy]);
 
-  // เฝ้า search แยก เพราะต้องการ handle กรณีย้อนกลับมาหน้า 1
   useDeepEqualDidUpdate(() => {
     if (page > 1) {
       setPage(1);

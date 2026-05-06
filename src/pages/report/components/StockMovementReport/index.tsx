@@ -18,8 +18,7 @@ import { getLastNDaysRange } from "@/utils/DateUtil";
 import { useLoadInitialData } from "./hooks/useLoadInitialData";
 import { ExportButton } from "../ExportButton";
 import { usePermission } from "@/hooks/auth/usePermission";
-// TODO: เปลี่ยนเป็น ReportService.exportStockMovement เมื่อ integrate API จริง
-import { MockReportExportUtil } from "../../utils/mockReportExport";
+import { ReportService } from "@/services/ReportService";
 import { useTranslation } from "@/hooks/translation/useTranslation";
 import { tReport } from "@/consts/translations/tReport";
 import { tDashboard } from "@/consts/translations/tDashboard";
@@ -83,13 +82,11 @@ export const StockMovementReportPage = () => {
               label={t(tReport.exportCsv)}
               filename={`stock-movement-${range.from}-to-${range.to}.csv`}
               disabled={!report}
-              onExport={async () =>
-                report
-                  ? {
-                      ok: true,
-                      data: MockReportExportUtil.exportStockMovement(report),
-                    }
-                  : { ok: false, message: t(tReport.reportNotLoaded) }
+              onExport={() =>
+                ReportService.exportStockMovement({
+                  ...range,
+                  format: "csv",
+                })
               }
               onError={setExportError}
             />

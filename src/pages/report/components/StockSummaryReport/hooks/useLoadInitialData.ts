@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDidUpdate } from "@mantine/hooks";
+import { ReportService } from "@/services/ReportService";
 import { usePaginationState } from "@/hooks/pagination/usePaginationState";
 import { useTableSort } from "@/hooks/table/useTableSort";
 import { compareValues } from "@/utils/SortUtil";
@@ -8,8 +9,6 @@ import type {
   StockSummaryReport,
   StockSummaryRow,
 } from "@/types/report/StockSummary";
-// TODO: เปลี่ยนเป็น ReportService.getStockSummary เมื่อ integrate API จริง
-import { useMockReportData } from "../../../hooks/useMockReportData";
 
 export const useLoadInitialData = () => {
   const [report, setReport] = useState<StockSummaryReport | null>(null);
@@ -21,11 +20,10 @@ export const useLoadInitialData = () => {
   const { limit, page, setTotalCount, setTotalPage } = pagination;
   const { sortBy, orderBy } = sortHandler;
 
-  // TODO: เปลี่ยนเป็น ReportService.getStockSummary เมื่อ integrate API จริง
-  const { getMockStockSummaryReport } = useMockReportData();
-
   const callGetReport = async (): Promise<boolean> => {
-    const data = await getMockStockSummaryReport();
+    const response = await ReportService.getStockSummary();
+    if (!response.ok) return false;
+    const data = response.data;
     setReport(data);
     setTotalCount(data.rows.length);
     setTotalPage(Math.ceil(data.rows.length / limit) || 1);

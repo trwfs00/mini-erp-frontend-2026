@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { NotificationUtil } from "@/utils/NotificationUtil";
-// TODO: เปลี่ยนเป็น dropdown hook จริงเมื่อ integrate API
-import { useMockProductDropdown } from "@/hooks/dropdown/useMockProductDropdown";
+import { useProducts } from "@/hooks/dropdown/useProduct";
 import { useStockSummary } from "@/pages/stock/hooks/useStockSummary";
 
 type Params = {
@@ -11,8 +10,7 @@ type Params = {
 export const useLoadInitialData = ({ opened }: Params) => {
   const [isLoadingInitialData, setIsLoadingInitialData] = useState(false);
 
-  // TODO: เปลี่ยนเป็น dropdown hook จริงเมื่อ integrate API
-  const { productOptions, callGetProductDropdown } = useMockProductDropdown();
+  const { productOptions, callGetProductDropdown } = useProducts();
   const { summary, fetchSummary, clearSummary } = useStockSummary();
 
   const loadInitialData = async (): Promise<void> => {
@@ -30,7 +28,6 @@ export const useLoadInitialData = ({ opened }: Params) => {
     }
   };
 
-  // โหลดเฉพาะตอน drawer เปิด
   useEffect(() => {
     if (opened) {
       loadInitialData();

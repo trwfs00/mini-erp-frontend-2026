@@ -1,6 +1,3 @@
-export type ApiReturn<T> = {
-  ok: boolean;
-  data?: T;
-  code?: string;
-  message?: string;
-};
+export type ApiReturn<T> =
+  | { ok: true; data: T }
+  | { ok: false; code?: string; message?: string };

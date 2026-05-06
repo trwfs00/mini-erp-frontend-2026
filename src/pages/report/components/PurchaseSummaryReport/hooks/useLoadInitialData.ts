@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDidUpdate } from "@mantine/hooks";
 import { useDeepEqualDidUpdate } from "@/hooks/basic/useDeepEqualDidUpdate";
+import { ReportService } from "@/services/ReportService";
 import { usePaginationState } from "@/hooks/pagination/usePaginationState";
 import { useTableSort } from "@/hooks/table/useTableSort";
 import { compareValues } from "@/utils/SortUtil";
@@ -9,8 +10,6 @@ import type {
   PurchaseSummaryReport,
   PurchaseSummaryRow,
 } from "@/types/report/PurchaseSummary";
-// TODO: เปลี่ยนเป็น ReportService.getPurchaseSummary เมื่อ integrate API จริง
-import { useMockReportData } from "../../../hooks/useMockReportData";
 
 type Params = {
   month: string;
@@ -26,11 +25,10 @@ export const useLoadInitialData = ({ month }: Params) => {
   const { limit, page, setTotalCount, setTotalPage, setPage } = pagination;
   const { sortBy, orderBy } = sortHandler;
 
-  // TODO: เปลี่ยนเป็น ReportService.getPurchaseSummary เมื่อ integrate API จริง
-  const { getMockPurchaseSummaryReport } = useMockReportData();
-
   const callGetReport = async (): Promise<boolean> => {
-    const data = await getMockPurchaseSummaryReport({ month });
+    const response = await ReportService.getPurchaseSummary({ month });
+    if (!response.ok) return false;
+    const data = response.data;
     setReport(data);
     setTotalCount(data.rows.length);
     setTotalPage(Math.ceil(data.rows.length / limit) || 1);

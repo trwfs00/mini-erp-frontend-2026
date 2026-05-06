@@ -5,7 +5,6 @@ import { useDisclosure, useLocalStorage, useMediaQuery } from "@mantine/hooks";
 import { useSidebarToggle } from "./hooks/useSidebarToggle";
 import { useWatchLocalStorage } from "@/hooks/localStorage/useWatchLocalStorage";
 import { LOCAL_STORAGE_KEYS } from "@/consts/keys/localStorageKeys";
-import { $authBypass } from "@/stores/debugModeStore";
 import { LocalStorageUtil } from "@/utils/LocalStorageUtil";
 import { TokenTimerUtil } from "@/utils/TokenTimerUtil";
 import { AuthUtil } from "@/utils/AuthUtil";
@@ -17,7 +16,6 @@ import { CommandPalette } from "@/components/CommandPalette";
 
 export const AuthLayout: FC = () => {
   const authUser = useStore($authUser);
-  const debugMode = useStore($authBypass);
   const [mobileOpened, { toggle: toggleMobile, close: closeMobile }] = useDisclosure(false);
   const [desktopOpened, setDesktopOpened] = useLocalStorage<boolean>({
     key: LOCAL_STORAGE_KEYS.SIDEBAR_OPEN,
@@ -27,16 +25,12 @@ export const AuthLayout: FC = () => {
   const toggleDesktop = () => setDesktopOpened((v) => !v);
   const isMobile = useMediaQuery("(max-width: 48em)");
 
-  const checkedAuth = debugMode || !!authUser;
+  const checkedAuth = !!authUser;
 
-  // Add keyboard shortcut for toggling sidebar (Ctrl+B)
   useSidebarToggle(toggleDesktop);
 
   useWatchLocalStorage(LOCAL_STORAGE_KEYS.AUTH_USER, () => {
-    if (debugMode) return;
-
     const authUser = LocalStorageUtil.loadAuthUser();
-    // auto logout if authUser is removed from localStorage (e.g., in another tab)
     if (!authUser || authUser.refresh_token_exp <= Date.now() / 1000) {
       $authUser.set(null);
       return;
@@ -50,11 +44,6 @@ export const AuthLayout: FC = () => {
   });
 
   useEffect(() => {
-    if (debugMode) {
-      console.log("[AUTH BYPASS] Auth check bypassed");
-      return;
-    }
-
     if (!authUser) {
       AuthUtil.logout();
       return;
@@ -88,7 +77,7 @@ export const AuthLayout: FC = () => {
     return () => {
       if (timerId) clearTimeout(timerId);
     };
-  }, [debugMode, authUser]);
+  }, [authUser]);
 
   if (!checkedAuth) return <></>;
 

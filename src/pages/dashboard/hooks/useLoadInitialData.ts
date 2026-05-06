@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useMockDashboardData } from "./useMockDashboardData";
+import { DashboardService } from "@/services/DashboardService";
 import type {
   DashboardSummary,
   LowStockProduct,
@@ -22,34 +22,30 @@ export const useLoadInitialData = () => {
   const [isReloadingTrend, setIsReloadingTrend] = useState(false);
   const [isReloadingLowStock, setIsReloadingLowStock] = useState(false);
 
-  // TODO: เปลี่ยนเป็น DashboardService methods เมื่อ integrate API จริง
-  const {
-    getMockSummary,
-    getMockStockMovement,
-    getMockPurchaseTrend,
-    getMockLowStock,
-  } = useMockDashboardData();
-
   const callGetSummary = async (): Promise<boolean> => {
-    const res = await getMockSummary();
+    const res = await DashboardService.getSummary();
+    if (!res.ok) return false;
     setSummary(res.data);
     return true;
   };
 
   const callGetMovement = async (): Promise<boolean> => {
-    const res = await getMockStockMovement();
+    const res = await DashboardService.getStockMovement();
+    if (!res.ok) return false;
     setMovement(res.data);
     return true;
   };
 
   const callGetTrend = async (): Promise<boolean> => {
-    const res = await getMockPurchaseTrend();
+    const res = await DashboardService.getPurchaseTrend();
+    if (!res.ok) return false;
     setTrend(res.data);
     return true;
   };
 
   const callGetLowStock = async (): Promise<boolean> => {
-    const res = await getMockLowStock();
+    const res = await DashboardService.getLowStock();
+    if (!res.ok) return false;
     setLowStock(res.data);
     return true;
   };

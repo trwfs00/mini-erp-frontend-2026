@@ -24,25 +24,4 @@ export const SessionStorageUtil = {
       this.saveBreadcrumbJourney(journey);
     }
   },
-  saveAuthBypass(enabled: boolean) {
-    sessionStorage.setItem(
-      SESSION_STORAGE_KEYS.AUTH_BYPASS,
-      enabled.toString(),
-    );
-  },
-  loadAuthBypass(): boolean {
-    return sessionStorage.getItem(SESSION_STORAGE_KEYS.AUTH_BYPASS) === "true";
-  },
-  saveMockMode(enabled: boolean) {
-    sessionStorage.setItem(SESSION_STORAGE_KEYS.MOCK_MODE, enabled.toString());
-  },
-  loadMockMode(): boolean {
-    return sessionStorage.getItem(SESSION_STORAGE_KEYS.MOCK_MODE) === "true";
-  },
-  saveBypassAll(enabled: boolean) {
-    sessionStorage.setItem(SESSION_STORAGE_KEYS.BYPASS_ALL, enabled.toString());
-  },
-  loadBypassAll(): boolean {
-    return sessionStorage.getItem(SESSION_STORAGE_KEYS.BYPASS_ALL) === "true";
-  },
 };

@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDidUpdate } from "@mantine/hooks";
+import { PurchaseOrderService } from "@/services/PurchaseOrderService";
 import type { PurchaseOrder } from "@/types/purchase-order/PurchaseOrder";
 import { NotificationUtil } from "@/utils/NotificationUtil";
-// TODO: ลบ useMockPurchaseOrderData เมื่อ integrate API จริง
-import { useMockPurchaseOrderData } from "@/pages/purchase-order/hooks/useMockPurchaseOrderData";
 
 type Params = {
   id?: string;
@@ -14,14 +13,10 @@ export const useLoadInitialData = ({ id }: Params) => {
   const [order, setOrder] = useState<PurchaseOrder | null>(null);
   const [notFound, setNotFound] = useState(false);
 
-  // TODO: ลบ useMockPurchaseOrderData เมื่อ integrate API จริง
-  const { getMockPurchaseOrder } = useMockPurchaseOrderData();
-
   const callGetPurchaseOrder = async (): Promise<boolean> => {
     if (!id) return false;
-    // TODO: เปลี่ยนเป็น PurchaseOrderService.getPurchaseOrder เมื่อ integrate API จริง
-    const response = await getMockPurchaseOrder(id);
-    if (!response) {
+    const response = await PurchaseOrderService.getPurchaseOrder(id);
+    if (!response.ok) {
       setNotFound(true);
       return false;
     }
