@@ -6,7 +6,9 @@ import type { StockTransaction } from "@/types/stock/StockTransaction";
 import { Text, Group } from "@mantine/core";
 import { TransactionTypeBadge } from "@/components/Badges/TransactionTypeBadge";
 import type { DataTableColumn } from "mantine-datatable";
-import dayjs from "dayjs";
+import { formatDateTime } from "@/utils/DateUtil";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tStockList } from "@/consts/translations/tStockList";
 
 type Props = {
   records: StockTransaction[];
@@ -23,19 +25,20 @@ export const StockTransactionTable: FC<Props> = ({
   isLoading,
   isLoadingInitial,
 }) => {
+  const t = useTranslation();
   const columns: DataTableColumn<StockTransaction>[] = [
     {
       accessor: "created_at",
-      title: "Date",
+      title: t(tStockList.thead.date),
       sortable: true,
       width: 160,
       render: ({ created_at }) => (
-        <Text fz="sm">{dayjs(created_at).format("DD/MM/YYYY HH:mm")}</Text>
+        <Text fz="sm">{formatDateTime(created_at)}</Text>
       ),
     },
     {
       accessor: "product_name",
-      title: "Product",
+      title: t(tStockList.thead.product),
       sortable: true,
       render: ({ product_name, product_id }) => (
         <Group gap="xs">
@@ -50,14 +53,14 @@ export const StockTransactionTable: FC<Props> = ({
     },
     {
       accessor: "type",
-      title: "Type",
+      title: t(tStockList.thead.type),
       sortable: true,
       width: 100,
       render: ({ type }) => <TransactionTypeBadge type={type} />,
     },
     {
       accessor: "quantity",
-      title: "Quantity",
+      title: t(tStockList.thead.quantity),
       sortable: true,
       textAlign: "right",
       width: 100,
@@ -78,14 +81,14 @@ export const StockTransactionTable: FC<Props> = ({
     },
     {
       accessor: "balance_after",
-      title: "Balance",
+      title: t(tStockList.thead.balance),
       textAlign: "right",
       width: 100,
       render: ({ balance_after }) => <Text fw={700}>{balance_after}</Text>,
     },
     {
       accessor: "created_by_name",
-      title: "By",
+      title: t(tStockList.thead.by),
       width: 160,
       render: ({ created_by_name }) => (
         <Text fz="sm" c="dimmed">
@@ -95,7 +98,7 @@ export const StockTransactionTable: FC<Props> = ({
     },
     {
       accessor: "note",
-      title: "Note/Reason",
+      title: t(tStockList.thead.note),
       render: ({ note, reason }) => (
         <Text fz="xs" c="dimmed" lineClamp={1}>
           {reason ? `[Adjust] ${reason}` : note}
@@ -111,7 +114,7 @@ export const StockTransactionTable: FC<Props> = ({
       columns={columns}
       pagination={pagination}
       sortHandler={sortHandler}
-      entityName="transactions"
+      entityName={tStockList.transaction}
       fetching={isLoading}
       isLoadingInitial={isLoadingInitial}
     />

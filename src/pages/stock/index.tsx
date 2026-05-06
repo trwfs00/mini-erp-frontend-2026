@@ -27,8 +27,13 @@ import { useStockFilter } from "./hooks/useStockFilter";
 import { NotificationUtil } from "@/utils/NotificationUtil";
 import { ROUTE_PATHS } from "@/router/routePaths";
 import { usePermission } from "@/hooks/auth/usePermission";
+import { tMenu } from "@/consts/translations/tMenu";
+import { tBasic } from "@/consts/translations/tBasic";
+import { tStockList } from "@/consts/translations/tStockList";
+import { useTranslation } from "@/hooks/translation/useTranslation";
 
 export const StockPage = () => {
+  const t = useTranslation();
   const { canCreate } = usePermission("stock");
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
@@ -85,7 +90,7 @@ export const StockPage = () => {
       setDrawerOpened(false);
     } else {
       NotificationUtil.notifyError({
-        title: "Failed to save transaction",
+        title: t(tBasic.notifyCreateError(t(tStockList.transaction))),
         message: response.message,
       });
     }
@@ -95,16 +100,17 @@ export const StockPage = () => {
 
   return (
     <PageLayout
-      breadcrumbs={{ label: "Stock", path: ROUTE_PATHS.STOCK }}
+      isLoading={isLoadingInitialData}
+      breadcrumbs={{ label: tMenu.stock, path: ROUTE_PATHS.STOCK }}
     >
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
             <Title order={2} fw={700}>
-              Stock Transactions
+              {t(tStockList.title)}
             </Title>
             <Text c="dimmed" fz="sm">
-              Manage inventory levels and track every movement.
+              {t(tStockList.description)}
             </Text>
           </Stack>
 
@@ -114,7 +120,7 @@ export const StockPage = () => {
                 leftSection={<Plus size={16} />}
                 onClick={() => setDrawerOpened(true)}
               >
-                New Transaction
+                {t(tStockList.form.addNew)}
               </Button>
             )}
             <RefreshButton
@@ -129,21 +135,21 @@ export const StockPage = () => {
         {/* Filters */}
         <Group align="flex-end">
           <TextInput
-            label="Search"
-            placeholder="Search note or product..."
+            label={t(tStockList.searchLabel)}
+            placeholder={t(tStockList.searchPlaceholder)}
             leftSection={<Search size={16} />}
             value={search}
             onChange={(e) => setSearch(e.currentTarget.value)}
             w={250}
           />
           <Select
-            label="Type"
-            placeholder="All Types"
+            label={t(tStockList.typeLabel)}
+            placeholder={t(tStockList.typeAllPlaceholder)}
             clearable
             data={[
-              { value: "IN", label: "Stock IN" },
-              { value: "OUT", label: "Stock OUT" },
-              { value: "ADJUST", label: "Stock ADJUST" },
+              { value: "IN", label: t(tStockList.typeOptions.in) },
+              { value: "OUT", label: t(tStockList.typeOptions.out) },
+              { value: "ADJUST", label: t(tStockList.typeOptions.adjust) },
             ]}
             value={filterForm.values.type}
             onChange={(val) =>
@@ -152,8 +158,8 @@ export const StockPage = () => {
             w={150}
           />
           <Select
-            label="Product"
-            placeholder="All Products"
+            label={t(tStockList.productLabel)}
+            placeholder={t(tStockList.productAllPlaceholder)}
             clearable
             searchable
             data={productOptions}
@@ -169,7 +175,7 @@ export const StockPage = () => {
           <Alert
             variant="light"
             color={summary.is_low_stock ? "red" : "blue"}
-            title={`Stock Summary: ${
+            title={`${t(tStockList.summary.title)}: ${
               productOptions
                 .flatMap((o) =>
                   typeof o === "object" && "value" in o ? [o] : [],
@@ -181,7 +187,7 @@ export const StockPage = () => {
             <Group gap="xl">
               <Stack gap={0}>
                 <Text fz="xs" c="dimmed" fw={500}>
-                  CURRENT BALANCE
+                  {t(tStockList.summary.currentBalance)}
                 </Text>
                 <Text fz="xl" fw={700}>
                   {summary.current_stock}
@@ -189,7 +195,7 @@ export const StockPage = () => {
               </Stack>
               <Stack gap={0}>
                 <Text fz="xs" c="dimmed" fw={500}>
-                  MINIMUM REQUIRED
+                  {t(tStockList.summary.minimumRequired)}
                 </Text>
                 <Text fz="xl" fw={700}>
                   {summary.min_stock}
@@ -197,7 +203,7 @@ export const StockPage = () => {
               </Stack>
               {summary.is_low_stock && (
                 <Badge color="red" variant="filled" size="lg" mt="sm">
-                  LOW STOCK WARNING
+                  {t(tStockList.summary.lowStockWarning)}
                 </Badge>
               )}
             </Group>

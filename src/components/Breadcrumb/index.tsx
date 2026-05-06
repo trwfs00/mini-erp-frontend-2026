@@ -7,6 +7,8 @@ import type { BreadcrumbItem } from "@/types/Global";
 import { SessionStorageUtil } from "@/utils/SessionStorageUtil";
 import { NAV_ITEMS } from "@/consts/navConfig";
 import { ROUTE_PATHS } from "@/router/routePaths";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tMenu } from "@/consts/translations/tMenu";
 
 type Props = {
   current?: BreadcrumbItem | BreadcrumbItem[];
@@ -18,10 +20,11 @@ const anchorProps: AnchorProps = {
   fw: 400,
 };
 
-const FIRST_LAYER_LABELS = NAV_ITEMS.map((item) => item.label);
+const FIRST_LAYER_PATHS = NAV_ITEMS.map((item) => item.path);
 
 export const Breadcrumb: FC<Props> = ({ current, useHome = true }) => {
   const navigate = useNavigate();
+  const t = useTranslation();
 
   const [journey, setJourney] = useState<BreadcrumbItem[]>(() =>
     SessionStorageUtil.loadBreadcrumbJourney(),
@@ -44,7 +47,7 @@ export const Breadcrumb: FC<Props> = ({ current, useHome = true }) => {
     const freshJourney = SessionStorageUtil.loadBreadcrumbJourney();
 
     // ถ้า current เป็น first-layer menu → reset journey เหลือแค่ตัวเดียว
-    if (FIRST_LAYER_LABELS.includes(current.label)) {
+    if (current.path && FIRST_LAYER_PATHS.includes(current.path)) {
       const newJourney = [current];
       SessionStorageUtil.saveBreadcrumbJourney(newJourney);
       setJourney(newJourney);
@@ -53,7 +56,7 @@ export const Breadcrumb: FC<Props> = ({ current, useHome = true }) => {
 
     // ถ้า current มีอยู่แล้วใน journey → slice กลับมาตรงนั้น (back-navigation)
     const foundIndex = freshJourney.findIndex(
-      (item) => item.label === current.label,
+      (item) => item.label.en === current.label.en,
     );
     if (foundIndex !== -1) {
       const newJourney = freshJourney.slice(0, foundIndex + 1);
@@ -75,7 +78,7 @@ export const Breadcrumb: FC<Props> = ({ current, useHome = true }) => {
       fw={500}
       style={{ cursor: "pointer" }}
     >
-      Home
+      {t(tMenu.home)}
     </Anchor>
   );
 
@@ -86,14 +89,14 @@ export const Breadcrumb: FC<Props> = ({ current, useHome = true }) => {
         const isLast = index === journey.length - 1;
         return (
           <Anchor
-            key={`${item.label}-${index}`}
+            key={`${item.label.en}-${index}`}
             onClick={() => item.path && navigate(item.path)}
             {...anchorProps}
             fw={isLast ? 600 : 400}
             c={isLast ? undefined : "dimmed"}
             style={{ cursor: item.path ? "pointer" : "default" }}
           >
-            {item.label}
+            {t(item.label)}
           </Anchor>
         );
       })}

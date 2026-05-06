@@ -3,6 +3,8 @@ import { LineChart } from "@mantine/charts";
 import type { FC } from "react";
 import { SurfaceCard } from "@/components/SurfaceCard";
 import type { PurchaseTrendPoint } from "@/types/report/PurchaseSummary";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tDashboard } from "@/consts/translations/tDashboard";
 import { formatMmYy } from "@/utils/DateUtil";
 
 type Props = {
@@ -11,10 +13,11 @@ type Props = {
 };
 
 export const PurchaseTrendChart: FC<Props> = ({ data, isLoading }) => {
+  const t = useTranslation();
+  const labelAmount = t(tDashboard.purchaseTrendChart.seriesAmount);
   const chartData = data.map((d) => ({
     month: formatMmYy(d.month),
-    Amount: d.total_amount,
-    Orders: d.order_count,
+    [labelAmount]: d.total_amount,
   }));
 
   return (
@@ -22,24 +25,24 @@ export const PurchaseTrendChart: FC<Props> = ({ data, isLoading }) => {
       <Stack gap="sm">
         <Stack gap={2}>
           <Title order={4} fw={600}>
-            Purchase Trend
+            {t(tDashboard.purchaseTrendChart.title)}
           </Title>
           <Text fz="xs" c="dimmed">
-            Last 6 months · total amount
+            {t(tDashboard.purchaseTrendChart.subtitle)}
           </Text>
         </Stack>
         {isLoading ? (
           <Skeleton h={260} radius="sm" />
         ) : chartData.length === 0 ? (
           <Text c="dimmed" fz="sm" ta="center" py="xl">
-            No purchase data yet.
+            {t(tDashboard.purchaseTrendChart.empty)}
           </Text>
         ) : (
           <LineChart
             h={260}
             data={chartData}
             dataKey="month"
-            series={[{ name: "Amount", color: "indigo.6" }]}
+            series={[{ name: labelAmount, color: "indigo.6" }]}
             curveType="monotone"
             withDots
             withLegend

@@ -11,6 +11,8 @@ import {
   PackageCheck,
 } from "lucide-react";
 import type { FC, ReactNode } from "react";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tDashboard } from "@/consts/translations/tDashboard";
 
 type CardProps = {
   label: string;
@@ -51,6 +53,8 @@ const TileSkeleton: FC = () => (
 );
 
 export const SummaryCards: FC<Props> = ({ summary, isLoading }) => {
+  const t = useTranslation();
+
   if (isLoading || !summary) {
     return (
       <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
@@ -61,40 +65,41 @@ export const SummaryCards: FC<Props> = ({ summary, isLoading }) => {
     );
   }
 
+
   return (
     <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
       <Card
-        label="Total Products"
+        label={t(tDashboard.summary.totalProducts)}
         value={summary.total_products.toLocaleString()}
         icon={<Package size={18} />}
         accent="blue"
       />
       <Card
-        label="Stock Value (Cost)"
+        label={t(tDashboard.summary.stockValueCost)}
         value={formatCurrency(summary.total_stock_value)}
         icon={<Wallet size={18} />}
         accent="teal"
       />
       <Card
-        label="Stock Value (Selling)"
+        label={t(tDashboard.summary.stockValueSelling)}
         value={formatCurrency(summary.total_selling_value)}
         icon={<TrendingUp size={18} />}
         accent="green"
       />
       <Card
-        label="Low Stock"
-        value={`${summary.low_stock_count} items`}
+        label={t(tDashboard.summary.lowStock)}
+        value={`${summary.low_stock_count} ${t(tDashboard.lowStockList.units)}`}
         icon={<AlertTriangle size={18} />}
         accent="red"
       />
       <Card
-        label="Pending POs"
+        label={t(tDashboard.summary.pendingPOs)}
         value={summary.pending_po_count.toLocaleString()}
         icon={<ClipboardList size={18} />}
         accent="orange"
       />
       <Card
-        label="Received This Month"
+        label={t(tDashboard.summary.receivedThisMonth)}
         value={summary.received_po_this_month.toLocaleString()}
         icon={<PackageCheck size={18} />}
         accent="grape"

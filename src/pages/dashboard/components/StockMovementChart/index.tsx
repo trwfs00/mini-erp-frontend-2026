@@ -3,6 +3,8 @@ import { BarChart } from "@mantine/charts";
 import type { FC } from "react";
 import { SurfaceCard } from "@/components/SurfaceCard";
 import type { StockMovementDailyPoint } from "@/types/report/StockMovementReport";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tDashboard } from "@/consts/translations/tDashboard";
 import { formatDate } from "@/utils/DateUtil";
 
 type Props = {
@@ -11,11 +13,15 @@ type Props = {
 };
 
 export const StockMovementChart: FC<Props> = ({ data, isLoading }) => {
+  const t = useTranslation();
+  const labelIn = t(tDashboard.stockMovementChart.seriesIn);
+  const labelOut = t(tDashboard.stockMovementChart.seriesOut);
+  const labelAdjust = t(tDashboard.stockMovementChart.seriesAdjust);
   const chartData = data.map((d) => ({
     date: formatDate(d.date).slice(0, 6),
-    In: d.in,
-    Out: d.out,
-    Adjust: d.adjust,
+    [labelIn]: d.in,
+    [labelOut]: d.out,
+    [labelAdjust]: d.adjust,
   }));
 
   return (
@@ -23,17 +29,17 @@ export const StockMovementChart: FC<Props> = ({ data, isLoading }) => {
       <Stack gap="sm">
         <Stack gap={2}>
           <Title order={4} fw={600}>
-            Stock Movement
+            {t(tDashboard.stockMovementChart.title)}
           </Title>
           <Text fz="xs" c="dimmed">
-            Last 14 days · IN / OUT / ADJUST
+            {t(tDashboard.stockMovementChart.subtitle)}
           </Text>
         </Stack>
         {isLoading ? (
           <Skeleton h={260} radius="sm" />
         ) : chartData.length === 0 ? (
           <Text c="dimmed" fz="sm" ta="center" py="xl">
-            No movement in this period.
+            {t(tDashboard.stockMovementChart.empty)}
           </Text>
         ) : (
           <BarChart
@@ -41,9 +47,9 @@ export const StockMovementChart: FC<Props> = ({ data, isLoading }) => {
             data={chartData}
             dataKey="date"
             series={[
-              { name: "In", color: "teal.6" },
-              { name: "Out", color: "red.6" },
-              { name: "Adjust", color: "gray.6" },
+              { name: labelIn, color: "teal.6" },
+              { name: labelOut, color: "red.6" },
+              { name: labelAdjust, color: "gray.6" },
             ]}
             withLegend
             tickLine="y"

@@ -13,6 +13,9 @@ import { yupResolver } from "mantine-form-yup-resolver";
 import { productSchema, type ProductFormValues } from "@/schemas/productSchema";
 import type { ProductList } from "@/types/product/ProductList";
 import { useLoadInitialData } from "./hooks/useLoadInitialData";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tBasic } from "@/consts/translations/tBasic";
+import { tProductList } from "@/consts/translations/tProductList";
 
 type Props = {
   opened: boolean;
@@ -29,6 +32,7 @@ export const ProductFormDrawer = ({
   onSave,
   isLoading = false,
 }: Props) => {
+  const t = useTranslation();
   const isEditing = !!product;
   const { categoryOptions } = useLoadInitialData({ opened });
 
@@ -74,7 +78,11 @@ export const ProductFormDrawer = ({
       onClose={onClose}
       position="right"
       size="md"
-      title={isEditing ? "Edit Product" : "Add New Product"}
+      title={
+        isEditing
+          ? t(tProductList.form.editTitle)
+          : t(tProductList.form.addTitle)
+      }
       styles={{
         title: {
           fontWeight: 600,
@@ -85,23 +93,23 @@ export const ProductFormDrawer = ({
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="md">
           <TextInput
-            label="SKU"
-            placeholder="Enter product SKU"
+            label={t(tProductList.form.skuLabel)}
+            placeholder={t(tProductList.form.skuPlaceholder)}
             withAsterisk
             disabled={isEditing}
             {...form.getInputProps("sku")}
           />
 
           <TextInput
-            label="Product Name"
-            placeholder="Enter product name"
+            label={t(tProductList.form.nameLabel)}
+            placeholder={t(tProductList.form.namePlaceholder)}
             withAsterisk
             {...form.getInputProps("name")}
           />
 
           <Select
-            label="Category"
-            placeholder="Select a category"
+            label={t(tProductList.form.categoryLabel)}
+            placeholder={t(tProductList.form.categoryPlaceholder)}
             withAsterisk
             data={categoryOptions}
             {...form.getInputProps("category_id")}
@@ -109,7 +117,7 @@ export const ProductFormDrawer = ({
 
           <Group grow>
             <NumberInput
-              label="Cost Price"
+              label={t(tProductList.form.costLabel)}
               placeholder="0.00"
               min={0}
               decimalScale={2}
@@ -117,7 +125,7 @@ export const ProductFormDrawer = ({
               {...form.getInputProps("cost_price")}
             />
             <NumberInput
-              label="Selling Price"
+              label={t(tProductList.form.sellingLabel)}
               placeholder="0.00"
               min={0}
               decimalScale={2}
@@ -128,13 +136,13 @@ export const ProductFormDrawer = ({
 
           <Group grow>
             <TextInput
-              label="Unit"
-              placeholder="e.g. piece, box"
+              label={t(tProductList.form.unitLabel)}
+              placeholder={t(tProductList.form.unitPlaceholder)}
               withAsterisk
               {...form.getInputProps("unit")}
             />
             <NumberInput
-              label="Min Stock"
+              label={t(tProductList.form.minStockLabel)}
               placeholder="0"
               min={0}
               withAsterisk
@@ -144,10 +152,12 @@ export const ProductFormDrawer = ({
 
           <Group justify="flex-end" mt="xl">
             <Button variant="default" onClick={onClose} disabled={isLoading}>
-              Cancel
+              {t(tBasic.textCancel)}
             </Button>
             <Button type="submit" loading={isLoading}>
-              {isEditing ? "Save Changes" : "Create Product"}
+              {isEditing
+                ? t(tProductList.form.submitEdit)
+                : t(tProductList.form.submitCreate)}
             </Button>
           </Group>
         </Stack>

@@ -18,8 +18,13 @@ import { CategoryFormDrawer } from "./components/CategoryFormDrawer";
 import { NotificationUtil } from "@/utils/NotificationUtil";
 import { ROUTE_PATHS } from "@/router/routePaths";
 import { usePermission } from "@/hooks/auth/usePermission";
+import { tMenu } from "@/consts/translations/tMenu";
+import { tBasic } from "@/consts/translations/tBasic";
+import { tCategoryList } from "@/consts/translations/tCategoryList";
+import { useTranslation } from "@/hooks/translation/useTranslation";
 
 export const CategoryPage = () => {
+  const t = useTranslation();
   const { canCreate, canUpdate, canDelete } = usePermission("category");
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
@@ -45,16 +50,16 @@ export const CategoryPage = () => {
     });
 
   const handleDelete = (category: CategoryList) => {
+    const confirmTexts = tBasic.confirmModalDelete(t(tCategoryList.category));
     modals.openConfirmModal({
-      title: "Delete Category",
+      title: t(confirmTexts.title),
       centered: true,
       children: (
         <Text size="sm">
-          Are you sure you want to delete <strong>{category.name}</strong>? This
-          action cannot be undone.
+          {t(confirmTexts.message)} <strong>{category.name}</strong>
         </Text>
       ),
-      labels: { confirm: "Delete", cancel: "Cancel" },
+      labels: { confirm: t(tBasic.textDelete), cancel: t(tBasic.textCancel) },
       confirmProps: { color: "red" },
       onConfirm: async () => {
         const response = await CategoryService.deleteCategory(
@@ -62,7 +67,7 @@ export const CategoryPage = () => {
         );
         if (!response.ok) {
           NotificationUtil.notifyError({
-            title: "Failed to delete category",
+            title: t(tBasic.notifyDeleteError(t(tCategoryList.category))),
             message: response.message,
           });
         }
@@ -78,8 +83,11 @@ export const CategoryPage = () => {
     });
 
     if (!response.ok) {
+      const errFn = selectedCategory
+        ? tBasic.notifyUpdateError
+        : tBasic.notifyCreateError;
       NotificationUtil.notifyError({
-        title: "Failed to save category",
+        title: t(errFn(t(tCategoryList.category))),
         message: response.message,
       });
     }
@@ -88,22 +96,23 @@ export const CategoryPage = () => {
 
   return (
     <PageLayout
-      breadcrumbs={{ label: "Categories", path: ROUTE_PATHS.CATEGORY }}
+      isLoading={isLoadingInitialData}
+      breadcrumbs={{ label: tMenu.category, path: ROUTE_PATHS.CATEGORY }}
     >
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
             <Title order={2} fw={700}>
-              Categories
+              {t(tCategoryList.title)}
             </Title>
             <Text c="dimmed" fz="sm">
-              Organize products into categories.
+              {t(tCategoryList.description)}
             </Text>
           </Stack>
 
           <Group>
             <TextInput
-              placeholder="Search by name or description..."
+              placeholder={t(tCategoryList.searchPlaceholder)}
               leftSection={<Search size={16} />}
               value={search}
               onChange={(e) => setSearch(e.currentTarget.value)}
@@ -118,7 +127,7 @@ export const CategoryPage = () => {
                   setDrawerOpened(true);
                 }}
               >
-                Add Category
+                {t(tBasic.textAddNew)}
               </Button>
             )}
           </Group>

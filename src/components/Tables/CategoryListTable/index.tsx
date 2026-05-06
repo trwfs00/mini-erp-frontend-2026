@@ -7,6 +7,8 @@ import { formatDate } from "@/utils/DateUtil";
 import { ActionIcon, Group } from "@mantine/core";
 import { Edit, Trash2 } from "lucide-react";
 import type { FC } from "react";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tCategoryList } from "@/consts/translations/tCategoryList";
 
 type Props = {
   records: CategoryList[];
@@ -27,21 +29,22 @@ export const CategoryListTable: FC<Props> = ({
   isLoading,
   isLoadingInitial,
 }) => {
+  const t = useTranslation();
   const columns: DataTableColumn<CategoryList>[] = [
     {
       accessor: "name",
-      title: "Category Name",
+      title: t(tCategoryList.thead.name),
       sortable: true,
       width: 280,
     },
     {
       accessor: "description",
-      title: "Description",
+      title: t(tCategoryList.thead.description),
       ellipsis: true,
     },
     {
       accessor: "updated_at",
-      title: "Updated",
+      title: t(tCategoryList.thead.updated),
       sortable: true,
       width: 140,
       render: (c) => formatDate(c.updated_at),
@@ -51,7 +54,7 @@ export const CategoryListTable: FC<Props> = ({
   if (onEdit || onDelete) {
     columns.push({
       accessor: "actions",
-      title: "Actions",
+      title: t(tCategoryList.thead.actions),
       width: 100,
       textAlign: "center",
       render: (c) => (
@@ -92,7 +95,7 @@ export const CategoryListTable: FC<Props> = ({
       columns={columns}
       pagination={pagination}
       sortHandler={sortHandler}
-      entityName="categories"
+      entityName={tCategoryList.category}
       fetching={isLoading}
       isLoadingInitial={isLoadingInitial}
     />

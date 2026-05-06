@@ -20,8 +20,12 @@ import type { PurchaseOrderStatus } from "@/types/purchase-order/PurchaseOrder";
 import { usePaginationState } from "@/hooks/pagination/usePaginationState";
 import { useTableSort } from "@/hooks/table/useTableSort";
 import { usePermission } from "@/hooks/auth/usePermission";
+import { tMenu } from "@/consts/translations/tMenu";
+import { tPurchaseOrder } from "@/consts/translations/tPurchaseOrder";
+import { useTranslation } from "@/hooks/translation/useTranslation";
 
 export const PurchaseOrderPage = () => {
+  const t = useTranslation();
   const { canCreate } = usePermission("purchase_order");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<PurchaseOrderStatus | "ALL">(
@@ -49,7 +53,7 @@ export const PurchaseOrderPage = () => {
   return (
     <PageLayout
       breadcrumbs={{
-        label: "Purchase Orders",
+        label: tMenu.purchaseOrder,
         path: ROUTE_PATHS.PURCHASE_ORDERS,
       }}
     >
@@ -57,29 +61,29 @@ export const PurchaseOrderPage = () => {
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
             <Title order={2} fw={700}>
-              Purchase Orders
+              {t(tPurchaseOrder.title)}
             </Title>
             <Text c="dimmed" fz="sm">
-              Create and track your inventory purchase orders.
+              {t(tPurchaseOrder.description)}
             </Text>
           </Stack>
 
           <Group>
             <TextInput
-              placeholder="Search by ID or Supplier..."
+              placeholder={t(tPurchaseOrder.searchPlaceholder)}
               leftSection={<Search size={16} />}
               value={search}
               onChange={(e) => setSearch(e.currentTarget.value)}
               w={{ base: "100%", sm: 250 }}
             />
             <Select
-              placeholder="Status"
+              placeholder={t(tPurchaseOrder.statusPlaceholder)}
               data={[
-                { value: "ALL", label: "All Status" },
-                { value: "DRAFT", label: "Draft" },
-                { value: "CONFIRMED", label: "Confirmed" },
-                { value: "RECEIVED", label: "Received" },
-                { value: "CANCELLED", label: "Cancelled" },
+                { value: "ALL", label: t(tPurchaseOrder.status.all) },
+                { value: "DRAFT", label: t(tPurchaseOrder.status.DRAFT) },
+                { value: "CONFIRMED", label: t(tPurchaseOrder.status.CONFIRMED) },
+                { value: "RECEIVED", label: t(tPurchaseOrder.status.RECEIVED) },
+                { value: "CANCELLED", label: t(tPurchaseOrder.status.CANCELLED) },
               ]}
               value={statusFilter}
               onChange={(val) =>
@@ -93,7 +97,7 @@ export const PurchaseOrderPage = () => {
                 leftSection={<Plus size={16} />}
                 onClick={() => navigate(ROUTE_PATHS.PO_CREATE)}
               >
-                Create PO
+                {t(tPurchaseOrder.createButton)}
               </Button>
             )}
           </Group>

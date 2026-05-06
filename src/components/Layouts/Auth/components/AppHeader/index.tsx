@@ -3,6 +3,9 @@ import { Badge, Box, Burger, Group, Tooltip } from "@mantine/core";
 import { useStore } from "@nanostores/react";
 import { $authUser } from "@/stores/authUserStore";
 import { $mockMode, $authBypass } from "@/stores/debugModeStore";
+import { LanguageButton } from "./components/LanguageButton";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tLayout } from "@/consts/translations/tLayout";
 import { UserMenu } from "@/components/UserMenu";
 import { SearchTrigger } from "@/components/SearchTrigger";
 import { NotificationCenter } from "@/components/NotificationCenter";
@@ -17,6 +20,7 @@ export const AppHeader: FC<AppHeaderProps> = ({
   mobileOpened,
   toggleMobile,
 }) => {
+  const t = useTranslation();
   const authUser = useStore($authUser);
   const mockMode = useStore($mockMode);
   const authBypass = useStore($authBypass);
@@ -40,7 +44,7 @@ export const AppHeader: FC<AppHeaderProps> = ({
           onClick={toggleMobile}
           hiddenFrom="sm"
           size="sm"
-          aria-label="Toggle sidebar (mobile)"
+          aria-label={t(tLayout.header.toggleSidebarMobile)}
         />
 
         <Box visibleFrom="sm">
@@ -49,7 +53,7 @@ export const AppHeader: FC<AppHeaderProps> = ({
 
         {mockMode && (
           <Tooltip
-            label="Using mock data — backend not connected"
+            label={t(tLayout.header.mockTooltip)}
             position="bottom"
             withArrow
           >
@@ -60,13 +64,13 @@ export const AppHeader: FC<AppHeaderProps> = ({
               radius="sm"
               styles={{ label: { letterSpacing: 0.4 } }}
             >
-              MOCK DATA MODE
+              {t(tLayout.header.mockBadge)}
             </Badge>
           </Tooltip>
         )}
         {authBypass && (
           <Tooltip
-            label="Auth Bypass mode — using stored credentials"
+            label={t(tLayout.header.authBypassTooltip)}
             position="bottom"
             withArrow
           >
@@ -77,13 +81,14 @@ export const AppHeader: FC<AppHeaderProps> = ({
               radius="sm"
               styles={{ label: { letterSpacing: 0.4 } }}
             >
-              AUTH BYPASS MODE
+              {t(tLayout.header.authBypassBadge)}
             </Badge>
           </Tooltip>
         )}
       </Group>
 
       <Group gap="xs" wrap="nowrap">
+        <LanguageButton />
         <NotificationCenter />
 
         {(() => {

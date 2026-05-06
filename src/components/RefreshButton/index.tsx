@@ -1,7 +1,9 @@
 import { ActionIcon, Box, Group, Text } from "@mantine/core";
 import { RefreshCwIcon } from "lucide-react";
 import { type FC, useState } from "react";
-import { formatDateTime } from "@/utils/DateUtil";
+import { formatTimestamp } from "@/utils/DateUtil";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tBasic } from "@/consts/translations/tBasic";
 import classes from "./RefreshButton.module.css";
 
 type Props = {
@@ -9,6 +11,7 @@ type Props = {
 };
 
 export const RefreshButton: FC<Props> = ({ onClick }) => {
+  const t = useTranslation();
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -32,10 +35,10 @@ export const RefreshButton: FC<Props> = ({ onClick }) => {
       </ActionIcon>
       <Box>
         <Text variant="body3" fw={600}>
-          Refresh Data
+          {t(tBasic.textRefreshData)}
         </Text>
         <Text variant="caption1" c="dimmed">
-          {formatDateTime(lastUpdated)}
+          {formatTimestamp(lastUpdated)}
         </Text>
       </Box>
     </Group>

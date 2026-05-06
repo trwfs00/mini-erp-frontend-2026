@@ -1,5 +1,6 @@
 import type { UsePaginationStateReturnType } from "@/hooks/pagination/usePaginationState";
 import type { UseTableSortReturn } from "@/hooks/table/useTableSort";
+import type { Language } from "@/types/language/Language";
 import { Skeleton } from "@mantine/core";
 import { ChevronsUpDownIcon, ChevronsUpIcon } from "lucide-react";
 import {
@@ -43,7 +44,7 @@ type Props<T> = Omit<
   columns: DataTableColumn<T>[];
   pagination?: UsePaginationStateReturnType;
   sortHandler?: UseTableSortReturn;
-  entityName?: string;
+  entityName?: Record<Language, string>;
   height?: number;
   minHeight?: number;
   isLoadingInitial?: boolean;

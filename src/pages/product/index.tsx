@@ -17,8 +17,13 @@ import { useTableSort } from "@/hooks/table/useTableSort";
 import { NotificationUtil } from "@/utils/NotificationUtil";
 import { ROUTE_PATHS } from "@/router/routePaths";
 import { usePermission } from "@/hooks/auth/usePermission";
+import { tMenu } from "@/consts/translations/tMenu";
+import { tBasic } from "@/consts/translations/tBasic";
+import { tProductList } from "@/consts/translations/tProductList";
+import { useTranslation } from "@/hooks/translation/useTranslation";
 
 export const ProductsPage = () => {
+  const t = useTranslation();
   const { canCreate, canUpdate, canDelete } = usePermission("product");
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 400);
@@ -44,16 +49,16 @@ export const ProductsPage = () => {
     });
 
   const handleDelete = (product: ProductList) => {
+    const confirmTexts = tBasic.confirmModalDelete(t(tProductList.product));
     modals.openConfirmModal({
-      title: "Delete Product",
+      title: t(confirmTexts.title),
       centered: true,
       children: (
         <Text size="sm">
-          Are you sure you want to delete <strong>{product.name}</strong>? This
-          action cannot be undone.
+          {t(confirmTexts.message)} <strong>{product.name}</strong>
         </Text>
       ),
-      labels: { confirm: "Delete", cancel: "Cancel" },
+      labels: { confirm: t(tBasic.textDelete), cancel: t(tBasic.textCancel) },
       confirmProps: { color: "red" },
       onConfirm: async () => {
         const response = await ProductService.deleteProduct(product.product_id);
@@ -61,7 +66,7 @@ export const ProductsPage = () => {
           await reloadProductList();
         } else {
           NotificationUtil.notifyError({
-            title: "Failed to delete product",
+            title: t(tBasic.notifyDeleteError(t(tProductList.product))),
             message: response.message,
           });
         }
@@ -80,8 +85,11 @@ export const ProductsPage = () => {
       await reloadProductList();
       setDrawerOpened(false);
     } else {
+      const errFn = selectedProduct
+        ? tBasic.notifyUpdateError
+        : tBasic.notifyCreateError;
       NotificationUtil.notifyError({
-        title: "Failed to save product",
+        title: t(errFn(t(tProductList.product))),
         message: response.message,
       });
     }
@@ -90,22 +98,23 @@ export const ProductsPage = () => {
 
   return (
     <PageLayout
-      breadcrumbs={{ label: "Products", path: ROUTE_PATHS.PRODUCT }}
+      isLoading={isLoadingInitialData}
+      breadcrumbs={{ label: tMenu.product, path: ROUTE_PATHS.PRODUCT }}
     >
       <Stack gap="lg">
         <Group justify="space-between" align="flex-start">
           <Stack gap={4}>
             <Title order={2} fw={700}>
-              Products
+              {t(tProductList.title)}
             </Title>
             <Text c="dimmed" fz="sm">
-              Manage your product catalog.
+              {t(tProductList.description)}
             </Text>
           </Stack>
 
           <Group>
             <TextInput
-              placeholder="Search by name or sku..."
+              placeholder={t(tProductList.searchPlaceholder)}
               leftSection={<Search size={16} />}
               value={search}
               onChange={(e) => setSearch(e.currentTarget.value)}
@@ -120,7 +129,7 @@ export const ProductsPage = () => {
                   setDrawerOpened(true);
                 }}
               >
-                Add Product
+                {t(tBasic.textAddNew)}
               </Button>
             )}
           </Group>

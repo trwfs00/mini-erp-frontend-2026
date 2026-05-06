@@ -12,7 +12,6 @@ import { LocalStorageUtil } from "@/utils/LocalStorageUtil";
 import { $authUser } from "@/stores/authUserStore";
 import { ROUTE_PATHS } from "@/router/routePaths";
 import {
-  // Anchor,
   Box,
   Button,
   Checkbox,
@@ -31,8 +30,11 @@ import {
   LockIcon,
   UserIcon,
 } from "lucide-react";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tLogin } from "@/consts/translations/tLogin";
 
 export const LoginPage: FC = () => {
+  const t = useTranslation();
   const authUser = useStore($authUser);
   const navigate = useNavigate();
   const { getMockAuthUser } = useMockAuthUser();
@@ -73,7 +75,7 @@ export const LoginPage: FC = () => {
     );
     if (!mockUser) {
       form.setErrors({
-        password: "Invalid credentials (try: admin / staff / viewer)",
+        password: t(tLogin.invalidCredentials),
       });
       return;
     }
@@ -84,7 +86,7 @@ export const LoginPage: FC = () => {
 
   return (
     <Box w={420} px="xs">
-      <title>Login | Welcome Back</title>
+      <title>{t(tLogin.pageTitle)}</title>
 
       <Stack gap={10} mb="xl" align="center">
         <Box
@@ -109,10 +111,10 @@ export const LoginPage: FC = () => {
 
         <Stack gap={2} align="center">
           <Title order={1} fz={28} fw={700} lh={1.1}>
-            Welcome back
+            {t(tLogin.welcome)}
           </Title>
           <Text c="dimmed" fz="sm">
-            Sign in to continue to Mini ERP
+            {t(tLogin.subtitle)}
           </Text>
         </Stack>
       </Stack>
@@ -120,8 +122,8 @@ export const LoginPage: FC = () => {
       <form onSubmit={form.onSubmit(handleLogin)}>
         <Stack gap="md">
           <TextInput
-            label="Username"
-            placeholder="Enter your username"
+            label={t(tLogin.usernameLabel)}
+            placeholder={t(tLogin.usernamePlaceholder)}
             size="md"
             radius="md"
             leftSection={<UserIcon size={18} />}
@@ -129,8 +131,8 @@ export const LoginPage: FC = () => {
           />
 
           <PasswordInput
-            label="Password"
-            placeholder="Enter your password"
+            label={t(tLogin.passwordLabel)}
+            placeholder={t(tLogin.passwordPlaceholder)}
             size="md"
             radius="md"
             leftSection={<LockIcon size={18} />}
@@ -142,20 +144,20 @@ export const LoginPage: FC = () => {
 
           <Group justify="space-between" mt={-4}>
             <Checkbox
-              label="Remember me"
+              label={t(tLogin.rememberMe)}
               size="sm"
               {...form.getInputProps("remember_me", { type: "checkbox" })}
             />
           </Group>
 
           <Button type="submit" size="md" radius="md" fullWidth mt="xs">
-            Sign in
+            {t(tLogin.signIn)}
           </Button>
 
           <Divider
             label={
               <Text fz="xs" c="dimmed">
-                Mini ERP · Secure access
+                {t(tLogin.divider)}
               </Text>
             }
             labelPosition="center"
@@ -164,7 +166,7 @@ export const LoginPage: FC = () => {
 
           {/* TODO: ลบบล็อกนี้เมื่อ integrate API จริง */}
           <Text fz="xs" c="dimmed" ta="center" mt={-8}>
-            Mock mode — try{" "}
+            {t(tLogin.mockHint)}{" "}
             <Text component="span" fw={600} c="bright">
               admin
             </Text>{" "}
@@ -175,8 +177,8 @@ export const LoginPage: FC = () => {
             /{" "}
             <Text component="span" fw={600} c="bright">
               viewer
-            </Text>{" "}
-            (any password)
+            </Text>
+            {t(tLogin.mockSuffix)}
           </Text>
         </Stack>
       </form>

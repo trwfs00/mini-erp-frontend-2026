@@ -7,6 +7,8 @@ import { formatDate } from "@/utils/DateUtil";
 import { ActionIcon, Group, Text, Stack } from "@mantine/core";
 import { Edit, Trash2, Mail, Phone } from "lucide-react";
 import type { FC } from "react";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tSupplierList } from "@/consts/translations/tSupplierList";
 
 type Props = {
   records: SupplierList[];
@@ -27,10 +29,11 @@ export const SupplierListTable: FC<Props> = ({
   isLoading,
   isLoadingInitial,
 }) => {
+  const t = useTranslation();
   const columns: DataTableColumn<SupplierList>[] = [
     {
       accessor: "name",
-      title: "Supplier Information",
+      title: t(tSupplierList.thead.info),
       sortable: true,
       render: (s) => (
         <Stack gap={4}>
@@ -45,7 +48,7 @@ export const SupplierListTable: FC<Props> = ({
     },
     {
       accessor: "contact",
-      title: "Contact",
+      title: t(tSupplierList.thead.contact),
       render: (s) => (
         <Stack gap={2}>
           <Group gap={6}>
@@ -61,7 +64,7 @@ export const SupplierListTable: FC<Props> = ({
     },
     {
       accessor: "address",
-      title: "Address",
+      title: t(tSupplierList.thead.address),
       render: (s) => (
         <Text size="xs" lineClamp={2}>
           {s.address}
@@ -70,7 +73,7 @@ export const SupplierListTable: FC<Props> = ({
     },
     {
       accessor: "updated_at",
-      title: "Updated",
+      title: t(tSupplierList.thead.updated),
       sortable: true,
       width: 140,
       render: (s) => formatDate(s.updated_at),
@@ -80,7 +83,7 @@ export const SupplierListTable: FC<Props> = ({
   if (onEdit || onDelete) {
     columns.push({
       accessor: "actions",
-      title: "Actions",
+      title: t(tSupplierList.thead.actions),
       width: 100,
       textAlign: "center",
       render: (s) => (
@@ -121,7 +124,7 @@ export const SupplierListTable: FC<Props> = ({
       columns={columns}
       pagination={pagination}
       sortHandler={sortHandler}
-      entityName="suppliers"
+      entityName={tSupplierList.supplier}
       fetching={isLoading}
       isLoadingInitial={isLoadingInitial}
     />

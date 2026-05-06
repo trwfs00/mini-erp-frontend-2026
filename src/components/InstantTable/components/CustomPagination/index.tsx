@@ -6,6 +6,8 @@ import {
   type MantineSize,
 } from "@mantine/core";
 import type { FC } from "react";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tBasic } from "@/consts/translations/tBasic";
 import paginationClasses from "./Pagination.module.css";
 
 type Props = {
@@ -28,10 +30,13 @@ type Props = {
 };
 
 export const CustomPagination: FC<Props> = ({ state, actions }) => {
+  const t = useTranslation();
   return (
     <Group justify="space-between" w="100%" wrap="nowrap">
       <Group gap="sm" wrap="nowrap">
-        <Text className={paginationClasses.paginationText}>Rows per page</Text>
+        <Text className={paginationClasses.paginationText}>
+          {t(tBasic.pagination.rowsPerPage)}
+        </Text>
         <Select
           size="sm"
           w={72}
@@ -50,7 +55,13 @@ export const CustomPagination: FC<Props> = ({ state, actions }) => {
           allowDeselect={false}
         />
         <Text className={paginationClasses.paginationText}>
-          {state.from || 0} - {state.to || 0} of {state.totalRecords || 0}
+          {t(
+            tBasic.pagination.fromTo(
+              state.from || 0,
+              state.to || 0,
+              state.totalRecords || 0,
+            ),
+          )}
         </Text>
       </Group>
       <Pagination

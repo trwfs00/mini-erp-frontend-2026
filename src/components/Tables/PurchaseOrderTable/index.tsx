@@ -9,6 +9,8 @@ import type { FC } from "react";
 import { PurchaseOrderStatusBadge } from "@/components/Badges/PurchaseOrderStatusBadge";
 import type { UseTableSortReturn } from "@/hooks/table/useTableSort";
 import type { UsePaginationStateReturnType } from "@/hooks/pagination/usePaginationState";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tPurchaseOrder } from "@/consts/translations/tPurchaseOrder";
 
 type Props = {
   records: PurchaseOrderSummary[];
@@ -27,25 +29,30 @@ export const PurchaseOrderTable: FC<Props> = ({
   isLoading,
   isLoadingInitial,
 }) => {
+  const t = useTranslation();
   const columns: DataTableColumn<PurchaseOrderSummary>[] = [
     {
       accessor: "purchase_order_id",
-      title: "PO Number",
+      title: t(tPurchaseOrder.thead.poNumber),
       sortable: true,
       width: 150,
       render: (p) => <Text fw={500}>{p.purchase_order_id}</Text>,
     },
-    { accessor: "supplier_name", title: "Supplier", sortable: true },
+    {
+      accessor: "supplier_name",
+      title: t(tPurchaseOrder.thead.supplier),
+      sortable: true,
+    },
     {
       accessor: "status",
-      title: "Status",
+      title: t(tPurchaseOrder.thead.status),
       sortable: true,
       width: 120,
       render: (p) => <PurchaseOrderStatusBadge status={p.status} />,
     },
     {
       accessor: "total_amount",
-      title: "Total Amount",
+      title: t(tPurchaseOrder.thead.totalAmount),
       sortable: true,
       width: 150,
       textAlign: "right",
@@ -53,25 +60,25 @@ export const PurchaseOrderTable: FC<Props> = ({
     },
     {
       accessor: "item_count",
-      title: "Items",
+      title: t(tPurchaseOrder.thead.items),
       width: 80,
       textAlign: "center",
     },
     {
       accessor: "created_at",
-      title: "Created Date",
+      title: t(tPurchaseOrder.thead.created),
       sortable: true,
       width: 160,
       render: (p) => formatDate(p.created_at),
     },
     {
       accessor: "created_by_name",
-      title: "Created By",
+      title: t(tPurchaseOrder.thead.createdBy),
       width: 150,
     },
     {
       accessor: "actions",
-      title: "Actions",
+      title: t(tPurchaseOrder.thead.actions),
       width: 80,
       textAlign: "center",
       render: (p) => (
@@ -98,7 +105,7 @@ export const PurchaseOrderTable: FC<Props> = ({
       columns={columns}
       pagination={pagination}
       sortHandler={sortHandler}
-      entityName="purchase orders"
+      entityName={tPurchaseOrder.purchaseOrder}
       fetching={isLoading}
       isLoadingInitial={isLoadingInitial}
       onRowClick={({ record }) => onView(record.purchase_order_id)}

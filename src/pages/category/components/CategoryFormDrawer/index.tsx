@@ -14,6 +14,9 @@ import {
   type CategoryFormValues,
 } from "@/schemas/categorySchema";
 import type { CategoryList } from "@/types/category/CategoryList";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tBasic } from "@/consts/translations/tBasic";
+import { tCategoryList } from "@/consts/translations/tCategoryList";
 
 type Props = {
   opened: boolean;
@@ -30,6 +33,7 @@ export const CategoryFormDrawer = ({
   onSave,
   isLoading = false,
 }: Props) => {
+  const t = useTranslation();
   const isEditing = !!category;
 
   const form = useForm<CategoryFormValues>({
@@ -59,7 +63,11 @@ export const CategoryFormDrawer = ({
       onClose={onClose}
       position="right"
       size="md"
-      title={isEditing ? "Edit Category" : "Add New Category"}
+      title={
+        isEditing
+          ? t(tCategoryList.form.editTitle)
+          : t(tCategoryList.form.addTitle)
+      }
       styles={{
         title: {
           fontWeight: 600,
@@ -75,15 +83,15 @@ export const CategoryFormDrawer = ({
       >
         <Stack gap="md">
           <TextInput
-            label="Category Name"
-            placeholder="e.g. Beverages, Snacks"
+            label={t(tCategoryList.form.nameLabel)}
+            placeholder={t(tCategoryList.form.namePlaceholder)}
             withAsterisk
             {...form.getInputProps("name")}
           />
 
           <Textarea
-            label="Description"
-            placeholder="Describe what products belong to this category"
+            label={t(tCategoryList.form.descriptionLabel)}
+            placeholder={t(tCategoryList.form.descriptionPlaceholder)}
             withAsterisk
             minRows={3}
             autosize
@@ -92,10 +100,12 @@ export const CategoryFormDrawer = ({
 
           <Group justify="flex-end" mt="xl">
             <Button variant="default" onClick={onClose} disabled={isLoading}>
-              Cancel
+              {t(tBasic.textCancel)}
             </Button>
             <Button type="submit" loading={isLoading}>
-              {isEditing ? "Save Changes" : "Create Category"}
+              {isEditing
+                ? t(tCategoryList.form.submitEdit)
+                : t(tCategoryList.form.submitCreate)}
             </Button>
           </Group>
         </Stack>

@@ -7,6 +7,9 @@ import { NAV_ITEMS } from "@/consts/navConfig";
 import { AuthUtil } from "@/utils/AuthUtil";
 import { PermissionUtil } from "@/utils/PermissionUtil";
 import { $authUser } from "@/stores/authUserStore";
+import { useTranslation } from "@/hooks/translation/useTranslation";
+import { tBasic } from "@/consts/translations/tBasic";
+import { tLayout } from "@/consts/translations/tLayout";
 import classes from "./AppSidebar.module.css";
 
 type AppSidebarProps = {
@@ -22,6 +25,7 @@ export const AppSidebar: FC<AppSidebarProps> = ({
 }) => {
   const showLabels = !collapsed;
   const authUser = useStore($authUser);
+  const t = useTranslation();
   const visibleNavItems = authUser
     ? NAV_ITEMS.filter((item) =>
         PermissionUtil.checkAnyPermission(authUser, item.permissionCode),
@@ -57,7 +61,9 @@ export const AppSidebar: FC<AppSidebarProps> = ({
           color="gray"
           size="lg"
           onClick={onToggle}
-          aria-label={isMobile ? "Close sidebar" : "Toggle sidebar"}
+          aria-label={
+            isMobile ? t(tLayout.sidebar.close) : t(tLayout.sidebar.toggle)
+          }
           className={classes.toggleBtn}
         >
           {renderToggleIcon()}
@@ -80,7 +86,7 @@ export const AppSidebar: FC<AppSidebarProps> = ({
                 >
                   <item.icon className={classes.linkIcon} strokeWidth={1.75} />
                   {showLabels && (
-                    <span className={classes.linkLabel}>{item.label}</span>
+                    <span className={classes.linkLabel}>{t(item.label)}</span>
                   )}
                 </span>
               )}
@@ -90,7 +96,7 @@ export const AppSidebar: FC<AppSidebarProps> = ({
           return collapsed ? (
             <Tooltip
               key={item.path}
-              label={item.label}
+              label={t(item.label)}
               position="right"
               withArrow
               offset={12}
@@ -105,7 +111,7 @@ export const AppSidebar: FC<AppSidebarProps> = ({
 
       <div className={classes.footer}>
         {collapsed ? (
-          <Tooltip label="Logout" position="right" withArrow offset={12}>
+          <Tooltip label={t(tBasic.textLogout)} position="right" withArrow offset={12}>
             <button
               type="button"
               className={classes.link}
@@ -124,7 +130,7 @@ export const AppSidebar: FC<AppSidebarProps> = ({
           >
             <span className={classes.linkInner}>
               <LogOut className={classes.linkIcon} strokeWidth={1.75} />
-              <span className={classes.linkLabel}>Logout</span>
+              <span className={classes.linkLabel}>{t(tBasic.textLogout)}</span>
             </span>
           </button>
         )}
